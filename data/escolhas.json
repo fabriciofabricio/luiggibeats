@@ -20,16 +20,31 @@
           "texto": "Só uma fornada.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "feliz", "fala": "Beleza, só uma fornadinha rápida pra comer assistindo vídeo." },
-            { "quem": "narrador", "fala": "Luis concorda com ele mesmo... enquanto já está pegando mais dois sacos de farinha do armário." }
+            {
+              "quem": "luis",
+              "expr": "feliz",
+              "fala": "Beleza, só uma fornadinha rápida pra comer assistindo vídeo."
+            },
+            {
+              "quem": "narrador",
+              "fala": "Luis concorda com ele mesmo... enquanto já está pegando mais dois sacos de farinha do armário."
+            }
           ]
         },
         {
           "texto": "Duas, no máximo.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "envergonhado", "fala": "Duas fornadas. Controle total. Disciplina de atleta." },
-            { "quem": "fabricio", "expr": "feliz", "fala": "[Discord] KKKKK ele riu sozinho na cozinha, vai assar até amanhã." }
+            {
+              "quem": "luis",
+              "expr": "envergonhado",
+              "fala": "Duas fornadas. Controle total. Disciplina de atleta."
+            },
+            {
+              "quem": "fabricio",
+              "expr": "feliz",
+              "fala": "[Discord] KKKKK ele riu sozinho na cozinha, vai assar até amanhã."
+            }
           ]
         },
         {
@@ -37,8 +52,15 @@
           "tag": "absurdo",
           "efeito": "bsod_fake",
           "miniCena": [
-            { "quem": "narrador", "fala": "ERRO FATAL 0x47COOKIE: O cérebro do Luis não suportou essa mentira." },
-            { "quem": "luis", "expr": "chocado", "fala": "Reiniciando sistema... pera, onde eu parei? Ah é, pré-aquecendo o forno!" }
+            {
+              "quem": "narrador",
+              "fala": "ERRO FATAL 0x47COOKIE: O cérebro do Luis não suportou essa mentira."
+            },
+            {
+              "quem": "luis",
+              "expr": "chocado",
+              "fala": "Reiniciando sistema... pera, onde eu parei? Ah é, pré-aquecendo o forno!"
+            }
           ]
         }
       ]
@@ -56,24 +78,48 @@
           "texto": "Mano, isso tem potencial!",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "chocado", "fala": "Por que você fez isso?" },
-            { "quem": "tiago_music", "expr": "chocado", "fala": "..." }
+            {
+              "quem": "luis",
+              "expr": "chocado",
+              "fala": "Por que você fez isso?"
+            },
+            {
+              "quem": "tiago_music",
+              "expr": "chocado",
+              "fala": "..."
+            }
           ]
         },
         {
           "texto": "Continua, tá ficando bom!",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "chocado", "fala": "Por que você fez isso?" },
-            { "quem": "tiago_music", "expr": "chocado", "fala": "Eu achei que você fosse meu melhor amigo..." }
+            {
+              "quem": "luis",
+              "expr": "chocado",
+              "fala": "Por que você fez isso?"
+            },
+            {
+              "quem": "tiago_music",
+              "expr": "chocado",
+              "fala": "Eu achei que você fosse meu melhor amigo..."
+            }
           ]
         },
         {
           "texto": "Que incrível, sério!",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "luis", "expr": "chocado", "fala": "Por que você fez isso?" },
-            { "quem": "mateus_buse", "expr": "feliz", "fala": "Sinceridade nota 10, diplomacia nota 0." }
+            {
+              "quem": "luis",
+              "expr": "chocado",
+              "fala": "Por que você fez isso?"
+            },
+            {
+              "quem": "mateus_buse",
+              "expr": "feliz",
+              "fala": "Sinceridade nota 10, diplomacia nota 0."
+            }
           ]
         }
       ]
@@ -90,24 +136,45 @@
           "texto": "Fala do clima.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "vitor_witiuk", "expr": "envergonhado", "fala": "Então... você sabia que a umidade relativa do ar em Curitiba hoje tá em 84%?" },
-            { "quem": "narrador", "fala": "Ele explica frentes frias por 3 minutos seguidos. A garota foi embora no minuto 1." }
+            {
+              "quem": "vitor_witiuk",
+              "expr": "envergonhado",
+              "fala": "Então... você sabia que a umidade relativa do ar em Curitiba hoje tá em 84%?"
+            },
+            {
+              "quem": "narrador",
+              "fala": "Ele explica frentes frias por 3 minutos seguidos. A garota foi embora no minuto 1."
+            }
           ]
         },
         {
           "texto": "Elogia ela.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "vitor_witiuk", "expr": "feliz", "fala": "Que tênis massa! Minha mãe tem um igualzinho pra ir no mercado." },
-            { "quem": "narrador", "fala": "Comparar o estilo dela com o da mãe dele foi uma escolha ousada." }
+            {
+              "quem": "vitor_witiuk",
+              "expr": "feliz",
+              "fala": "Que tênis massa! Minha mãe tem um igualzinho pra ir no mercado."
+            },
+            {
+              "quem": "narrador",
+              "fala": "Comparar o estilo dela com o da mãe dele foi uma escolha ousada."
+            }
           ]
         },
         {
           "texto": "Faz uma piada.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "vitor_witiuk", "expr": "envergonhado", "fala": "Sabe o que um pão falou pro outro? ...Esqueci o final." },
-            { "quem": "narrador", "fala": "Cri cri... cri cri..." }
+            {
+              "quem": "vitor_witiuk",
+              "expr": "envergonhado",
+              "fala": "Sabe o que um pão falou pro outro? ...Esqueci o final."
+            },
+            {
+              "quem": "narrador",
+              "fala": "Cri cri... cri cri..."
+            }
           ]
         }
       ]
@@ -124,24 +191,48 @@
           "texto": "Elogiar o mangá que ela está lendo.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "envergonhado", "fala": "Esse mangá aí é muito bom, né? Igual você..." },
-            { "quem": "maria_clara", "expr": "feliz", "fala": "SIM! Você não tem noção do arco do cap. 42, olha esse traço!" }
+            {
+              "quem": "luis",
+              "expr": "envergonhado",
+              "fala": "Esse mangá aí é muito bom, né? Igual você..."
+            },
+            {
+              "quem": "maria_clara",
+              "expr": "feliz",
+              "fala": "SIM! Você não tem noção do arco do cap. 42, olha esse traço!"
+            }
           ]
         },
         {
           "texto": "Fazer uma cesta incrível pra impressionar.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "luis", "expr": "feliz", "fala": "Olha essa de três pontos, Maria Clara! *CHUÁ*" },
-            { "quem": "maria_clara", "expr": "feliz", "fala": "BOA! Ei, viu aquela menina linda ali na arquibancada? Vou lá falar com ela!" }
+            {
+              "quem": "luis",
+              "expr": "feliz",
+              "fala": "Olha essa de três pontos, Maria Clara! *CHUÁ*"
+            },
+            {
+              "quem": "maria_clara",
+              "expr": "feliz",
+              "fala": "BOA! Ei, viu aquela menina linda ali na arquibancada? Vou lá falar com ela!"
+            }
           ]
         },
         {
           "texto": "Falar direto o que sente.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "envergonhado", "fala": "Maria Clara, eu gosto muito de voc—" },
-            { "quem": "cecilia", "expr": "feliz", "fala": "FEEELPS!! ACHEI VOCÊ!!" }
+            {
+              "quem": "luis",
+              "expr": "envergonhado",
+              "fala": "Maria Clara, eu gosto muito de voc—"
+            },
+            {
+              "quem": "cecilia",
+              "expr": "feliz",
+              "fala": "FEEELPS!! ACHEI VOCÊ!!"
+            }
           ]
         }
       ]
@@ -151,30 +242,51 @@
       "capitulo": 2,
       "pergunta": "O que fazer na pandemia?",
       "convergencia": "discord",
-      "eventoReal": "O Fabricio chama no Discord: 'mano, bora fazer uma música zoando o Vitor'.",
+      "eventoReal": "Aí eu te chamei no Discord: 'mano, bora fazer uma música zoando o Vitor'.",
       "opcoes": [
         {
           "texto": "Aprender uma língua.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "Uma corujinha verde aparece na tela com 40 notificações passivo-agressivas." },
-            { "quem": "luis", "expr": "chocado", "fala": "Desisto, a coruja tá me ameaçando em espanhol." }
+            {
+              "quem": "narrador",
+              "fala": "Uma corujinha verde aparece na tela com 40 notificações passivo-agressivas."
+            },
+            {
+              "quem": "luis",
+              "expr": "chocado",
+              "fala": "Desisto, a coruja tá me ameaçando em espanhol."
+            }
           ]
         },
         {
           "texto": "Malhar em casa.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "bravo", "fala": "UM! ...Dois... *deita no tapete*" },
-            { "quem": "narrador", "fala": "Treino encerrado com sucesso em 14 segundos." }
+            {
+              "quem": "luis",
+              "expr": "bravo",
+              "fala": "UM! ...Dois... *deita no tapete*"
+            },
+            {
+              "quem": "narrador",
+              "fala": "Treino encerrado com sucesso em 14 segundos."
+            }
           ]
         },
         {
           "texto": "Ler livros.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "luis", "expr": "neutro", "fala": "Capítulo 1, parágrafo 2... zzz..." },
-            { "quem": "narrador", "fala": "Recorde mundial de sono na página 2." }
+            {
+              "quem": "luis",
+              "expr": "neutro",
+              "fala": "Capítulo 1, parágrafo 2... zzz..."
+            },
+            {
+              "quem": "narrador",
+              "fala": "Recorde mundial de sono na página 2."
+            }
           ]
         }
       ]
@@ -190,24 +302,51 @@
           "texto": "Algo sério sobre a pandemia.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "neutro", "fala": "Escreve: 'Em 2020 o mundo parou...'" },
-            { "quem": "fabricio", "expr": "feliz", "fala": "'...e o Vitor continuou sem pegar ninguém.' BOTA O 808!!" }
+            {
+              "quem": "luis",
+              "expr": "neutro",
+              "fala": "Escreve: 'Em 2020 o mundo parou...'"
+            },
+            {
+              "quem": "fabricio",
+              "expr": "feliz",
+              "fala": "'...e o Vitor continuou sem pegar ninguém.' BOTA O 808!!",
+              "canal": "discord"
+            }
           ]
         },
         {
           "texto": "Uma música romântica.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "envergonhado", "fala": "Fiz uns acordes tristes de piano..." },
-            { "quem": "fabricio", "expr": "feliz", "fala": "Perfeito pra cantar sobre o Vitor elogiando o tênis da menina!" }
+            {
+              "quem": "luis",
+              "expr": "envergonhado",
+              "fala": "Fiz uns acordes tristes de piano..."
+            },
+            {
+              "quem": "fabricio",
+              "expr": "feliz",
+              "fala": "Perfeito pra cantar sobre o Vitor elogiando o tênis da menina!",
+              "canal": "discord"
+            }
           ]
         },
         {
           "texto": "Uma homenagem bonita ao Vitor.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "luis", "expr": "feliz", "fala": "Vitor, você é um irmão..." },
-            { "quem": "mateus_buse", "expr": "feliz", "fala": "...um irmão que não sabe puxar assunto. Solta o beat!" }
+            {
+              "quem": "luis",
+              "expr": "feliz",
+              "fala": "Vitor, você é um irmão..."
+            },
+            {
+              "quem": "mateus_buse",
+              "expr": "feliz",
+              "fala": "...um irmão que não sabe puxar assunto. Solta o beat!",
+              "canal": "discord"
+            }
           ]
         }
       ]
@@ -223,22 +362,36 @@
           "texto": "Não posso, tenho aula.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "neutro", "fala": "Digitando: 'Não posso, tenho aula'..." },
-            { "quem": "narrador", "fala": "Autocorretor: 'Não posso... mas quero'. Luis apaga em pânico." }
+            {
+              "quem": "luis",
+              "expr": "neutro",
+              "fala": "Digitando: 'Não posso, tenho aula'..."
+            },
+            {
+              "quem": "narrador",
+              "fala": "Autocorretor: 'Não posso... mas quero'. Luis apaga em pânico."
+            }
           ]
         },
         {
           "texto": "Hoje não vai dar.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "chocado", "fala": "Autocorretor mudou pra 'Hoje sim!'?? PARA CELULAR!" }
+            {
+              "quem": "luis",
+              "expr": "chocado",
+              "fala": "Autocorretor mudou pra 'Hoje sim!'?? PARA CELULAR!"
+            }
           ]
         },
         {
           "texto": "Fingir que não viu.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "narrador", "fala": "Luis desliga as notificações. 3 minutos depois: passos ecoando no corredor..." }
+            {
+              "quem": "narrador",
+              "fala": "Luis desliga as notificações. 3 minutos depois: passos ecoando no corredor..."
+            }
           ]
         }
       ]
@@ -255,21 +408,31 @@
           "texto": "Entrar.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "narrador", "fala": "A câmera aproxima da porta... e corta imediatamente para preto." }
+            {
+              "quem": "narrador",
+              "fala": "A câmera aproxima da porta... e corta imediatamente para preto."
+            }
           ]
         },
         {
           "texto": "Não entrar.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "Luis dá um passo pra trás... e a fita do destino censura o resto da gravação." }
+            {
+              "quem": "narrador",
+              "fala": "Luis dá um passo pra trás... e a fita do destino censura o resto da gravação."
+            }
           ]
         },
         {
           "texto": "Sair correndo pela janela.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "luis", "expr": "chocado", "fala": "A janela é do terceiro andar! ...Melhor manter o mistério." }
+            {
+              "quem": "luis",
+              "expr": "chocado",
+              "fala": "A janela é do terceiro andar! ...Melhor manter o mistério."
+            }
           ]
         }
       ]
@@ -286,22 +449,36 @@
           "texto": "Respeitar o amigo e se afastar.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "Um anjinho aparece no ombro do Luis e aplaude emocionado!" },
-            { "quem": "narrador", "fala": "Dois segundos depois, um diabinho dá uma voadora no anjinho pra fora da tela." }
+            {
+              "quem": "narrador",
+              "fala": "Um anjinho aparece no ombro do Luis e aplaude emocionado!"
+            },
+            {
+              "quem": "narrador",
+              "fala": "Dois segundos depois, um diabinho dá uma voadora no anjinho pra fora da tela."
+            }
           ]
         },
         {
           "texto": "Pedir a opinião do Fabricio.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "feliz", "fala": "Mano, você sabe exatamente o que você vai fazer. Já tô até ligando o Discord." }
+            {
+              "quem": "fabricio",
+              "expr": "feliz",
+              "fala": "Mano, você sabe exatamente o que você vai fazer. Já tô até ligando o Discord."
+            }
           ]
         },
         {
           "texto": "Fingir que não percebeu.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "gi_eta", "expr": "feliz", "fala": "Fofo você fingindo que não entendeu... me dá uma carona nesse Subaru?" }
+            {
+              "quem": "gi_eta",
+              "expr": "feliz",
+              "fala": "Fofo você fingindo que não entendeu... me dá uma carona nesse Subaru?"
+            }
           ]
         }
       ]
@@ -317,21 +494,32 @@
           "texto": "Conversa madura.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "envergonhado", "fala": "Digita um textão maduro. Apaga. Digita de novo. Apaga. Manda só 'opa tô ocupado'." }
+            {
+              "quem": "luis",
+              "expr": "envergonhado",
+              "fala": "Digita um textão maduro. Apaga. Digita de novo. Apaga. Manda só 'opa tô ocupado'."
+            }
           ]
         },
         {
           "texto": "Bloquear.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "O dedo do Luis paira sobre o botão 'Bloquear' por 10 longos segundos... e volta pro menu inicial." }
+            {
+              "quem": "narrador",
+              "fala": "O dedo do Luis paira sobre o botão 'Bloquear' por 10 longos segundos... e volta pro menu inicial."
+            }
           ]
         },
         {
           "texto": "Mudar de academia.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "luis", "expr": "chocado", "fala": "Abre o site de outra academia. Vê a mensalidade. Fecha a aba na hora." }
+            {
+              "quem": "luis",
+              "expr": "chocado",
+              "fala": "Abre o site de outra academia. Vê a mensalidade. Fecha a aba na hora."
+            }
           ]
         }
       ]
@@ -348,21 +536,33 @@
           "texto": "Mano, pensa na Agatha.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "caliandra", "expr": "feliz", "fala": "Fabricio, você sabe o que faz." }
+            {
+              "quem": "caliandra",
+              "expr": "feliz",
+              "fala": "Fabricio, você sabe o que faz."
+            }
           ]
         },
         {
           "texto": "Vai embora comigo.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "caliandra", "expr": "feliz", "fala": "Fabricio, você sabe o que faz." }
+            {
+              "quem": "caliandra",
+              "expr": "feliz",
+              "fala": "Fabricio, você sabe o que faz."
+            }
           ]
         },
         {
           "texto": "Segue seu coração.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "caliandra", "expr": "feliz", "fala": "Fabricio, você sabe o que faz." }
+            {
+              "quem": "caliandra",
+              "expr": "feliz",
+              "fala": "Fabricio, você sabe o que faz."
+            }
           ]
         }
       ]
@@ -379,23 +579,43 @@
           "texto": "Política.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luiza", "expr": "feliz", "fala": "Então, porque na social-democracia europeia, especialmente quando estive na Alemanha..." },
-            { "quem": "luis", "expr": "neutro", "fala": "*concorda com a cabeça por 20 minutos*" }
+            {
+              "quem": "luiza",
+              "expr": "feliz",
+              "fala": "Então, porque na social-democracia europeia, especialmente quando estive na Alemanha..."
+            },
+            {
+              "quem": "luis",
+              "expr": "neutro",
+              "fala": "*concorda com a cabeça por 20 minutos*"
+            }
           ]
         },
         {
           "texto": "Música.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "luis", "expr": "feliz", "fala": "Quer ouvir um shittrap meu?" },
-            { "quem": "luiza", "expr": "neutro", "fala": "...Enfim, os clubes eletrônicos de Berlim na Alemanha são incríveis!" }
+            {
+              "quem": "luis",
+              "expr": "feliz",
+              "fala": "Quer ouvir um shittrap meu?"
+            },
+            {
+              "quem": "luiza",
+              "expr": "neutro",
+              "fala": "...Enfim, os clubes eletrônicos de Berlim na Alemanha são incríveis!"
+            }
           ]
         },
         {
           "texto": "Viagens.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luiza", "expr": "feliz", "fala": "VOCÊ NÃO SABE COMO FOI A MINHA VIAGEM PRA ALEMANHA!" }
+            {
+              "quem": "luiza",
+              "expr": "feliz",
+              "fala": "VOCÊ NÃO SABE COMO FOI A MINHA VIAGEM PRA ALEMANHA!"
+            }
           ]
         }
       ]
@@ -405,28 +625,43 @@
       "capitulo": 6,
       "pergunta": "O Fabricio precisa encontrar a Agatha às 3 da manhã. O Luis diz:",
       "convergencia": "discord",
-      "eventoReal": "O Luis sai da casa da Luiza pra dar carona pro Fabricio, enquanto a Caliandra grita da porta.",
+      "eventoReal": "O Luis sai da casa da Luiza pra me dar carona, enquanto a Caliandra grita da porta.",
       "opcoes": [
         {
           "texto": "Mano, fica aí, já são 3 da manhã.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "chocado", "fala": "Eu combinei com a Agatha, mano, não posso furar!" }
+            {
+              "quem": "fabricio",
+              "expr": "chocado",
+              "fala": "Eu combinei com a Agatha, mano, não posso furar!"
+            }
           ]
         },
         {
           "texto": "Chama um Uber.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "App: 'Nenhum motorista disponível às 3h12' + emoji chorando." }
+            {
+              "quem": "narrador",
+              "fala": "App: 'Nenhum motorista disponível às 3h12' + emoji chorando."
+            }
           ]
         },
         {
           "texto": "Vai você, eu fico com a Luiza.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "luiza", "expr": "feliz", "fala": "Olha essa foto da minha viagem pra Munique!" },
-            { "quem": "luis", "expr": "envergonhado", "fala": "Pensando bem, eu te levo sim, Fabricio!" }
+            {
+              "quem": "luiza",
+              "expr": "feliz",
+              "fala": "Olha essa foto da minha viagem pra Munique!"
+            },
+            {
+              "quem": "luis",
+              "expr": "envergonhado",
+              "fala": "Pensando bem, eu te levo sim, Fabricio!"
+            }
           ]
         }
       ]
@@ -436,27 +671,38 @@
       "capitulo": 6,
       "pergunta": "No Subaru, o Fabricio pergunta: 'mano, eu sou uma pessoa ruim?'",
       "convergencia": "vinyl",
-      "eventoReal": "Eles chegam na balada K-pop de qualquer jeito.",
+      "eventoReal": "A gente chega na balada K-pop de qualquer jeito.",
       "opcoes": [
         {
           "texto": "Claro que não.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "envergonhado", "fala": "Mas eu acabei de ficar com a Caliandra faz 15 minutos..." }
+            {
+              "quem": "fabricio",
+              "expr": "envergonhado",
+              "fala": "Mas eu acabei de ficar com a Caliandra faz 15 minutos..."
+            }
           ]
         },
         {
           "texto": "Um pouquinho.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "narrador", "fala": "O Fabricio encara o vidro embaçado do Subaru em silêncio cinematográfico." }
+            {
+              "quem": "narrador",
+              "fala": "Eu fiquei encarando o vidro embaçado do Subaru em silêncio cinematográfico."
+            }
           ]
         },
         {
           "texto": "Você sabe o que faz.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "fabricio", "expr": "bravo", "fala": "PARA DE FALAR ISSO MANO!!" }
+            {
+              "quem": "fabricio",
+              "expr": "bravo",
+              "fala": "PARA DE FALAR ISSO MANO!!"
+            }
           ]
         }
       ]
@@ -466,29 +712,44 @@
       "capitulo": 6,
       "pergunta": "Como cumprimentar a Agatha?",
       "convergencia": "glitch",
-      "eventoReal": "Ela solta um 'oi' sem olhar e puxa o Fabricio. Luis fica com a mão no ar.",
+      "eventoReal": "Ela solta um 'oi' sem olhar e me puxa. O Luis fica com a mão no ar.",
       "conquista": "ignorado_com_sucesso",
       "opcoes": [
         {
           "texto": "Oi! Prazer, sou o Luis!",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "feliz", "fala": "Oi! Prazer, sou o Luis!" },
-            { "quem": "agatha", "expr": "neutro", "fala": "oi. *já puxando o Fabricio*" }
+            {
+              "quem": "luis",
+              "expr": "feliz",
+              "fala": "Oi! Prazer, sou o Luis!"
+            },
+            {
+              "quem": "agatha",
+              "expr": "neutro",
+              "fala": "oi. *já puxando o Fabricio*"
+            }
           ]
         },
         {
           "texto": "Um aceno simpático.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "envergonhado", "fala": "*acena animado no vácuo absoluto*" }
+            {
+              "quem": "luis",
+              "expr": "envergonhado",
+              "fala": "*acena animado no vácuo absoluto*"
+            }
           ]
         },
         {
           "texto": "Um abraço.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "narrador", "fala": "O Luis abre os braços e abraça o ar curitibano." }
+            {
+              "quem": "narrador",
+              "fala": "O Luis abre os braços e abraça o ar curitibano."
+            }
           ]
         }
       ]
@@ -504,21 +765,31 @@
           "texto": "Esperar o Fabricio.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "O relógio avança 20 minutos. Um pombo dorme. Nada muda." }
+            {
+              "quem": "narrador",
+              "fala": "O relógio avança 20 minutos. Um pombo dorme. Nada muda."
+            }
           ]
         },
         {
           "texto": "Mandar 'vou indo'.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "neutro", "fala": "[WhatsApp] Visualizado. Resposta: '👍'" }
+            {
+              "quem": "fabricio",
+              "expr": "neutro",
+              "fala": "[WhatsApp] Visualizado. Resposta: '👍'"
+            }
           ]
         },
         {
           "texto": "Sentar no banco do lado.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "narrador", "fala": "Os dois param e olham pro Luis ao mesmo tempo. Ele levanta na velocidade da luz." }
+            {
+              "quem": "narrador",
+              "fala": "Os dois param e olham pro Luis ao mesmo tempo. Ele levanta na velocidade da luz."
+            }
           ]
         }
       ]
@@ -534,21 +805,33 @@
           "texto": "Foi mal, não tenho.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "chocado", "fala": "Foi mal, tô sem nada! *acelera o passo*" }
+            {
+              "quem": "luis",
+              "expr": "chocado",
+              "fala": "Foi mal, tô sem nada! *acelera o passo*"
+            }
           ]
         },
         {
           "texto": "Dar uma moeda.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "envergonhado", "fala": "Toma aqui, boa noite! *continua andando rápido*" }
+            {
+              "quem": "luis",
+              "expr": "envergonhado",
+              "fala": "Toma aqui, boa noite! *continua andando rápido*"
+            }
           ]
         },
         {
           "texto": "Fingir que está no telefone.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "luis", "expr": "chocado", "fala": "Alô? Sim, tô quase chegando! *O CELULAR TOCA DE VERDADE: Fabricio — 'tá vivo?'*" }
+            {
+              "quem": "luis",
+              "expr": "chocado",
+              "fala": "Alô? Sim, tô quase chegando! *O CELULAR TOCA DE VERDADE: Fabricio — 'tá vivo?'*"
+            }
           ]
         }
       ]
@@ -564,21 +847,32 @@
           "texto": "Restaurante chique.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "luis", "expr": "chocado", "fala": "Olha o cardápio... R$ 180 só a água?! Bora pro shopping." }
+            {
+              "quem": "luis",
+              "expr": "chocado",
+              "fala": "Olha o cardápio... R$ 180 só a água?! Bora pro shopping."
+            }
           ]
         },
         {
           "texto": "Piquenique no parque.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "Começa a chover granizo do nada. É Curitiba. Bora pro shopping." }
+            {
+              "quem": "narrador",
+              "fala": "Começa a chover granizo do nada. É Curitiba. Bora pro shopping."
+            }
           ]
         },
         {
           "texto": "Almoço no shopping.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luiza", "expr": "feliz", "fala": "Adoro a praça de alimentação!" }
+            {
+              "quem": "luiza",
+              "expr": "feliz",
+              "fala": "Adoro a praça de alimentação!"
+            }
           ]
         }
       ]
@@ -594,22 +888,37 @@
           "texto": "Aceita um relacionamento aberto.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "envergonhado", "fala": "Tudo bem... inclusive escrevi um poema dizendo que só tenho olhos pra você... pera." }
+            {
+              "quem": "luis",
+              "expr": "envergonhado",
+              "fala": "Tudo bem... inclusive escrevi um poema dizendo que só tenho olhos pra você... pera."
+            }
           ]
         },
         {
           "texto": "Tenta convencer ela.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "envergonhado", "fala": "*faz discurso romântico digno de filme*" },
-            { "quem": "luiza", "expr": "neutro", "fala": "Ok. *olha o celular*" }
+            {
+              "quem": "luis",
+              "expr": "envergonhado",
+              "fala": "*faz discurso romântico digno de filme*"
+            },
+            {
+              "quem": "luiza",
+              "expr": "neutro",
+              "fala": "Ok. *olha o celular*"
+            }
           ]
         },
         {
           "texto": "Escreve uma música sobre isso.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "narrador", "fala": "Nasce um shittrap melancólico instantâneo." }
+            {
+              "quem": "narrador",
+              "fala": "Nasce um shittrap melancólico instantâneo."
+            }
           ]
         }
       ]
@@ -619,27 +928,39 @@
       "capitulo": 8,
       "pergunta": "Qual o look pro Sad Baile?",
       "convergencia": "discord",
-      "eventoReal": "Ele vai com a roupa que dá tempo porque o Fabricio já está gritando 'cheguei' há 10 minutos.",
+      "eventoReal": "Ele vai com a roupa que dá tempo porque eu já tava gritando 'cheguei' há 10 minutos.",
       "opcoes": [
         {
           "texto": "Camisa social.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "fabricio", "expr": "feliz", "fala": "Vai num casamento ou num baile triste?" }
+            {
+              "quem": "fabricio",
+              "expr": "feliz",
+              "fala": "Vai num casamento ou num baile triste?"
+            }
           ]
         },
         {
           "texto": "Moletom do LuiggiBeats.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "feliz", "fala": "Divulgação, gosto! ...Pera, isso no peito é massa de cookie?" }
+            {
+              "quem": "fabricio",
+              "expr": "feliz",
+              "fala": "Divulgação, gosto! ...Pera, isso no peito é massa de cookie?"
+            }
           ]
         },
         {
           "texto": "Roupa da academia.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "fabricio", "expr": "bravo", "fala": "Você não vai fazer supino no Sad Baile, mano." }
+            {
+              "quem": "fabricio",
+              "expr": "bravo",
+              "fala": "Você não vai fazer supino no Sad Baile, mano."
+            }
           ]
         }
       ]
@@ -649,28 +970,40 @@
       "capitulo": 8,
       "pergunta": "Uma das meninas conta que trabalha vendendo fotos no OnlyFans. Luis responde:",
       "convergencia": "discord",
-      "eventoReal": "Silêncio absoluto. O Fabricio cobre o rosto. O Discord explode rindo da inocência do Luis.",
+      "eventoReal": "Silêncio absoluto. Eu cubro o rosto. O Discord explode rindo da inocência do Luis.",
       "conquista": "fotos_de_paisagem",
       "opcoes": [
         {
           "texto": "Ah, tipo fotografia de paisagem?",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "fabricio", "expr": "chocado", "fala": "*cobre o rosto inteiramente*" }
+            {
+              "quem": "fabricio",
+              "expr": "chocado",
+              "fala": "*cobre o rosto inteiramente*"
+            }
           ]
         },
         {
           "texto": "Legal! Você usa câmera profissional?",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "feliz", "fala": "Curte lente 50mm ou grande angular?" }
+            {
+              "quem": "luis",
+              "expr": "feliz",
+              "fala": "Curte lente 50mm ou grande angular?"
+            }
           ]
         },
         {
           "texto": "Meu Subaru ia ficar ótimo numas fotos.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "mateus_buse", "expr": "chocado", "fala": "[Discord] KKKKKKKKKK ELE METEU O SUBARU NO MEIO" }
+            {
+              "quem": "mateus_buse",
+              "expr": "chocado",
+              "fala": "[Discord] KKKKKKKKKK ELE METEU O SUBARU NO MEIO"
+            }
           ]
         }
       ]
@@ -687,21 +1020,32 @@
           "texto": "Acabei de sair de um relacionamento.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "rebeca", "expr": "feliz", "fala": "Perfeito, então tá solteiro!!" }
+            {
+              "quem": "rebeca",
+              "expr": "feliz",
+              "fala": "Perfeito, então tá solteiro!!"
+            }
           ]
         },
         {
           "texto": "Tô aqui só pelo Fabricio.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "Ao fundo, o Fabricio já está beijando a Marilis Docinho e dando joinha." }
+            {
+              "quem": "narrador",
+              "fala": "Ao fundo, eu já tava beijando a Marilis Docinho e dando joinha."
+            }
           ]
         },
         {
           "texto": "Vamos ser só amigos?",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "rebeca", "expr": "feliz", "fala": "Tranquilo, a gente pode ser amigo depois! *volta pra pista rindo*" }
+            {
+              "quem": "rebeca",
+              "expr": "feliz",
+              "fala": "Tranquilo, a gente pode ser amigo depois! *volta pra pista rindo*"
+            }
           ]
         }
       ]
@@ -717,21 +1061,33 @@
           "texto": "Contar do Subaru.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "ruiva_misteriosa", "expr": "feliz", "fala": "Nossa, motor boxer? Que legal... (fingindo interesse por pura educação)" }
+            {
+              "quem": "ruiva_misteriosa",
+              "expr": "feliz",
+              "fala": "Nossa, motor boxer? Que legal... (fingindo interesse por pura educação)"
+            }
           ]
         },
         {
           "texto": "Contar que acabou de terminar.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "ruiva_misteriosa", "expr": "feliz", "fala": "Por isso o Sad Baile? Kkkkk" }
+            {
+              "quem": "ruiva_misteriosa",
+              "expr": "feliz",
+              "fala": "Por isso o Sad Baile? Kkkkk"
+            }
           ]
         },
         {
           "texto": "Mostrar um LuiggiBeats.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "ruiva_misteriosa", "expr": "feliz", "fala": "LuiggiBeats?! Kkkkk bota mais uma!" }
+            {
+              "quem": "ruiva_misteriosa",
+              "expr": "feliz",
+              "fala": "LuiggiBeats?! Kkkkk bota mais uma!"
+            }
           ]
         }
       ]
@@ -747,21 +1103,33 @@
           "texto": "Isso é uma red flag gigante.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "luis", "expr": "feliz", "fala": "(Pensa: red flag total!) Na voz: 'Nossa, que viagem legal!'" }
+            {
+              "quem": "luis",
+              "expr": "feliz",
+              "fala": "(Pensa: red flag total!) Na voz: 'Nossa, que viagem legal!'"
+            }
           ]
         },
         {
           "texto": "Mudar de assunto.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "yohana", "expr": "feliz", "fala": "E na volta ainda fiz um cara pagar a conta do aeroporto!" }
+            {
+              "quem": "yohana",
+              "expr": "feliz",
+              "fala": "E na volta ainda fiz um cara pagar a conta do aeroporto!"
+            }
           ]
         },
         {
           "texto": "Vou ter que pagar o jantar também?",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "yohana", "expr": "feliz", "fala": "*sorri em silêncio e não responde*" }
+            {
+              "quem": "yohana",
+              "expr": "feliz",
+              "fala": "*sorri em silêncio e não responde*"
+            }
           ]
         }
       ]
@@ -777,21 +1145,33 @@
           "texto": "E aí, o que você achou?",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "yohana", "expr": "bravo", "fala": "Cala a boca. Quero ver se tem pós-créditos." }
+            {
+              "quem": "yohana",
+              "expr": "bravo",
+              "fala": "Cala a boca. Quero ver se tem pós-créditos."
+            }
           ]
         },
         {
           "texto": "Bora comer alguma coisa?",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "yohana", "expr": "bravo", "fala": "Cala a boca. Quero ver se tem pós-créditos." }
+            {
+              "quem": "yohana",
+              "expr": "bravo",
+              "fala": "Cala a boca. Quero ver se tem pós-créditos."
+            }
           ]
         },
         {
           "texto": "Esse filme foi estranho, né?",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "yohana", "expr": "bravo", "fala": "Cala a boca. Quero ver se tem pós-créditos." }
+            {
+              "quem": "yohana",
+              "expr": "bravo",
+              "fala": "Cala a boca. Quero ver se tem pós-créditos."
+            }
           ]
         }
       ]
@@ -807,21 +1187,30 @@
           "texto": "Manda mensagem todo dia.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "Visualizado às 14h22. Nenhuma resposta." }
+            {
+              "quem": "narrador",
+              "fala": "Visualizado às 14h22. Nenhuma resposta."
+            }
           ]
         },
         {
           "texto": "Dá espaço pra ela.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "Ela também não manda nada." }
+            {
+              "quem": "narrador",
+              "fala": "Ela também não manda nada."
+            }
           ]
         },
         {
           "texto": "Vai junto de surpresa.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "narrador", "fala": "O Subaru fica sem gasolina na BR-277." }
+            {
+              "quem": "narrador",
+              "fala": "O Subaru fica sem gasolina na BR-277."
+            }
           ]
         }
       ]
@@ -831,27 +1220,37 @@
       "capitulo": 10,
       "pergunta": "No carro, o Fabricio pergunta da Yohana.",
       "convergencia": "vinyl",
-      "eventoReal": "O Fabricio fala da Rayssa pelo resto da viagem inteira.",
+      "eventoReal": "E eu falei da Rayssa pelo resto da viagem inteira.",
       "opcoes": [
         {
           "texto": "Superei.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "O rádio do Subaru muda de estação sozinho e toca uma sofrência." }
+            {
+              "quem": "narrador",
+              "fala": "O rádio do Subaru muda de estação sozinho e toca uma sofrência."
+            }
           ]
         },
         {
           "texto": "Nem lembro dela.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "narrador", "fala": "Um outdoor gigante passa pela janela escrito: 'PÓS-CRÉDITOS'." }
+            {
+              "quem": "narrador",
+              "fala": "Um outdoor gigante passa pela janela escrito: 'PÓS-CRÉDITOS'."
+            }
           ]
         },
         {
           "texto": "Bora mudar de assunto.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "feliz", "fala": "Falando em assunto bom, a Rayssa é incrível né mano..." }
+            {
+              "quem": "fabricio",
+              "expr": "feliz",
+              "fala": "Falando em assunto bom, a Rayssa é incrível né mano..."
+            }
           ]
         }
       ]
@@ -868,21 +1267,33 @@
           "texto": "Eu sou o Tico.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "bravo", "fala": "Não, eu que sou o Tico!" }
+            {
+              "quem": "fabricio",
+              "expr": "bravo",
+              "fala": "Não, eu que sou o Tico!"
+            }
           ]
         },
         {
           "texto": "O Fabricio é o Tico.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "feliz", "fala": "Finalmente admitiu que sou o protagonista!" }
+            {
+              "quem": "fabricio",
+              "expr": "feliz",
+              "fala": "Finalmente admitiu que sou o protagonista!"
+            }
           ]
         },
         {
           "texto": "A gente é o Lé e o Cré.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "rayssa", "expr": "feliz", "fala": "Lé e Cré combinam ainda mais!" }
+            {
+              "quem": "rayssa",
+              "expr": "feliz",
+              "fala": "Lé e Cré combinam ainda mais!"
+            }
           ]
         }
       ]
@@ -892,28 +1303,40 @@
       "capitulo": 11,
       "pergunta": "Você percebe que o Fabricio está dirigindo seu Subaru sem carteira.",
       "convergencia": "narrator",
-      "eventoReal": "O Fabricio puxa o freio de mão e começa o drift dos sonhos.",
+      "eventoReal": "Aí eu puxo o freio de mão e começa o drift dos sonhos.",
       "conquista": "carta_que_carta",
       "opcoes": [
         {
           "texto": "Mano, para o carro.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "feliz", "fala": "Acelerar mais? Beleza!! *pisa fundo*" }
+            {
+              "quem": "fabricio",
+              "expr": "feliz",
+              "fala": "Acelerar mais? Beleza!! *pisa fundo*"
+            }
           ]
         },
         {
           "texto": "Fabricio, você nem tem carteira!",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "feliz", "fala": "Tenho sim! Olha minha CNH desenhada em giz de cera: 'CONFIA'!" }
+            {
+              "quem": "fabricio",
+              "expr": "feliz",
+              "fala": "Tenho sim! Olha minha CNH desenhada em giz de cera: 'CONFIA'!"
+            }
           ]
         },
         {
           "texto": "Ignorar e continuar beijando.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "mateus_buse", "expr": "chocado", "fala": "[Discord flutuando nas nuvens] mano...?" }
+            {
+              "quem": "mateus_buse",
+              "expr": "chocado",
+              "fala": "[Discord flutuando nas nuvens] mano...?"
+            }
           ]
         }
       ]
@@ -930,21 +1353,32 @@
           "texto": "Eu nunca fiz isso.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "eloiza", "expr": "feliz", "fala": "Haha, além de cavalheiro é modesto!" }
+            {
+              "quem": "eloiza",
+              "expr": "feliz",
+              "fala": "Haha, além de cavalheiro é modesto!"
+            }
           ]
         },
         {
           "texto": "Quem é você?",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "eloiza", "expr": "feliz", "fala": "Adoro esse seu charme misterioso." }
+            {
+              "quem": "eloiza",
+              "expr": "feliz",
+              "fala": "Adoro esse seu charme misterioso."
+            }
           ]
         },
         {
           "texto": "Obrigado...?",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "Ela já está segurando o braço do Luis." }
+            {
+              "quem": "narrador",
+              "fala": "Ela já está segurando o braço do Luis."
+            }
           ]
         }
       ]
@@ -960,21 +1394,33 @@
           "texto": "Terminar na hora.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "eloiza", "expr": "envergonhado", "fala": "*começa a chorar* Eu juro que vou parar com isso..." }
+            {
+              "quem": "eloiza",
+              "expr": "envergonhado",
+              "fala": "*começa a chorar* Eu juro que vou parar com isso..."
+            }
           ]
         },
         {
           "texto": "Pedir pra ver o celular.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "eloiza", "expr": "bravo", "fala": "Não. Mas eu vou parar com isso." }
+            {
+              "quem": "eloiza",
+              "expr": "bravo",
+              "fala": "Não. Mas eu vou parar com isso."
+            }
           ]
         },
         {
           "texto": "Pedir que ela pare.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "eloiza", "expr": "neutro", "fala": "Vou parar com isso." }
+            {
+              "quem": "eloiza",
+              "expr": "neutro",
+              "fala": "Vou parar com isso."
+            }
           ]
         }
       ]
@@ -991,21 +1437,31 @@
           "texto": "Amor, ela é só uma amiga.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "eloiza", "expr": "bravo", "fala": "Não." }
+            {
+              "quem": "eloiza",
+              "expr": "bravo",
+              "fala": "Não."
+            }
           ]
         },
         {
           "texto": "Cabe todo mundo, o Subaru é grande!",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "narrador", "fala": "A Eloiza senta exatamente no meio do banco de trás ocupando todos os lugares possíveis." }
+            {
+              "quem": "narrador",
+              "fala": "A Eloiza senta exatamente no meio do banco de trás ocupando todos os lugares possíveis."
+            }
           ]
         },
         {
           "texto": "Então eu vou a pé com ela.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "A Eloiza olha fixamente para ele. O Luis volta a colocar o cinto em silêncio." }
+            {
+              "quem": "narrador",
+              "fala": "A Eloiza olha fixamente para ele. O Luis volta a colocar o cinto em silêncio."
+            }
           ]
         }
       ]
@@ -1021,21 +1477,32 @@
           "texto": "Pede desculpa.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "cara_aleatorio", "expr": "neutro", "fala": "É... ele pediu desculpa... complicado, né." }
+            {
+              "quem": "cara_aleatorio",
+              "expr": "neutro",
+              "fala": "É... ele pediu desculpa... complicado, né."
+            }
           ]
         },
         {
           "texto": "Explica que foi a namorada.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "A Eloiza aparece exatamente nessa hora na porta de braços cruzados. Luis muda de assunto na hora." }
+            {
+              "quem": "narrador",
+              "fala": "A Eloiza aparece exatamente nessa hora na porta de braços cruzados. Luis muda de assunto na hora."
+            }
           ]
         },
         {
           "texto": "Deixa o Fabricio falar.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "fabricio", "expr": "envergonhado", "fala": "Então... né..." }
+            {
+              "quem": "fabricio",
+              "expr": "envergonhado",
+              "fala": "Então... né..."
+            }
           ]
         }
       ]
@@ -1052,22 +1519,37 @@
           "texto": "Hoje não, tô cansado.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "tutuluiza", "expr": "feliz", "fala": "Isso é fala de personagem que se arrepende no segundo ato." }
+            {
+              "quem": "tutuluiza",
+              "expr": "feliz",
+              "fala": "Isso é fala de personagem que se arrepende no segundo ato."
+            }
           ]
         },
         {
           "texto": "Bora, mas só uma.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "narrador", "fala": "O Fabricio já está lá dentro na fila do bar." }
+            {
+              "quem": "narrador",
+              "fala": "Eu já tava lá dentro na fila do bar."
+            }
           ]
         },
         {
           "texto": "Só se você me disser se Nora tem pós-créditos.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "tutuluiza", "expr": "feliz", "fala": "Não tem! É um crime cinematográfico." },
-            { "quem": "luis", "expr": "chocado", "fala": "*emocionado* Finalmente alguém me entende." }
+            {
+              "quem": "tutuluiza",
+              "expr": "feliz",
+              "fala": "Não tem! É um crime cinematográfico."
+            },
+            {
+              "quem": "luis",
+              "expr": "chocado",
+              "fala": "*emocionado* Finalmente alguém me entende."
+            }
           ]
         }
       ]
@@ -1077,28 +1559,39 @@
       "capitulo": 14,
       "pergunta": "O Fabricio cochicha: 'mano, acho que ela tá a fim de mim'.",
       "convergencia": "discord",
-      "eventoReal": "O Fabricio passa a achar que a Tutuluiza quer ficar com ele e se arruma demais todo rolê.",
+      "eventoReal": "E eu passei a achar que a Tutuluiza queria ficar comigo e me arrumava demais todo rolê.",
       "conquista": "ele_achou_que_era_com_ele",
       "opcoes": [
         {
           "texto": "Com certeza, mano.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "feliz", "fala": "*arruma o cabelo no reflexo do celular imediatamente*" }
+            {
+              "quem": "fabricio",
+              "expr": "feliz",
+              "fala": "*arruma o cabelo no reflexo do celular imediatamente*"
+            }
           ]
         },
         {
           "texto": "Não sei, hein.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "bravo", "fala": "Tá com inveja!" }
+            {
+              "quem": "fabricio",
+              "expr": "bravo",
+              "fala": "Tá com inveja!"
+            }
           ]
         },
         {
           "texto": "Ela tá a fim de filme, só.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "narrador", "fala": "Ele ignora completamente a frase." }
+            {
+              "quem": "narrador",
+              "fala": "Ele ignora completamente a frase."
+            }
           ]
         }
       ]
@@ -1108,27 +1601,39 @@
       "capitulo": 14,
       "pergunta": "Na James, o Fabricio quer ficar com a Lara sem a Tutuluiza ver.",
       "convergencia": "strikethrough",
-      "eventoReal": "A Lara puxa o Fabricio e começa a Operação Ponto Cego.",
+      "eventoReal": "A Lara me puxa e começa a Operação Ponto Cego.",
       "opcoes": [
         {
           "texto": "Então não fica com a Lara.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "bravo", "fala": "*olha pra Lara, olha pro Luis* Não." }
+            {
+              "quem": "fabricio",
+              "expr": "bravo",
+              "fala": "*olha pra Lara, olha pro Luis* Não."
+            }
           ]
         },
         {
           "texto": "Fala com a Tutuluiza antes.",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "fabricio", "expr": "chocado", "fala": "Tá doido?!" }
+            {
+              "quem": "fabricio",
+              "expr": "chocado",
+              "fala": "Tá doido?!"
+            }
           ]
         },
         {
           "texto": "Deixa comigo.",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "luis", "expr": "feliz", "fala": "*estala os dedos como agente secreto*" }
+            {
+              "quem": "luis",
+              "expr": "feliz",
+              "fala": "*estala os dedos como agente secreto*"
+            }
           ]
         }
       ]
@@ -1145,21 +1650,32 @@
           "texto": "Eu tô num tempo com minha namorada...",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "tutuluiza", "expr": "feliz", "fala": "Tempo? Isso é tipo intervalo de filme?" }
+            {
+              "quem": "tutuluiza",
+              "expr": "feliz",
+              "fala": "Tempo? Isso é tipo intervalo de filme?"
+            }
           ]
         },
         {
           "texto": "Bora falar de filme?",
           "tag": "sensato",
           "miniCena": [
-            { "quem": "tutuluiza", "expr": "feliz", "fala": "A gente pode falar de filme... depois." }
+            {
+              "quem": "tutuluiza",
+              "expr": "feliz",
+              "fala": "A gente pode falar de filme... depois."
+            }
           ]
         },
         {
           "texto": "OLHA, O FABRICIO!",
           "tag": "absurdo",
           "miniCena": [
-            { "quem": "narrador", "fala": "Agora ele QUER que ela olhe pro Fabricio. Ela não olha." }
+            {
+              "quem": "narrador",
+              "fala": "Agora ele QUER que ela olhe pro Fabricio. Ela não olha."
+            }
           ]
         }
       ]
@@ -1178,7 +1694,11 @@
           "tag": "absurdo",
           "estiloBotao": "gigante_pulsando",
           "miniCena": [
-            { "quem": "luis", "expr": "envergonhado", "fala": "'oi sumida kkk'... Droga, respondi em 0,4 segundos." }
+            {
+              "quem": "luis",
+              "expr": "envergonhado",
+              "fala": "'oi sumida kkk'... Droga, respondi em 0,4 segundos."
+            }
           ]
         },
         {
@@ -1186,7 +1706,10 @@
           "tag": "sensato",
           "estiloBotao": "fujão",
           "miniCena": [
-            { "quem": "narrador", "fala": "Você clicou em Ignorar... mas o dedo escorregou em RESPONDER." }
+            {
+              "quem": "narrador",
+              "fala": "Você clicou em Ignorar... mas o dedo escorregou em RESPONDER."
+            }
           ]
         },
         {
@@ -1194,7 +1717,10 @@
           "tag": "sensato",
           "estiloBotao": "piscando",
           "miniCena": [
-            { "quem": "narrador", "fala": "O botão Bloquear sumiu antes de completar o clique." }
+            {
+              "quem": "narrador",
+              "fala": "O botão Bloquear sumiu antes de completar o clique."
+            }
           ]
         }
       ]

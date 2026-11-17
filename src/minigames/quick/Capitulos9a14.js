@@ -332,29 +332,32 @@
   }
 
   // ======================================================================
-  // 4. BEIJO NO DRIFT (Cap. 11 · Sonho)
+  // 4. BEIJO NO DRIFT (Cap. 11 · Sonho dentro do Subaru)
+  //    O Fabricio dirige sem carteira; Luis e Sol no banco de trás. Compense o drift para o lado
+  //    oposto e mantenha o beijo alinhado. Mesma lógica e conquistas do original.
   // ======================================================================
   function beijoNoDrift(id) {
-    const kit = root.LuiggiKit.abrir({ id, titulo: 'Beijo no Drift (Sonho)', icone: '💋', capitulo: 11, cor: '#ec4899', ambiente: 'sonho', max: 1000 });
+    const kit = root.LuiggiKit.abrir({ id, titulo: 'Beijo no Drift (Sonho)', icone: '💋', capitulo: 11, cor: '#ec4899', ambiente: 'subaru_sonho', max: 1000 });
     const { stage, env, THREE } = kit;
-    const { M, plane, textures, createSubaruMesh, createCapybaraMesh } = L();
-    env.group.children.forEach((c) => {
-      // Ilha central fica escondida (a estrada passa por ela)
-      if (c.position && c.position.x === 0 && c.position.z === 0 && c.type === 'Group') c.visible = false;
-    });
-    const estradaTex = textures.asphalt(1, 30, { base: '#3b2b6b' });
-    const estrada = plane(8, 400, M.std('#ffffff', 0.4, 0.2, { map: estradaTex, emissive: '#7c3aed', emissiveIntensity: 0.15 }), 0, 0, -150);
-    estrada.rotation.x = -Math.PI / 2;
-    stage.scene.add(estrada);
-    [-4.1, 4.1].forEach((x) => stage.scene.add(L().box(0.12, 0.08, 400, M.glow('#f9a8d4', 2.4), x, 0.04, -150, { cast: false })));
-    const sub = createSubaruMesh(root.LuiggiSave?.state?.subaruMods?.cor || '#1245A8', true);
-    stage.scene.add(sub);
-    sub.rotation.y = Math.PI;
-    const fumaca = kit.particulas({ count: 200, size: 0.9, shape: 'smoke', colors: ['#f5d0fe', '#fbcfe8', '#ddd6fe'], intensity: 0.5, life: [0.6, 1.2], drag: 1.5 });
-    const coracoes = kit.particulas({ count: 80, size: 0.3, shape: 'heart', colors: ['#f472b6', '#fb7185'], intensity: 2, gravity: -1, life: [0.8, 1.4] });
-    const capivara = createCapybaraMesh();
+    stage.camera.fov = env.fov || 64;
+    stage.camera.updateProjectionMatrix();
+    const carta = (cid, seat, altura = 1.05) => {
+      const c = L().createCharacterCard(kit.personagem(cid), { altura, emotes: false });
+      const p = env.assentos[seat];
+      c.group.position.set(p[0], p[1], p[2]);
+      env.ancora.add(c.group);
+      stage.addUpdate((dt) => c.update(dt, stage.camera));
+      return c;
+    };
+    const fab = carta('fabricio', 'L');
+    const luis = carta('luis', 'TL');
+    const sol = carta('sol', 'TC');
+    const baseLuis = luis.group.position.clone();
+    const baseSol = sol.group.position.clone();
+    const coracoes = kit.particulas({ count: 80, size: 0.08, shape: 'heart', colors: ['#f472b6', '#fb7185'], intensity: 2, gravity: -0.4, life: [0.8, 1.4] });
+    const capivara = L().createCapybaraMesh();
     capivara.visible = false;
-    capivara.scale.setScalar(0.7);
+    capivara.scale.setScalar(0.5);
     stage.scene.add(capivara);
 
     let medidor = 45;
@@ -362,12 +365,12 @@
     let combo = 0;
     let rodadas = 7;
     let lado = 'ESQUERDA';
-    let drift = 0;
     let driftAlvo = 0;
     let janela = 0;
     let aguardando = false;
     let capT = -1;
-    const cam = stage.camera;
+    let separacao = 0.32; // distância entre Luis e Sol (menor = beijo alinhado)
+    let empurrao = 0;
 
     function hud() {
       kit.hud(kit.pill(`🔁 Restam: ${rodadas}`) + kit.pill(`🔥 Combo: ${combo}`));
@@ -386,17 +389,21 @@
       lado = Math.random() < 0.5 ? 'ESQUERDA' : 'DIREITA';
       const ev = rodadas === 4 ? '🦫 CAPIVARA VOADORA NA JANELA!' : rodadas === 2 ? '📸 FLASH DO RADAR — FAÇA POSE!' : `🚨 Fabricio: "${lado}!"`;
       kit.msg(ev, '#f9a8d4');
+      fab.setSpeaking(true);
+      fab.setExpression('feliz');
       if (rodadas === 4) {
         capivara.visible = true;
         capT = 0;
-        if (root.LuiggiSave) root.LuiggiSave.incrementarContador('capivarasDesviadas', 1);
+        root.LuiggiSave?.incrementarContador('capivarasDesviadas', 1);
       }
       if (rodadas === 2) {
         kit.sfx('radar');
         stage.pulseGrade('flash', 1, 0.7, 0);
-        if (root.LuiggiSave) root.LuiggiSave.incrementarContador('radaresPegos', 1);
+        root.LuiggiSave?.incrementarContador('radaresPegos', 1);
       }
-      driftAlvo = lado === 'ESQUERDA' ? 0.55 : -0.55;
+      driftAlvo = lado === 'ESQUERDA' ? 0.28 : -0.28;
+      empurrao = lado === 'ESQUERDA' ? -1 : 1;
+      separacao = 0.55;
       janela = 3;
       aguardando = true;
     }
@@ -404,25 +411,39 @@
     function responder(dir) {
       if (!aguardando || kit.terminado) return;
       aguardando = false;
+      fab.setSpeaking(false);
       const correto = (lado === 'ESQUERDA' && dir === 'DIREITA') || (lado === 'DIREITA' && dir === 'ESQUERDA');
+      const meio = luis.group.getWorldPosition(new THREE.Vector3()).lerp(sol.group.getWorldPosition(new THREE.Vector3()), 0.5).add(new THREE.Vector3(0, 0.95, 0));
       if (correto) {
         combo++;
         medidor = Math.min(100, medidor + 12);
+        separacao = 0.12;
         kit.sfx('forno');
-        kit.pop(combo >= 3 ? `COMBO x${combo}! 💋` : 'ALINHADO! 💋', sub.position.clone().add(new THREE.Vector3(0, 1.8, 0)), '#f472b6');
-        coracoes.burst(20, sub.position.clone().add(new THREE.Vector3(0, 1.4, 0)), 2);
+        kit.pop(combo >= 3 ? `COMBO x${combo}! 💋` : 'ALINHADO! 💋', meio, '#f472b6');
+        coracoes.burst(20, meio, 0.8);
+        luis.setExpression('feliz');
+        sol.setExpression('feliz');
       } else {
         combo = 0;
         tecs++;
         medidor = Math.max(0, medidor - 10);
+        separacao = 0.05;
         kit.sfx('bruh');
-        kit.pop('*TEC* 🦷', sub.position.clone().add(new THREE.Vector3(0, 1.8, 0)), '#f87171');
-        stage.shake(0.2, 6);
+        kit.pop('*TEC* 🦷', meio, '#f87171');
+        stage.shake(0.05, 8);
+        luis.setExpression('chocado');
+        sol.setExpression('chocado');
       }
       driftAlvo = 0;
+      empurrao = 0;
       rodadas--;
       hud();
-      kit.timeout(proxima, 1100);
+      kit.timeout(() => {
+        separacao = 0.32;
+        luis.setExpression('neutro');
+        sol.setExpression('neutro');
+        proxima();
+      }, 1100);
     }
 
     kit.tecla((e) => {
@@ -434,17 +455,23 @@
       { label: 'Compensar Direita ➡', tecla: '→', onClick: () => responder('DIREITA') }
     ]);
 
+    let drift = 0;
+    let inercia = 0;
+    const camLocal = new THREE.Vector3(...env.cam.pos);
+    const lookLocal = new THREE.Vector3(...env.cam.look);
     kit.loop((dt, t) => {
-      estradaTex.offset.y -= dt * 2.2;
-      drift = U().damp(drift, driftAlvo, 3, dt);
-      sub.rotation.y = Math.PI + drift;
-      sub.position.x = U().damp(sub.position.x, -drift * 2.2, 2, dt);
-      sub.userData.wheels.forEach((w) => (w.rotation.x -= dt * 20));
-      if (Math.abs(drift) > 0.15) {
-        [-0.8, 0.8].forEach((x) => fumaca.emit(1, sub.localToWorld(new THREE.Vector3(x, 0.2, -1.4)), () => ({ x: U().rand(-0.5, 0.5), y: U().rand(0.3, 0.8), z: 3 })));
-      }
-      cam.position.set(sub.position.x * 0.6 + Math.sin(t * 0.5) * 0.3, 2.6, 6.2);
-      cam.lookAt(sub.position.x * 0.5, 0.9, -3);
+      drift = U().damp(drift, driftAlvo, 2.5, dt);
+      env.drift = drift;
+      // Câmera presa ao carro: o mundo lá fora gira no drift
+      env.ancora.updateMatrixWorld();
+      stage.camera.position.copy(env.ancora.localToWorld(camLocal.clone()));
+      stage.camera.lookAt(env.ancora.localToWorld(lookLocal.clone()));
+      inercia = U().damp(inercia, empurrao * 0.12, 4, dt);
+      const centro = (baseLuis.x + baseSol.x) / 2;
+      luis.group.position.x = U().damp(luis.group.position.x, centro - separacao / 2 + inercia, 8, dt);
+      sol.group.position.x = U().damp(sol.group.position.x, centro + separacao / 2 + inercia, 8, dt);
+      luis.group.position.y = baseLuis.y + Math.abs(Math.sin(t * 6)) * 0.01;
+      sol.group.position.y = baseSol.y + Math.abs(Math.sin(t * 6 + 1)) * 0.01;
       if (aguardando) {
         janela -= dt;
         kit.medidor('tempo', 'Tempo para compensar', Math.max(0, janela / 3), { cor: '#a855f7' });
@@ -452,16 +479,16 @@
       }
       if (capT >= 0) {
         capT += dt;
-        capivara.position.set(-8 + capT * 7, 2.2 + Math.sin(capT * 6) * 0.3, -2.5);
-        capivara.rotation.y = Math.PI / 2;
+        capivara.position.set(2.2 - capT * 2.2, 1.2 + Math.sin(capT * 6) * 0.15, 0.7);
+        capivara.rotation.y = -Math.PI / 2;
         capivara.children.forEach((c) => (c.name === 'asaE' || c.name === 'asaD') && (c.rotation.x = Math.sin(t * 20) * 0.6));
-        if (capT > 2.4) {
+        if (capT > 2.2) {
           capivara.visible = false;
           capT = -1;
         }
       }
     });
-    kit.intro('Sonho lúcido: o Fabricio dirige o Subaru com a CNH de giz de cera. Quando ele gritar o lado da curva, <b>compense para o lado oposto</b> e alinhe o beijo!', ['⌨️ ← →', '🖱️ Botões']).then(proxima);
+    kit.intro('Sonho lúcido: o Fabricio dirige o Subaru com a CNH de giz de cera, e você está no banco de trás com a Sol. Quando ele gritar o lado da curva, <b>compense para o lado oposto</b> e mantenha o beijo alinhado!', ['⌨️ ← →', '🖱️ Botões']).then(proxima);
     return kit.promessa;
   }
 

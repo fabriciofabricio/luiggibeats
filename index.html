@@ -26,11 +26,12 @@
       <div id="vn-day-hud" class="vn-day-hud"></div>
       <div id="vn-cast-layer" class="vn-cast-layer"></div>
       <div id="vn-hotspots" class="vn-hotspots"></div>
+      <div id="lower-third" class="lower-third"></div>
 
       <div id="dialogue-overlay" class="dialogue-overlay hidden">
         <div id="dialogue-portrait" class="dialogue-portrait"></div>
-        <div>
-          <div id="dialogue-name" class="dialogue-name"></div>
+        <div class="dialogue-main">
+          <div class="dialogue-head"><span id="dialogue-name" class="dialogue-name"></span><span id="dialogue-tag" class="dialogue-tag"></span></div>
           <div id="dialogue-text" class="dialogue-text"></div>
         </div>
         <button id="dialogue-next" class="mg-btn primary">▶</button>
@@ -50,7 +51,7 @@
     </div>
   </div>
 
-  <div id="chapter-intro-overlay" class="chapter-intro hidden"></div>
+  <div id="fade-overlay" class="fade-overlay"></div>
 
   <div id="convergence-overlay" class="convergence-overlay hidden">
     <div id="convergence-content" class="convergence-content"></div>

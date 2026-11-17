@@ -708,7 +708,7 @@
   };
 
   // ---------- QUARTO-ESTÚDIO (Cap. 2 · Pandemia) ----------
-  BUILDERS.quarto_estudio = () => {
+  BUILDERS.quarto_estudio = (o = {}) => {
     const THREE = T();
     const { box, cyl, plane, M, textures, createParticles, halo, neonSign } = L();
     const g = new THREE.Group();
@@ -788,10 +788,12 @@
       caixas,
       slots: { L: [-1.4, 0, 0.2], R: [1.4, 0, 0.2], C: [0, 0, 0.2] },
       cam: { pos: [0, 1.7, 5.4], look: [0, 1.5, -0.5] },
-      bg: 0x07060d,
-      fog: [0x0c0a18, 0.04],
-      luz: { sky: '#6d5bd0', ground: '#140f24', hemi: 0.5, key: '#8b9cff', keyI: 0.5, keyPos: [-3, 8, 6] },
-      grade: { tint: [0.98, 0.94, 1.08], saturation: 1.15, bloom: 1.0 },
+      bg: o.dia ? 0x6b7a99 : 0x07060d,
+      fog: [o.dia ? 0x8a93ab : 0x0c0a18, o.dia ? 0.02 : 0.04],
+      luz: o.dia
+        ? { sky: '#e7eeff', ground: '#4b5563', hemi: 1.3, key: '#fff3dc', keyI: 1.8, keyPos: [6, 8, -3], fillI: 0.7 }
+        : { sky: '#6d5bd0', ground: '#140f24', hemi: 0.5, key: '#8b9cff', keyI: 0.5, keyPos: [-3, 8, 6] },
+      grade: o.dia ? { tint: [1.02, 1.0, 1.0], saturation: 1.05, bloom: 0.6 } : { tint: [0.98, 0.94, 1.08], saturation: 1.15, bloom: 1.0 },
       update(dt, t) {
         chuva.update(dt);
         const b = Math.pow(Math.max(0, Math.sin(t * Math.PI * 2 * (140 / 60 / 2))), 8);
@@ -967,6 +969,14 @@
     // Postes de luz de sódio
     for (let i = 0; i < 5; i++) poste(g, -6.2, 4 - i * 12, '#ff9d3c', { lado: 1, altura: 5.2, intensidade: 16 });
     for (let i = 0; i < 4; i++) poste(g, 6.2, -2 - i * 12, '#ff9d3c', { lado: -1, altura: 5.2, intensidade: 16 });
+    if (o.yard) {
+      const fachada = L().neonSign('YARD', '#a3e635', 3, 1.1, { size: 220, font: '"Arial Black", sans-serif' });
+      fachada.position.set(-10.9, 3.6, -4);
+      fachada.rotation.y = Math.PI / 2;
+      g.add(fachada);
+      const fila = multidao(g, 10, [-9.4, -8.2, -7, -1], ['#111827', '#7c3aed', '#be185d', '#0f766e']);
+      g.userData.fila = fila;
+    }
     // Subaru estacionado
     const sub = createSubaruMesh(root.LuiggiSave?.state?.subaruMods?.cor || '#1245A8', false);
     sub.position.set(-4.3, 0, -9);
@@ -1000,6 +1010,7 @@
       grade: { tint: [1.06, 0.95, 0.9], saturation: 1.05, contrast: 1.08, bloom: 1.1, vignette: 0.75 },
       update(dt, t) {
         if (o.garoa !== false) garoa.update(dt);
+        if (g.userData.fila) g.userData.fila.update(t, 0.4);
         amarelo.visible = Math.floor(t * 1.4) % 2 === 0;
       }
     };
@@ -1448,7 +1459,7 @@
   };
 
   // ---------- BALADA YARD / JAMES (Cap. 14) ----------
-  BUILDERS.balada = () => {
+  BUILDERS.balada = (o = {}) => {
     const THREE = T();
     const { box, plane, M, textures, neonSign, createParticles } = L();
     const g = new THREE.Group();
@@ -1473,10 +1484,10 @@
     g.add(box(6, 1.1, 0.9, M.std('#111827', 0.3, 0.5), -7, 0.55, -2));
     g.add(box(6, 0.04, 0.9, M.glow('#ec4899', 2), -7, 1.12, -2, { cast: false }));
     g.add(box(4, 0.5, 1.4, M.std('#4c1d95', 0.9), 7, 0.4, -4));
-    const neon = neonSign('YARD', '#a3e635', 2.6, 1, { size: 200, font: '"Arial Black", sans-serif' });
+    const neon = neonSign(o.kpop ? 'K-POP' : 'YARD', o.kpop ? '#f472b6' : '#a3e635', 2.6, 1, { size: 200, font: '"Arial Black", sans-serif' });
     neon.position.set(-7, 3.2, -7.85);
     g.add(neon);
-    const neon2 = neonSign('JAMES', '#ec4899', 2.6, 1, { size: 200, font: '"Arial Black", sans-serif' });
+    const neon2 = neonSign(o.kpop ? '♥ LIGHTSTICK ♥' : 'JAMES', o.kpop ? '#a78bfa' : '#ec4899', 2.6, 1, { size: o.kpop ? 120 : 200, font: '"Arial Black", sans-serif' });
     neon2.position.set(7, 3.2, -7.85);
     g.add(neon2);
     const povo = multidao(g, 50, [-8, 8, -6, -2.2], ['#0f172a', '#831843', '#164e63', '#3f6212', '#1e1b4b']);
@@ -1534,6 +1545,33 @@
     const THREE = T();
     const { box, plane, M, textures, createSubaruMesh, createParticles, addHeadlights } = L();
     const g = new THREE.Group();
+    // Com a foto real do Safepoint (servidor local): cenário 2.5D com a foto ao fundo
+    const foto = fotoPanorama(g, FOTO_SAFEPOINT, { raio: o.raio || 16, arco: Math.PI * 0.7, corte: 0.22, brilho: o.brilhoFoto ?? 0.95 });
+    if (foto) {
+      ceu(g, [[0, '#6ea8e8'], [0.6, '#bcd8f5'], [1, '#e8f1fa']], 140);
+      const asfalto = plane(40, 40, M.std('#ffffff', 0.85, 0.05, { map: textures.asphalt(8, 8, { lines: false, base: '#4b4f57' }) }), 0, -0.005, 4);
+      asfalto.rotation.x = -Math.PI / 2;
+      g.add(asfalto);
+      let sub = null;
+      if (!o.semSubaru) {
+        sub = createSubaruMesh(root.LuiggiSave?.state?.subaruMods?.cor || '#1245A8', !!root.LuiggiSave?.state?.subaruMods?.neon);
+        sub.position.set(0, 0, -3.2);
+        sub.rotation.y = o.rotSubaru ?? Math.PI * 0.82;
+        g.add(sub);
+      }
+      return {
+        group: g,
+        subaru: sub,
+        foto: true,
+        slots: { L: [-1.5, 0, 0.8], R: [1.5, 0, 0.8], C: [0, 0, 0.8] },
+        cam: { pos: [5.5, 2.0, 5], look: [0, 0.9, -3] },
+        bg: 0xbcd8f5,
+        fog: null,
+        luz: { sky: '#e0efff', ground: '#6b6256', hemi: 1.3, key: '#fff4e0', keyI: 2.4, keyPos: [8, 14, 6], fillI: 0.6 },
+        grade: { tint: [1.02, 1.0, 0.98], saturation: 1.05, bloom: 0.45, vignette: 0.55, threshold: 1.3 },
+        update() { }
+      };
+    }
     ceu(g, [
       [0, '#020410'],
       [0.5, '#0b1230'],
@@ -1577,6 +1615,249 @@
         bokeh.update(dt);
       }
     };
+  };
+
+  // ---------- FOTO DO SAFEPOINT COMO CENÁRIO 2.5D ----------
+  const FOTO_SAFEPOINT = 'assets/Cenarios/safe point para chilling/Screenshot 2026-11-17 012957.png';
+
+  /**
+   * Pano de fundo com a foto real: a parte de cima (fachada) vira um painel curvo e a faixa de baixo
+   * (calçada/rua) vira chão em perspectiva, o que dá profundidade quando a câmera se move.
+   * Retorna null quando imagens locais não podem virar textura (abrindo via file://).
+   */
+  function fotoPanorama(g, url, o = {}) {
+    if (!L().canUseImageTextures()) return null;
+    const THREE = T();
+    const raio = o.raio || 16;
+    const arco = o.arco || Math.PI * 0.62;
+    const aspecto = o.aspecto || 705 / 521;
+    const largura = raio * arco;
+    const altura = largura / aspecto;
+    const corte = o.corte ?? 0.2; // fração de baixo da foto usada como chão
+    const tex = new THREE.TextureLoader().load(encodeURI(url));
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 4;
+    const texChao = new THREE.TextureLoader().load(encodeURI(url));
+    texChao.colorSpace = THREE.SRGBColorSpace;
+    tex.repeat.set(1, 1 - corte);
+    tex.offset.set(0, corte);
+    texChao.repeat.set(1, corte);
+    texChao.offset.set(0, 0);
+    const brilho = o.brilho ?? 1;
+    // Fachada curva
+    const geo = new THREE.CylinderGeometry(raio, raio, altura * (1 - corte), 48, 1, true, Math.PI - arco / 2 + (o.giro || 0), arco);
+    const fachada = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide, color: new THREE.Color(brilho, brilho, brilho), fog: false }));
+    fachada.position.y = (altura * (1 - corte)) / 2 + (o.y || 0);
+    fachada.scale.x = -1; // a câmera vê a foto pelo lado de dentro sem espelhar
+    fachada.userData.noOutline = true;
+    g.add(fachada);
+    // Chão (calçada/rua da foto) em perspectiva até perto da câmera
+    const profundidade = o.chao || raio * 0.55;
+    const pts = [];
+    const uvs = [];
+    const idx = [];
+    const seg = 32;
+    for (let i = 0; i <= seg; i++) {
+      const a = Math.PI - arco / 2 + (o.giro || 0) + (arco * i) / seg;
+      const fx = Math.sin(a) * raio;
+      const fz = Math.cos(a) * raio;
+      const nx = Math.sin(a) * (raio - profundidade);
+      const nz = Math.cos(a) * (raio - profundidade);
+      pts.push(-fx, (o.y || 0) + 0.01, fz, -nx, (o.y || 0) + 0.01, nz);
+      uvs.push(i / seg, 1, i / seg, 0);
+      if (i < seg) {
+        const k = i * 2;
+        idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2);
+      }
+    }
+    const geoChao = new THREE.BufferGeometry();
+    geoChao.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+    geoChao.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    geoChao.setIndex(idx);
+    const chao = new THREE.Mesh(geoChao, new THREE.MeshBasicMaterial({ map: texChao, side: THREE.DoubleSide, color: new THREE.Color(brilho, brilho, brilho), fog: false }));
+    chao.userData.noOutline = true;
+    g.add(chao);
+    return { fachada, chao, tex };
+  }
+
+  // ---------- INTERIOR DO SUBARU (cenas de história dentro do carro) ----------
+  function interiorSubaru(g) {
+    const THREE = T();
+    const carro = new THREE.Group();
+    g.add(carro);
+    const pov = root.LuiggiSubaruPOV?.construirInterior?.({ estatico: true });
+    if (pov) carro.add(pov.group);
+    return { carro, pov };
+  }
+
+  const ASSENTOS_SUBARU = {
+    L: [-0.42, 0.3, 0.1],
+    R: [0.42, 0.3, 0.1],
+    TL: [-0.4, 0.32, 1.12],
+    TR: [0.4, 0.32, 1.12],
+    TC: [0.02, 0.32, 1.12],
+    FORA: [1.75, -0.35, 0.2]
+  };
+
+  BUILDERS.subaru_noite = (o = {}) => {
+    const THREE = T();
+    const { M, plane, textures, box, halo } = L();
+    const g = new THREE.Group();
+    const dia = !!o.dia;
+    const { carro } = interiorSubaru(g);
+    // Rua passando pelas janelas
+    const rua = plane(16, 400, M.std('#ffffff', 0.6, 0.1, { map: textures.asphalt(2, 60) }), 0, -0.25, -150);
+    rua.rotation.x = -Math.PI / 2;
+    g.add(rua);
+    const postes = [];
+    for (let i = 0; i < 12; i++) {
+      const pg = new THREE.Group();
+      [-1, 1].forEach((s) => {
+        pg.add(box(0.12, 5, 0.12, M.std('#2d3340', 0.6, 0.6), s * 5, 2.2, 0));
+        pg.add(box(0.5, 0.12, 0.25, M.glow(dia ? '#e5e7eb' : '#ffb35c', dia ? 0.6 : 3), s * 4.5, 4.6, 0, { cast: false }));
+        if (!dia) {
+          const h = halo('#ffb35c', 2.2, 1.0);
+          h.position.set(s * 4.5, 4.4, 0);
+          pg.add(h);
+        }
+      });
+      pg.position.z = -i * 14;
+      g.add(pg);
+      postes.push(pg);
+    }
+    const predios = new THREE.Group();
+    g.add(predios);
+    cidade(predios, { n: 50, linha: [-200, 200], z: -60, prof: 20, hMin: 8, hMax: 30, lit: dia ? 0.05 : 0.35 });
+    if (dia) ceu(g, [[0, '#7cb7ff'], [0.6, '#cfe6ff'], [1, '#f1f5f9']]);
+    const luzInterna = new THREE.PointLight(dia ? '#ffffff' : '#7aa2ff', dia ? 2 : 1.4, 3, 1.4);
+    luzInterna.position.set(0, 1.4, 0.4);
+    g.add(luzInterna);
+    return {
+      group: g,
+      ancora: carro,
+      assentos: ASSENTOS_SUBARU,
+      slots: { L: ASSENTOS_SUBARU.L, R: ASSENTOS_SUBARU.R, C: ASSENTOS_SUBARU.TC },
+      alturaCarta: 1.05,
+      cam: { pos: [0.05, 1.4, -0.84], look: [-0.02, 0.98, 0.9] },
+      fov: 62,
+      camRaio: 0.35,
+      bg: dia ? 0xbfdcff : 0x05070f,
+      fog: [dia ? 0xd7e7ff : 0x0a0f1f, dia ? 0.012 : 0.03],
+      luz: dia
+        ? { sky: '#ffffff', ground: '#8a8a8a', hemi: 1.4, key: '#fff6e0', keyI: 2.2, keyPos: [6, 12, -4], fillI: 0.7 }
+        : { sky: '#4a5a9a', ground: '#111', hemi: 0.6, key: '#ffb35c', keyI: 0.6, keyPos: [-4, 6, -6], fillI: 0.55, fill: '#9fb4ff' },
+      grade: dia ? { exposure: 1.05, saturation: 1.05 } : { tint: [0.98, 0.98, 1.06], vignette: 0.75, bloom: 1.0 },
+      update(dt, t) {
+        if (o.parado) return;
+        postes.forEach((p) => {
+          p.position.z += dt * 16;
+          if (p.position.z > 10) p.position.z -= 12 * 14;
+        });
+        carro.position.y = Math.sin(t * 9) * 0.004;
+        carro.rotation.z = Math.sin(t * 0.7) * 0.004;
+      }
+    };
+  };
+
+  BUILDERS.subaru_sonho = () => {
+    const THREE = T();
+    const { M, sphere, createParticles, plane, textures, createCapybaraMesh } = L();
+    const g = new THREE.Group();
+    ceu(g, [[0, '#1e1b4b'], [0.35, '#7e22ce'], [0.6, '#f472b6'], [0.8, '#fdba74'], [1, '#fde68a']]);
+    estrelas(g, 400, 100, '#ffffff', 0.25);
+    g.add(sphere(8, M.glow('#fff1f2', 1.4), -30, 30, -80, 32));
+    // Estrada flutuante dos sonhos sob o carro
+    const estradaTex = textures.asphalt(1, 40, { base: '#3b2b6b' });
+    const estrada = plane(7, 300, M.std('#ffffff', 0.4, 0.2, { map: estradaTex, emissive: '#7c3aed', emissiveIntensity: 0.2 }), 0, -0.3, -120);
+    estrada.rotation.x = -Math.PI / 2;
+    g.add(estrada);
+    const nuvens = [];
+    for (let i = 0; i < 26; i++) {
+      const n = new THREE.Group();
+      for (let k = 0; k < 4; k++) n.add(sphere(1 + Math.random() * 1.2, M.toon('#fdf4ff', { emissive: '#f5d0fe', emissiveIntensity: 0.35 }), k * 1.4, Math.random() * 0.6, Math.random() * 0.8, 10));
+      n.position.set((Math.random() < 0.5 ? -1 : 1) * (5 + Math.random() * 18), -3 + Math.random() * 9, -Math.random() * 120);
+      g.add(n);
+      nuvens.push(n);
+    }
+    const capivaras = [];
+    for (let i = 0; i < 3; i++) {
+      const c = createCapybaraMesh();
+      c.scale.setScalar(0.8);
+      c.position.set((i % 2 ? 1 : -1) * (6 + i * 3), 3 + i * 2, -20 - i * 25);
+      c.rotation.y = Math.PI / 2;
+      g.add(c);
+      capivaras.push(c);
+    }
+    const { carro, pov } = interiorSubaru(g);
+    // No sonho ninguém senta no banco do passageiro: some com ele para enxergar Luis e Sol atrás
+    pov?.group.children.forEach((c) => {
+      if (c.type === 'Group' && Math.abs(c.position.x - 0.42) < 0.01) c.visible = false;
+    });
+    const brilhos = createParticles({ count: 160, size: 0.12, shape: 'spark', colors: ['#fde68a', '#f9a8d4', '#c4b5fd'], intensity: 2, ambient: { center: [0, 2, -10], size: [20, 8, 30], vel: [[-0.1, 0.05, 1], [0.1, 0.3, 3]] }, life: [3, 6] });
+    g.add(brilhos.points);
+    const luzRosa = new THREE.PointLight('#f9a8d4', 2.4, 4, 1.3);
+    luzRosa.position.set(0, 1.4, 0.6);
+    g.add(luzRosa);
+    return {
+      group: g,
+      ancora: carro,
+      assentos: ASSENTOS_SUBARU,
+      slots: { L: ASSENTOS_SUBARU.L, R: ASSENTOS_SUBARU.TR, C: ASSENTOS_SUBARU.TL },
+      alturaCarta: 1.05,
+      cam: { pos: [0.08, 1.42, -0.84], look: [-0.1, 0.98, 0.95] },
+      fov: 64,
+      camRaio: 0.35,
+      bg: 0x7e22ce,
+      fog: [0xd8b4fe, 0.01],
+      luz: { sky: '#fbcfe8', ground: '#6d28d9', hemi: 1.3, key: '#fff1f2', keyI: 1.4, keyPos: [-8, 12, 6], fillI: 0.7, fill: '#f5d0fe' },
+      grade: { tint: [1.05, 0.95, 1.08], saturation: 1.2, bloom: 1.1, aberration: 0.25, lift: [0.04, 0.0, 0.06] },
+      drift: 0,
+      update(dt, t) {
+        estradaTex.offset.y -= dt * 2.4;
+        brilhos.update(dt);
+        nuvens.forEach((n) => {
+          n.position.z += dt * 14;
+          if (n.position.z > 12) n.position.z -= 130;
+        });
+        capivaras.forEach((c, i) => {
+          c.position.z += dt * (9 + i);
+          c.position.y += Math.sin(t * 2 + i) * 0.01;
+          if (c.position.z > 15) c.position.z -= 90;
+          c.children.forEach((w) => (w.name === 'asaE' || w.name === 'asaD') && (w.rotation.x = Math.sin(t * 16 + i) * 0.6));
+        });
+        // Balanço do drift dos sonhos
+        const d = this.drift || 0;
+        carro.rotation.y = Math.sin(t * 0.5) * 0.05 + d;
+        carro.rotation.z = Math.sin(t * 0.8) * 0.02 - d * 0.3;
+        carro.position.y = Math.sin(t * 1.3) * 0.03;
+      }
+    };
+  };
+
+  BUILDERS.subaru_fora = () => {
+    // Subaru estacionado na frente da academia, à noite, balançando com os vidros embaçados (Cap. 4)
+    const env = BUILDERS.centro_noite({ garoa: false });
+    const sub = env.subaru;
+    sub.position.set(0.6, 0, -1.5);
+    sub.rotation.y = -0.5;
+    sub.traverse((m) => {
+      if (m.isMesh && m.material && m.material.transparent && m.material.opacity > 0.8 && m.material.opacity < 0.95) {
+        m.material = m.material.clone();
+        m.material.color.set('#d7dde8');
+        m.material.opacity = 0.92;
+        m.material.roughness = 0.9;
+      }
+    });
+    const base = env.update;
+    env.cam = { pos: [3.6, 1.8, 4.6], look: [0.4, 0.8, -1.5] };
+    env.slots = { L: [-6, 0, 6], R: [6, 0, 6], C: [0, 0, 8] };
+    env.semElenco = true;
+    env.update = function (dt, t) {
+      base.call(env, dt, t);
+      sub.rotation.z = Math.sin(t * 7) * 0.025;
+      sub.position.y = Math.abs(Math.sin(t * 7)) * 0.03;
+    };
+    return env;
   };
 
   // ------------------------------------------------------------------

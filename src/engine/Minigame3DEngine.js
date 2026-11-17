@@ -2086,7 +2086,7 @@
       if (expr === state.expr && state.ready) return;
       state.expr = expr;
       aplicarTextura(expr);
-      mostrarEmote(expr);
+      if (o.emotes !== false) mostrarEmote(expr);
       state.pulse = 1;
     }
 
@@ -2112,7 +2112,9 @@
       if (camera) {
         const camPos = camera.position;
         const wp = group.getWorldPosition(new THREE.Vector3());
-        pivot.rotation.y = Math.atan2(camPos.x - wp.x, camPos.z - wp.z) - group.rotation.y;
+        // Compensa a rotação de todos os "pais" (ex.: carta dentro do Subaru que está derrapando)
+        const yawPai = new THREE.Euler().setFromQuaternion(group.getWorldQuaternion(new THREE.Quaternion()), 'YXZ').y;
+        pivot.rotation.y = Math.atan2(camPos.x - wp.x, camPos.z - wp.z) - yawPai;
       }
       const alvo = state.dim ? 0.55 : 1;
       const cur = mat.color.r / Math.max(0.001, state.tint.r);

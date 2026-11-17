@@ -1196,7 +1196,8 @@ window.__LUIGGI_PERSONAGENS__ = {
         "id": "acelerar_chave",
         "nome": "Chave do Civic",
         "descricao": "Gira a chave do Civic tunado desafiando pro racha."
-      }
+      },
+      "spriteCartoon": "assets/sprites/emily/cartoon.png"
     },
     {
       "id": "sol",
@@ -1208,94 +1209,6 @@ window.__LUIGGI_PERSONAGENS__ = {
       "temFoto": true,
       "fotos": [
         "assets/Sol/Screenshot 2026-11-17 011041.png"
-      ],
-      "suposicoes": [
-        "alturaRelativa",
-        "tipoCorpo",
-        "pecaInferior"
-      ],
-      "fichaVisual": {
-        "tomPele": "#E4B89E",
-        "sombreamentoPele": "#C4957A",
-        "cabelo": {
-          "cor": "#1E1918",
-          "corMecha": null,
-          "comprimento": "médio-longo",
-          "textura": "liso volumoso",
-          "penteado": "solto jogado para trás",
-          "franja": "sem franja",
-          "estilo": "longo_liso"
-        },
-        "rosto": {
-          "formato": "oval_marcante",
-          "olhos": {
-            "cor": "#3D2B24",
-            "formato": "amendoado",
-            "delineado": true
-          },
-          "sobrancelhas": {
-            "cor": "#E4D2BA",
-            "espessura": "fina",
-            "estilo": "descolorida"
-          },
-          "nariz": "arredondado",
-          "sorriso": "expressivo"
-        },
-        "detalhes": {
-          "barbaBigode": "nenhuma",
-          "oculos": {
-            "tipo": "retangular_fino",
-            "corArmacao": "#18181D",
-            "lenteTinta": "#C9A9C9"
-          },
-          "piercings": [
-            "piercing discreto no septo",
-            "argolas prata"
-          ],
-          "alargadores": false,
-          "tatuagens": [
-            "tatuagem pequena no braço direito"
-          ],
-          "maquiagem": "sobrancelhas descoloridas e gloss rosado (#D1797D)"
-        },
-        "corpo": {
-          "alturaRelativa": 3,
-          "tipoCorpo": "medio_magro"
-        },
-        "roupa": {
-          "estilo": "alternativo / Y2K",
-          "paletaCores": [
-            "#18181B",
-            "#C9A9C9",
-            "#D1D5DB"
-          ],
-          "pecaSuperior": "camiseta preta básica",
-          "pecaInferior": "calça neutra (suposição)",
-          "acessorios": [
-            "óculos retangular com lente levemente lilás",
-            "correntinha prata"
-          ]
-        }
-      },
-      "animacaoEspecial": {
-        "id": "pose_radar",
-        "nome": "Pose pro Radar",
-        "descricao": "Abaixa os óculos e faz pose dramática no banco de trás."
-      }
-    },
-    {
-      "id": "eloiza",
-      "nome": "Eloiza",
-      "apelido": "Eloiza",
-      "papel": "Namorada da era gótica e dos 'tempos'",
-      "capituloPrimeiraAparicao": 12,
-      "fraseMarcante": "Vou parar com isso.",
-      "temFoto": true,
-      "fotos": [
-        "assets/Eloiza/Screenshot 2026-11-17 011849.png"
-      ],
-      "suposicoes": [
-        "pecaInferior"
       ],
       "fichaVisual": {
         "tomPele": "#F7E3DA",
@@ -1353,6 +1266,81 @@ window.__LUIGGI_PERSONAGENS__ = {
           "pecaInferior": "saia ou calça preta",
           "acessorios": [
             "colar/terço preto com pingentes de morcego e pentagrama",
+            "celular trancado"
+          ]
+        }
+      },
+      "animacaoEspecial": {
+        "id": "cruzar_bracos",
+        "nome": "Cruzar os Braços",
+        "descricao": "Cruza os braços com olhar gótico penetrante e bandeirinha vermelha piscando."
+      },
+      "spriteCartoon": "assets/sprites/sol/cartoon.png"
+    },
+    {
+      "id": "eloiza",
+      "nome": "Eloiza",
+      "apelido": "Eloiza",
+      "papel": "Namorada da era gótica e dos 'tempos'",
+      "capituloPrimeiraAparicao": 12,
+      "fraseMarcante": "Vou parar com isso.",
+      "temFoto": true,
+      "fotos": [
+        "assets/Eloiza/Screenshot 2026-11-17 011849.png"
+      ],
+      "suposicoes": [
+        "pecaInferior"
+      ],
+      "fichaVisual": {
+        "tomPele": "#F3D2C1",
+        "sombreamentoPele": "#D9B3A1",
+        "cabelo": {
+          "cor": "#1D1513",
+          "corMecha": null,
+          "comprimento": "longo",
+          "textura": "liso",
+          "penteado": "solto, longo, com franja reta cheia",
+          "franja": "reta cheia na altura das sobrancelhas",
+          "estilo": "longo_liso_franja"
+        },
+        "rosto": {
+          "formato": "oval",
+          "olhos": {
+            "cor": "#3A2621",
+            "formato": "amendoado",
+            "delineado": true
+          },
+          "sobrancelhas": {
+            "cor": "#2A1D1A",
+            "espessura": "media",
+            "estilo": "natural"
+          },
+          "nariz": "pequeno",
+          "sorriso": "discreto"
+        },
+        "detalhes": {
+          "barbaBigode": "nenhuma",
+          "oculos": null,
+          "piercings": [],
+          "alargadores": false,
+          "tatuagens": [],
+          "maquiagem": "delineado gatinho marcado, blush rosado e gloss rosa (#D4707C)"
+        },
+        "corpo": {
+          "alturaRelativa": 2,
+          "tipoCorpo": "medio_magro"
+        },
+        "roupa": {
+          "estilo": "noite / alternativo",
+          "paletaCores": [
+            "#141416",
+            "#D4707C",
+            "#1D1513"
+          ],
+          "pecaSuperior": "top preto tomara-que-caia",
+          "pecaInferior": "calça escura (suposição)",
+          "acessorios": [
+            "choker preto fino",
             "celular trancado"
           ]
         }

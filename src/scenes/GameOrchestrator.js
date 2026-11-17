@@ -63,51 +63,26 @@
     return ok;
   }
 
-  // Abertura do capítulo: foto real do lugar com título, enquanto o cenário 3D é montado por trás
-  function mostrarAberturaCapitulo(cap) {
-    return new Promise((resolve) => {
-      const ov = document.getElementById('chapter-intro-overlay');
-      if (!ov) return resolve();
-      const pal = cap.paleta || { accent: '#f59e0b' };
-      ov.style.setProperty('--accent', pal.accent || '#f59e0b');
-      ov.innerHTML = `
-        <div class="ci-photo" style="${cap.cenarioImagem ? `background-image:url('${encodeURI(cap.cenarioImagem)}')` : ''}"></div>
-        <div class="ci-shade"></div>
-        <div class="ci-content">
-          <div class="ci-kicker">${cap.codigo}</div>
-          <h1 class="ci-title">${cap.titulo}</h1>
-          <div class="ci-era">${cap.era}</div>
-          <div class="ci-vibe">${VIBE_POR_CAPITULO[cap.id] || ''}</div>
-        </div>
-        <div class="ci-skip">clique ou espaço para pular</div>`;
-      ov.classList.remove('hidden', 'saindo');
-      void ov.offsetWidth;
-      ov.classList.add('entrando');
-      let feito = false;
-      const fim = () => {
-        if (feito) return;
-        feito = true;
-        clearTimeout(t);
-        window.removeEventListener('keydown', onKey);
-        ov.removeEventListener('click', fim);
-        ov.classList.add('saindo');
-        setTimeout(() => {
-          ov.classList.add('hidden');
-          ov.classList.remove('entrando', 'saindo');
-          ov.innerHTML = '';
-        }, 750);
-        resolve();
-      };
-      const onKey = (e) => {
-        if (e.code === 'Space' || e.code === 'Enter' || e.code === 'Escape') {
-          e.preventDefault();
-          fim();
-        }
-      };
-      const t = setTimeout(fim, 3600);
-      ov.addEventListener('click', fim);
-      window.addEventListener('keydown', onKey);
-    });
+  // Legenda discreta no canto (lower third): título do capítulo ou nome do lugar.
+  let legendaTimer = null;
+  function mostrarLegenda(titulo, sub = '', o = {}) {
+    const el = document.getElementById('lower-third');
+    if (!el) return;
+    clearTimeout(legendaTimer);
+    el.innerHTML = `${o.kicker ? `<div class="lt-kicker">${o.kicker}</div>` : ''}<div class="lt-title">${titulo}</div>${sub ? `<div class="lt-sub">${sub}</div>` : ''}`;
+    el.classList.toggle('lt-capitulo', !!o.kicker);
+    el.classList.remove('show');
+    void el.offsetWidth;
+    el.classList.add('show');
+    legendaTimer = setTimeout(() => el.classList.remove('show'), o.duracao || 3600);
+  }
+
+  // Transição suave (fade) entre história e minigames
+  function transicao(entrar = true, ms = 380) {
+    const f = document.getElementById('fade-overlay');
+    if (!f) return Promise.resolve();
+    f.classList.toggle('on', entrar);
+    return new Promise((r) => setTimeout(r, ms));
   }
 
   function configurarCenarioDatingSim(cap) {
@@ -118,7 +93,8 @@
     const data = root.LuiggiData.cache;
 
     const usa3D = !!root.LuiggiStory3D?.ativo;
-    if (usa3D) root.LuiggiStory3D.entrarCapitulo(cap);
+    const comecaComCena = (cap.eventos || [])[0]?.tipo === 'cena';
+    if (usa3D) root.LuiggiStory3D.entrarCapitulo(cap, { semCenario: comecaComCena });
     if (bgEl && !usa3D) {
       const pal = cap.paleta || { bg: '#16192b', accent: '#f59e0b' };
       if (cap.cenarioImagem) {
@@ -128,16 +104,10 @@
       }
     }
 
-    if (dayHud) {
-      dayHud.innerHTML = `
-        <strong>📅 ${cap.codigo} — ${cap.titulo}</strong>
-        <span>${cap.era} · ${VIBE_POR_CAPITULO[cap.id] || ''}</span>
-      `;
-    }
+    if (dayHud) dayHud.innerHTML = '';
 
-    // Cast inicial da cena (Luis na esquerda + primeiro NPC na direita)
-    const firstNpc = cap.npcsMapa?.[0]?.id || null;
-    root.LuiggiDialogue.resetCast('luis', firstNpc);
+    // Elenco começa só com o Luis; os outros entram em cena quando falam pessoalmente
+    root.LuiggiDialogue.resetCast('luis', null);
 
     // Hotspots discretos apenas para o easter egg do Gato da Luiza (Caps. 7 a 15)
     if (hotspotsEl) {
@@ -178,23 +148,21 @@
     if (root.LuiggiSave) root.LuiggiSave.incrementarContador('felpsOmeter', 1);
     if (root.LuiggiAudio) root.LuiggiAudio.playSFX('felps');
     if (root.LuiggiStory3D?.ativo) root.LuiggiStory3D.efeito('felps');
-    const frame = document.querySelector('.stage-frame');
-    if (frame) {
-      const b = document.createElement('div');
-      b.className = 'felps-banner';
-      b.textContent = 'FELPS!!';
-      frame.appendChild(b);
-      setTimeout(() => b.remove(), 1100);
-    }
   }
 
   async function executarMinigame(minigameId, modoLivre = false) {
     const st = root.LuiggiStory3D;
-    if (st?.ativo && minigameId !== 'ajude_vitor') st.pausar();
+    if (minigameId === 'ajude_vitor') return executarMinigameInterno(minigameId, modoLivre);
+    await transicao(true);
+    if (st?.ativo) st.pausar();
+    const p = executarMinigameInterno(minigameId, modoLivre);
+    setTimeout(() => transicao(false), 60);
     try {
-      return await executarMinigameInterno(minigameId, modoLivre);
+      return await p;
     } finally {
+      await transicao(true, 260);
       if (st?.ativo) st.retomar();
+      transicao(false);
     }
   }
 
@@ -269,7 +237,7 @@
       await root.LuiggiDialogue.mostrarTelaPreta('Você sabe como essa história continua. Você acabou de jogar ela.');
     } else if (finalId === 'proximo_capitulo') {
       root.LuiggiAchievements.desbloquear('proximo_capitulo');
-      await root.LuiggiDialogue.mostrarDialogo({ quem: 'luis', expr: 'neutro', fala: '[Mensagem enviada] Acho que a gente precisa terminar de vez. Cuida de você.', capId: 15 });
+      await root.LuiggiDialogue.mostrarDialogo({ quem: 'luis', expr: 'neutro', fala: 'Acho que a gente precisa terminar de vez. Cuida de você.', capId: 15, canal: 'whatsapp' });
       await root.LuiggiDialogue.mostrarDialogo({ quem: 'fabricio', expr: 'feliz', fala: '[Discord] Tamo junto, mano. Pega o Subaru, bora dar uma volta sem rumo no amanhecer.', capId: 15 });
       await root.LuiggiDialogue.mostrarDialogo({ quem: 'mateus_buse', expr: 'feliz', fala: '[Discord] (desmutou só pra dizer: tamo junto, Luiggi.)', capId: 15 });
       await root.LuiggiDriving.abrirDirecao('amanhecer');
@@ -280,7 +248,7 @@
     }
 
     const creds = root.LuiggiData.cache.dialogos.creditos || [];
-    await root.LuiggiDialogue.mostrarTelaPreta(creds.slice(0, 6).join('\n'));
+    await root.LuiggiDialogue.mostrarCreditos(creds);
     await root.LuiggiDialogue.mostrarDialogo({
       quem: 'fabricio',
       expr: 'feliz',
@@ -317,12 +285,27 @@
     }
 
     configurarCenarioDatingSim(cap);
-    await mostrarAberturaCapitulo(cap);
+    if ((cap.eventos || [])[0]?.tipo !== 'cena') {
+      mostrarLegenda(cap.titulo, `${cap.era}`, { kicker: cap.codigo });
+      await new Promise((r) => setTimeout(r, 900));
+    }
 
     const estiloMap = { 2: 'trap', 8: 'sad', 11: 'sonho', 12: 'gotico', 13: 'underground' };
     root.LuiggiAudio.tocarEstiloSintetizado(estiloMap[capId] || 'lofi', 118);
 
+    let teveCena = false;
     for (const ev of cap.eventos || []) {
+      if (ev.tipo === 'cena') {
+        const primeira = !teveCena;
+        teveCena = true;
+        const elenco = ev.elenco || null;
+        root.LuiggiDialogue.resetCast(elenco ? (elenco.luis ? 'luis' : null) : 'luis', null);
+        if (root.LuiggiStory3D?.ativo) await root.LuiggiStory3D.mudarCena(ev.cenario, ev.opts || {}, elenco);
+        if (primeira) mostrarLegenda(cap.titulo, ev.legenda || cap.era, { kicker: cap.codigo });
+        else if (ev.legenda) mostrarLegenda(ev.legenda);
+        await new Promise((r) => setTimeout(r, primeira ? 1100 : 500));
+        continue;
+      }
       if (ev.tipo === 'dialogo') {
         await root.LuiggiDialogue.mostrarDialogo({
           quem: ev.quem,
@@ -331,12 +314,7 @@
           capId
         });
       } else if (ev.tipo === 'discord') {
-        await root.LuiggiDialogue.mostrarDialogo({
-          quem: ev.quem,
-          expr: 'neutro',
-          fala: `[Discord] ${ev.fala}`,
-          capId
-        });
+        await root.LuiggiDialogue.mostrarDialogo({ quem: ev.quem, expr: 'neutro', fala: ev.fala, capId, canal: 'discord' });
       } else if (ev.tipo === 'sfx') {
         root.LuiggiAudio.playSFX(ev.som);
       } else if (ev.tipo === 'felps') {
@@ -345,7 +323,8 @@
       } else if (ev.tipo === 'conquista') {
         root.LuiggiAchievements.desbloquear(ev.id);
       } else if (ev.tipo === 'tela_preta' || ev.tipo === 'cena_especial') {
-        await root.LuiggiDialogue.mostrarTelaPreta(ev.texto);
+        if (ev.tipo === 'cena_especial' && root.LuiggiStory3D?.ativo) root.LuiggiStory3D.efeitoEspecial(ev.id);
+        await root.LuiggiDialogue.mostrarAdendo(ev.texto, capId);
       } else if (ev.tipo === 'escolha') {
         const res = await root.LuiggiDialogue.mostrarEscolha(ev.escolhaId, capId);
         if (ev.escolhaId === 'c15_escolha_final' && res?.finalId) {
@@ -612,6 +591,12 @@
     iniciarPalco3D();
     const atalho = aplicarAtalhosDeTeste();
     atualizarHUD();
+
+    // Barra superior aparece só quando o mouse chega no topo da tela
+    window.addEventListener('mousemove', (e) => {
+      if (e.clientY < 36) document.body.classList.add('hud-visivel');
+      else if (e.clientY > 110) document.body.classList.remove('hud-visivel');
+    });
 
     document.getElementById('btn-top-fs').addEventListener('click', alternarTelaCheia);
     document.getElementById('btn-top-museum').addEventListener('click', () => root.LuiggiMuseum.abrirMuseu('saguao'));

@@ -165,7 +165,7 @@
   // ------------------------------------------------------------------
   // INTERIOR DO SUBARU (frente = -z)
   // ------------------------------------------------------------------
-  function construirInterior(stage) {
+  function construirInterior(o = {}) {
     const THREE = root.THREE;
     const { box, cyl, plane, M, textures, halo } = L();
     const g = new THREE.Group();
@@ -246,7 +246,7 @@
       const enc = box(0.5, 0.62, 0.12, tecido, 0, 0.78, 0.45);
       enc.rotation.x = -0.15;
       b.add(enc);
-      b.add(box(0.28, 0.18, 0.1, tecido, 0, 1.2, 0.52));
+      if (!o.estatico) b.add(box(0.28, 0.18, 0.1, tecido, 0, 1.2, 0.52));
       b.position.x = x;
       return b;
     };
@@ -292,11 +292,12 @@
     retro.position.set(0.02, 1.36, -0.72);
     retro.rotation.y = 0.18;
     retro.add(box(0.27, 0.085, 0.03, plastico, 0, 0, 0));
-    const espelho = plane(0.25, 0.07, new THREE.MeshBasicMaterial({ map: rt.texture }), 0, 0, 0.017);
+    const espelho = plane(0.25, 0.07, o.estatico ? M.std('#1e293b', 0.05, 0.9) : new THREE.MeshBasicMaterial({ map: rt.texture }), 0, 0, 0.017);
     espelho.userData.acao = 'retrovisor';
     retro.add(espelho);
     retro.add(box(0.02, 0.07, 0.02, plastico, 0, 0.07, -0.02));
     retro.userData.acao = 'retrovisor';
+    retro.visible = !o.estatico; // nas cenas de história a câmera fica onde está o retrovisor
     g.add(retro);
     const camRetro = new THREE.PerspectiveCamera(48, 320 / 120, 0.05, 60);
     camRetro.position.set(0, 1.25, -0.55);
@@ -456,7 +457,7 @@
         stage.scene.add(env.group);
         root.Luiggi3DEnv.aplicar(stage, env);
         stage.setGrade({ vignette: 0.85, bloom: 1.1 });
-        interior = construirInterior(stage);
+        interior = construirInterior();
         stage.scene.add(interior.group);
         card = L().createCharacterCard(fabricio, { altura: 0.98, tint: '#dfe6ff' });
         card.group.position.set(0.5, 0.52, -0.02);
@@ -731,5 +732,5 @@
     return stage;
   }
 
-  root.LuiggiSubaruPOV = { abrirSubaruSafepoint, cenaVoltaPraCasa };
+  root.LuiggiSubaruPOV = { abrirSubaruSafepoint, cenaVoltaPraCasa, construirInterior };
 })(window);

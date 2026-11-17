@@ -68,6 +68,12 @@
       "cliffhanger": "Pra entender como chegamos aqui... precisamos voltar ao fundão.",
       "eventos": [
         {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "cozinha",
+          "legenda": "Ontem · Cozinha do Luis"
+        },
+        {
           "tipo": "dialogo",
           "quem": "luis",
           "expr": "feliz",
@@ -202,6 +208,11 @@
       "cliffhanger": "2020. O mundo para. (Uma batida de 808 ecoa...)",
       "eventos": [
         {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "sala_aula"
+        },
+        {
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "Luz dourada de fim de tarde na sala de aula. Bem-vindo ao Fundão: sede oficial dos nerds."
@@ -239,6 +250,11 @@
           "minigameId": "puzzle_armario"
         },
         {
+          "tipo": "cena",
+          "cenario": "quadra",
+          "legenda": "Quadra do colégio · fim da aula"
+        },
+        {
           "tipo": "dialogo",
           "quem": "maria_clara",
           "expr": "feliz",
@@ -253,9 +269,10 @@
           "escolhaId": "c1_declarar_maria_clara"
         },
         {
-          "tipo": "discord",
-          "quem": "fabricio",
-          "fala": "E eu aparecendo aí no fundo sem nem saber que ia virar o melhor amigo desse cara kkkk"
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "E eu aparecendo aí no fundo sem nem saber que ia virar o melhor amigo desse cara kkkk",
+          "expr": "feliz"
         },
         {
           "tipo": "cliffhanger",
@@ -313,6 +330,11 @@
       "cliffhanger": "Anos depois, num corredor de faculdade, uma voz ecoa: '...felps?'",
       "eventos": [
         {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "quarto_estudio"
+        },
+        {
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "Quarto escuro, LED roxo e azul, álcool em gel na mesa e dois monitores ligados."
@@ -322,7 +344,7 @@
           "escolhaId": "c2_pandemia_fazer"
         },
         {
-          "tipo": "dialogo",
+          "tipo": "discord",
           "quem": "fabricio",
           "expr": "feliz",
           "fala": "Mano, abre a DAW aí! A gente precisa transformar os dates desastrosos do Vitor em shittrap!"
@@ -350,15 +372,26 @@
           "id": "nasce_uma_lenda"
         },
         {
+          "tipo": "cena",
+          "cenario": "centro_noite",
+          "legenda": "Enquanto isso, na casa do Vitor..."
+        },
+        {
           "tipo": "dialogo",
           "quem": "vitor_witiuk",
           "expr": "chocado",
           "fala": "*ajoelhando na chuva* POR QUÊÊÊ?! VOCÊS FIZERAM UMA MÚSICA SOBRE EU ELOGIAR O TÊNIS DA MÃE?!"
         },
         {
-          "tipo": "discord",
-          "quem": "fabricio",
-          "fala": "E assim nasceu a dupla dinâmica. Melhor fase da quarentena kkkk"
+          "tipo": "cena",
+          "cenario": "quarto_estudio",
+          "legenda": "De volta ao quarto"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "E assim nasceu a dupla dinâmica. Melhor fase da quarentena kkkk",
+          "expr": "feliz"
         },
         {
           "tipo": "cliffhanger",
@@ -410,6 +443,11 @@
       "cliffhanger": "O ronco de um motor boxer. Um Subaru azul estaciona na frente da academia.",
       "eventos": [
         {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "corredor"
+        },
+        {
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "Corredores frios, luz fluorescente. Cursos diferentes, mesma faculdade. O celular vibra: é a Cecília."
@@ -446,9 +484,10 @@
           "texto": "Luis Felipe nunca contou para ninguém se entrou no banheiro ou não."
         },
         {
-          "tipo": "discord",
-          "quem": "fabricio",
-          "fala": "CONTA LOGO MANO! Até hoje ele não fala nem pra mim!"
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "CONTA LOGO MANO! Até hoje ele não fala nem pra mim!",
+          "expr": "feliz"
         },
         {
           "tipo": "discord",
@@ -511,6 +550,11 @@
       "cliffhanger": "Uma noite fria em Curitiba. Neon piscando: BEC BAR.",
       "eventos": [
         {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "academia"
+        },
+        {
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "21 anos. Espelhos, ferro batendo e o Subaru Legacy azul brilhando lá fora."
@@ -530,9 +574,22 @@
           "escolhaId": "c4_gi_eta_flerte"
         },
         {
+          "tipo": "cena",
+          "cenario": "subaru_fora",
+          "legenda": "Estacionamento da academia"
+        },
+        {
           "tipo": "cena_especial",
           "id": "subaru_balancando",
           "texto": "CENSURADO — Os vidros do Subaru embaçam dramaticamente. O carro balança. (Discord: KKKKKKKKKKKK)"
+        },
+        {
+          "tipo": "cena",
+          "cenario": "quarto_estudio",
+          "opts": {
+            "dia": true
+          },
+          "legenda": "Dia seguinte"
         },
         {
           "tipo": "dialogo",
@@ -603,6 +660,11 @@
       "cliffhanger": "O Fabricio olha o celular e empalidece: 'mano... eu combinei com a Agatha.'",
       "eventos": [
         {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "bec_bar"
+        },
+        {
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "Chuva fina em Curitiba. Neon no Bec Bar. Do nada, um grito corta a noite:"
@@ -616,7 +678,7 @@
         {
           "tipo": "dialogo",
           "quem": "narrador",
-          "fala": "É a Caliandra, ex-ficante do Fabricio, de franja, acompanhada da amiga Luiza. Detalhe: o Fabricio já está ficando com a Agatha."
+          "fala": "É a Caliandra, minha ex-ficante, de franja, acompanhada da amiga Luiza. Detalhe: eu já tava ficando com a Agatha."
         },
         {
           "tipo": "minigame",
@@ -641,14 +703,19 @@
           "minigameId": "conversa_luiza"
         },
         {
-          "tipo": "dialogo",
-          "quem": "narrador",
-          "fala": "Todos vão pro apartamento da Luiza. No outro quarto, Caliandra repete mais 5 vezes: 'Fabricio, você sabe o que faz.' Eles ficam."
+          "tipo": "cena",
+          "cenario": "apartamento",
+          "legenda": "Apartamento da Luiza"
         },
         {
           "tipo": "dialogo",
           "quem": "narrador",
-          "fala": "Enquanto isso, na sala, o Luis aprendia geografia alemã. De repente, o celular do Fabricio vibra."
+          "fala": "Todo mundo vai pro apartamento da Luiza. No outro quarto, a Caliandra repete mais 5 vezes: 'Fabricio, você sabe o que faz.' A gente fica."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Enquanto isso, na sala, o Luis aprendia geografia alemã. De repente, o meu celular vibra."
         },
         {
           "tipo": "cliffhanger",
@@ -706,6 +773,11 @@
       "cliffhanger": "No Subaru, celular vibra: 'Luiza: chegou bem? 🙂'",
       "eventos": [
         {
+          "tipo": "cena",
+          "cenario": "apartamento",
+          "legenda": "Apartamento da Luiza · 3h da manhã"
+        },
+        {
           "tipo": "escolha",
           "escolhaId": "c6_sair_apartamento"
         },
@@ -720,8 +792,25 @@
           "minigameId": "direcao_madrugada"
         },
         {
+          "tipo": "cena",
+          "cenario": "subaru_noite",
+          "elenco": {
+            "luis": "L",
+            "fabricio": "R"
+          },
+          "legenda": "No Subaru, a caminho do Centro"
+        },
+        {
           "tipo": "escolha",
           "escolhaId": "c6_carro_pessoa_ruim"
+        },
+        {
+          "tipo": "cena",
+          "cenario": "balada",
+          "opts": {
+            "kpop": true
+          },
+          "legenda": "Balada K-Pop"
         },
         {
           "tipo": "dialogo",
@@ -735,6 +824,14 @@
         {
           "tipo": "minigame",
           "minigameId": "segurando_vela"
+        },
+        {
+          "tipo": "cena",
+          "cenario": "centro_noite",
+          "opts": {
+            "garoa": false
+          },
+          "legenda": "Praça no Centro · 3h"
         },
         {
           "tipo": "escolha",
@@ -761,7 +858,7 @@
         },
         {
           "tipo": "cliffhanger",
-          "texto": "Celular vibra: 'Luiza: chegou bem? 🙂' — Narrador: 'Pelo menos alguém perguntou.'"
+          "texto": "Celular vibra: 'Luiza: chegou bem? 🙂' — Fabricio: 'Pelo menos alguém perguntou.'"
         }
       ]
     },
@@ -816,6 +913,11 @@
       "cliffhanger": "Fabricio no celular: 'mano, você tá na bad. hoje a gente vai no Sad Baile.'",
       "eventos": [
         {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "quarto_estudio"
+        },
+        {
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "A conversa com a Luiza engata. Hora de responder na velocidade certa!"
@@ -829,8 +931,18 @@
           "escolhaId": "c7_primeiro_encontro"
         },
         {
+          "tipo": "cena",
+          "cenario": "shopping",
+          "legenda": "Shopping · primeiro encontro"
+        },
+        {
           "tipo": "minigame",
           "minigameId": "praca_alimentacao"
+        },
+        {
+          "tipo": "cena",
+          "cenario": "apartamento",
+          "legenda": "Apartamento da Luiza"
         },
         {
           "tipo": "cena_especial",
@@ -914,6 +1026,11 @@
       ],
       "cliffhanger": "Saindo de manhã cedo no frio. Um cartaz no poste: 'TNT: última quinta-feira do mês.'",
       "eventos": [
+        {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "sad_baile"
+        },
         {
           "tipo": "escolha",
           "escolhaId": "c8_look_noite"
@@ -1038,6 +1155,11 @@
       "cliffhanger": "Fabricio: 'mano. tô namorando a Rayssa. bora no Emily Doces amanhã?'",
       "eventos": [
         {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "cafe"
+        },
+        {
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "Última quinta-feira do mês: campeonato de latte art no Asterisco Café!"
@@ -1053,7 +1175,7 @@
         {
           "tipo": "dialogo",
           "quem": "narrador",
-          "fala": "Ao fundo, Fabricio conhece a Rayssa com corações voando. Enquanto isso, Luis conhece a Yohana..."
+          "fala": "Ao fundo, eu conheço a Rayssa com corações voando. Enquanto isso, o Luis conhece a Yohana..."
         },
         {
           "tipo": "minigame",
@@ -1062,6 +1184,11 @@
         {
           "tipo": "escolha",
           "escolhaId": "c9_red_flag_franca"
+        },
+        {
+          "tipo": "cena",
+          "cenario": "cinema",
+          "legenda": "Cinema · filme 'Nora'"
         },
         {
           "tipo": "dialogo",
@@ -1143,12 +1270,29 @@
       "cliffhanger": "O Luis deita e fecha os olhos. A tela começa a ficar cor-de-rosa...",
       "eventos": [
         {
+          "tipo": "cena",
+          "cenario": "subaru_noite",
+          "opts": {
+            "dia": true
+          },
+          "elenco": {
+            "luis": "L",
+            "fabricio": "R"
+          },
+          "legenda": "Bacacheri → Centro"
+        },
+        {
           "tipo": "minigame",
           "minigameId": "direcao_bacacheri"
         },
         {
           "tipo": "escolha",
           "escolhaId": "c10_fabricio_yohana"
+        },
+        {
+          "tipo": "cena",
+          "cenario": "emily_doces",
+          "legenda": "Emily Doces"
         },
         {
           "tipo": "dialogo",
@@ -1241,6 +1385,16 @@
       "cliffhanger": "Na academia, dois olhos brilham no escuro observando o Luis.",
       "eventos": [
         {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "subaru_sonho",
+          "elenco": {
+            "fabricio": "L",
+            "luis": "TL",
+            "sol": "TC"
+          }
+        },
+        {
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "Isso é um sonho. Nada aqui aconteceu. (Ainda bem.) Capivaras voam pelo céu pastel de Curitiba."
@@ -1256,6 +1410,11 @@
         {
           "tipo": "minigame",
           "minigameId": "beijo_no_drift"
+        },
+        {
+          "tipo": "cena",
+          "cenario": "quarto_estudio",
+          "legenda": "Quarto do Luis · de manhã"
         },
         {
           "tipo": "dialogo",
@@ -1339,6 +1498,14 @@
       "cliffhanger": "Dia de TNT. O Subaru tem 5 lugares. 'Isso vai ser um problema.'",
       "eventos": [
         {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "academia",
+          "opts": {
+            "gotica": true
+          }
+        },
+        {
           "tipo": "discord",
           "quem": "mateus_buse",
           "fala": "GÓTICA. A Julie avisou no capítulo 8!!"
@@ -1367,6 +1534,11 @@
           "minigameId": "detetive_instagram"
         },
         {
+          "tipo": "cena",
+          "cenario": "apartamento",
+          "legenda": "Casa da Eloiza"
+        },
+        {
           "tipo": "cena_especial",
           "id": "esconder_mae_eloiza",
           "texto": "A mãe da Eloiza chega em casa! Ela nunca contou que namoram! Luis pula atrás do sofá em 5 segundos!"
@@ -1382,7 +1554,7 @@
         },
         {
           "tipo": "cliffhanger",
-          "texto": "Dia de TNT. O Subaru tem 5 lugares. Narrador: 'Isso vai ser um problema.'"
+          "texto": "Dia de TNT. O Subaru tem 5 lugares. Fabricio: 'Isso vai ser um problema.'"
         }
       ]
     },
@@ -1449,9 +1621,21 @@
       "cliffhanger": "Semanas depois. Primeiro 'tempo' com a Eloiza. (Sim, teve mais de um.)",
       "eventos": [
         {
+          "tipo": "cena",
+          "cenario": "subaru_noite",
+          "elenco": {
+            "luis": "L",
+            "eloiza": "R",
+            "fabricio": "TL",
+            "matheus_neuman": "TR",
+            "yohana": "FORA"
+          },
+          "legenda": "No Subaru · dia de TNT"
+        },
+        {
           "tipo": "dialogo",
           "quem": "narrador",
-          "fala": "No Subaru: Luis, Eloiza, Fabricio e Matheus Neuman. O combinado era dar carona pra Yohana pro TNT."
+          "fala": "No Subaru: o Luis, a Eloiza, eu e o Matheus Neuman. O combinado era dar carona pra Yohana pro TNT."
         },
         {
           "tipo": "escolha",
@@ -1462,9 +1646,14 @@
           "id": "climao"
         },
         {
+          "tipo": "cena",
+          "cenario": "galpao",
+          "legenda": "Galpão underground"
+        },
+        {
           "tipo": "dialogo",
           "quem": "narrador",
-          "fala": "Mais tarde, no galpão underground. Luz vermelha, grave pesado. A Yohana chama Luis e Fabricio lá fora..."
+          "fala": "Mais tarde, no galpão underground. Luz vermelha, grave pesado. A Yohana chama eu e o Luis lá fora..."
         },
         {
           "tipo": "escolha",
@@ -1482,7 +1671,7 @@
         {
           "tipo": "dialogo",
           "quem": "narrador",
-          "fala": "MAS NA VIDA REAL... ninguém venceu. Luis perdeu a paz, Fabricio perdeu o rolê, e o Cara Aleatório continua concordando até hoje."
+          "fala": "MAS NA VIDA REAL... ninguém venceu. O Luis perdeu a paz, eu perdi o rolê, e o Cara Aleatório continua concordando até hoje."
         },
         {
           "tipo": "cliffhanger",
@@ -1547,6 +1736,15 @@
       "cliffhanger": "Hoje. Um tempo. De novo. (Mais ou menos.)",
       "eventos": [
         {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "centro_noite",
+          "opts": {
+            "garoa": false,
+            "yard": true
+          }
+        },
+        {
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "Rua Prudente de Moraes. Na frente da Yard, um reencontro cinematográfico com a Tutuluiza, agora influencer de filmes."
@@ -1554,6 +1752,11 @@
         {
           "tipo": "escolha",
           "escolhaId": "c14_entrar_yard"
+        },
+        {
+          "tipo": "cena",
+          "cenario": "balada",
+          "legenda": "Yard"
         },
         {
           "tipo": "minigame",
@@ -1588,13 +1791,25 @@
           "id": "plot_twist"
         },
         {
-          "tipo": "discord",
-          "quem": "fabricio",
-          "fala": "PLOT TWIST!! EU PROTEGI OS SENTIMENTOS DE QUEM QUERIA MEU AMIGO O TEMPO TODO KKKKKK"
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "PLOT TWIST!! EU PROTEGI OS SENTIMENTOS DE QUEM QUERIA MEU AMIGO O TEMPO TODO KKKKKK",
+          "expr": "feliz"
         },
         {
           "tipo": "escolha",
           "escolhaId": "c14_plot_twist_flerte"
+        },
+        {
+          "tipo": "cena",
+          "cenario": "subaru_noite",
+          "elenco": {
+            "luis": "L"
+          },
+          "opts": {
+            "parado": true
+          },
+          "legenda": "Sozinho no Subaru"
         },
         {
           "tipo": "cena_especial",
@@ -1658,6 +1873,14 @@
       "cliffhanger": "A história do LuiggiBeats ainda está sendo escrita.",
       "eventos": [
         {
+          "tipo": "cena",
+          "inicial": true,
+          "cenario": "cozinha",
+          "opts": {
+            "amanhecer": true
+          }
+        },
+        {
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "De volta ao presente. Eles estão 'dando um tempo'... mas ela ainda vem todo dia e ele responde toda mensagem."
@@ -1698,7 +1921,7 @@
         {
           "tipo": "dialogo",
           "quem": "narrador",
-          "fala": "Por que você ainda não sabe o que ela posta? Por que a mãe dela ainda não sabe que você existe? Se fosse o Fabricio vivendo isso, o que você diria pra ele?"
+          "fala": "Por que você ainda não sabe o que ela posta? Por que a mãe dela ainda não sabe que você existe? Se fosse eu vivendo isso, o que você diria pra mim?"
         },
         {
           "tipo": "dialogo",

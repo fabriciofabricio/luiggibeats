@@ -380,6 +380,8 @@
       }
     };
 
+    root.LuiggiKit.atual = kit;
+
     function limpar() {
       limpezas.forEach((f) => {
         try {
