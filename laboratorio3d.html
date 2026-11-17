@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Laboratório 3D · LuiggiBeats</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #05060a; color: #e5e7eb; font-family: 'Segoe UI', system-ui, sans-serif; }
+    #v { position: fixed; inset: 0; }
+    #painel { position: fixed; top: 12px; left: 12px; background: rgba(10, 12, 20, 0.85); border: 1px solid #334155; border-radius: 12px; padding: 10px 12px; font-size: 13px; display: flex; flex-direction: column; gap: 6px; z-index: 2; backdrop-filter: blur(6px); }
+    #painel select, #painel button { background: #111827; color: #e5e7eb; border: 1px solid #334155; border-radius: 6px; padding: 4px 8px; }
+    #painel h1 { font-size: 14px; margin: 0 0 4px; color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <div id="v"></div>
+  <div id="painel">
+    <h1>🧪 Laboratório 3D</h1>
+    <label>Cenário <select id="env"></select></label>
+    <label>Esquerda <select id="L"></select></label>
+    <label>Direita <select id="R"></select></label>
+    <label>Modo <select id="modo"><option value="cartas">Cartas (sprites)</option><option value="bonecos">Bonecos 3D</option></select></label>
+    <label>Pose <select id="pose"><option>idle</option><option>walk</option><option>run</option><option>dance</option><option>dance_sad</option><option>fight</option><option>cheer</option><option>talk</option><option>crossed</option><option>sad</option><option>sneak</option></select></label>
+  </div>
+  <script src="vendor/three.min.js"></script>
+  <script src="data/game_bundle.js"></script>
+  <script src="src/engine/CharacterRig.js"></script>
+  <script src="src/engine/DataLoader.js"></script>
+  <script src="src/engine/SaveManager.js"></script>
+  <script src="src/engine/Minigame3DEngine.js"></script>
+  <script src="src/engine/Character3D.js"></script>
+  <script src="src/engine/Environments3D.js"></script>
+  <script>
+    window.labPronto = (async () => {
+      await LuiggiData.carregarTudo();
+      const L3 = Luiggi3D;
+      const q = new URLSearchParams(location.search);
+      const st = L3.createStage(document.getElementById('v'), { radius: '0', fov: 42 });
+      window.st = st;
+      const envs = ['cozinha', 'sala_aula', 'corredor', 'quadra', 'quarto_estudio', 'academia', 'bec_bar', 'centro_noite', 'shopping', 'apartamento', 'sad_baile', 'cafe', 'cinema', 'emily_doces', 'garagem', 'sonho', 'galpao', 'balada', 'safepoint'];
+      const pessoas = [...LuiggiData.cache.personagemMap.values()].filter((p) => !p.isPet);
+      const selEnv = document.getElementById('env');
+      envs.forEach((e) => selEnv.add(new Option(e, e)));
+      ['L', 'R'].forEach((k) => {
+        const s = document.getElementById(k);
+        s.add(new Option('(ninguém)', ''));
+        pessoas.forEach((p) => s.add(new Option(p.nome, p.id)));
+      });
+      selEnv.value = q.get('env') || 'cozinha';
+      document.getElementById('L').value = q.get('L') ?? 'luis';
+      document.getElementById('R').value = q.get('R') ?? 'fabricio';
+      document.getElementById('modo').value = q.get('modo') || 'cartas';
+      document.getElementById('pose').value = q.get('pose') || 'idle';
+
+      let env = null;
+      let atores = [];
+      function montar() {
+        if (env) {
+          st.scene.remove(env.group);
+          L3.disposeObject(env.group);
+        }
+        atores.forEach((a) => st.scene.remove(a.group));
+        atores = [];
+        env = Luiggi3DEnv.build(selEnv.value, selEnv.value === 'academia' && q.get('gotica') ? { gotica: true } : selEnv.value === 'cozinha' && q.get('amanhecer') ? { amanhecer: true } : {});
+        st.scene.add(env.group);
+        Luiggi3DEnv.aplicar(st, env);
+        st.camera.position.set(...env.cam.pos);
+        st.camera.lookAt(...env.cam.look);
+        const modo = document.getElementById('modo').value;
+        ['L', 'R'].forEach((k) => {
+          const id = document.getElementById(k).value;
+          if (!id) return;
+          const ch = LuiggiData.cache.personagemMap.get(id);
+          const a = modo === 'bonecos' ? Luiggi3DChar.create(ch) : L3.createCharacterCard(ch);
+          a.group.position.set(...env.slots[k]);
+          if (a.setPose) {
+            a.setPose(document.getElementById('pose').value);
+            a.group.rotation.y = k === 'L' ? 0.35 : -0.35;
+          }
+          st.scene.add(a.group);
+          atores.push(a);
+        });
+      }
+      ['env', 'L', 'R', 'modo', 'pose'].forEach((id) => document.getElementById(id).addEventListener('change', montar));
+      montar();
+      st.start((dt, t) => {
+        env.update(dt, t);
+        atores.forEach((a) => a.update(dt, st.camera));
+      });
+      return { post: !!st.post, perfil: st.perfil.nome };
+    })();
+  </script>
+</body>
+</html>

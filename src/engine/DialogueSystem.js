@@ -33,6 +33,17 @@
     const map = root.LuiggiData.cache.personagemMap;
     const modoCab = !!root.LuiggiSave?.state?.config?.modoCabecao;
 
+    // Palco 3D: o elenco vive dentro do cenário (exceto no Modo Cabeção, que usa a camada DOM)
+    if (root.LuiggiStory3D?.ativo && !modoCab) {
+      if (activeId && activeId !== 'narrador') {
+        if (activeId === sceneCast.left || activeId === 'luis') sceneCast.left = activeId;
+        else sceneCast.right = activeId;
+      }
+      layer.innerHTML = '';
+      root.LuiggiStory3D.foco(sceneCast.left, sceneCast.right, activeId, expr, shot);
+      return;
+    }
+
     // Atualiza slots e ângulo de câmera dinamicamente!
     if (activeId && activeId !== 'narrador') {
       if (activeId === 'luis') {
@@ -83,6 +94,7 @@
       }
 
       function tremorTela() {
+        if (root.LuiggiStory3D?.ativo) root.LuiggiStory3D.tremor(0.12);
         const stage = el('game-shell');
         if (!stage) return;
         stage.classList.remove('shake');
@@ -198,6 +210,7 @@
           if (!fx || !fxInner) return resolve();
 
           fx.className = 'convergence-overlay show fx-' + tipo;
+          if (root.LuiggiStory3D?.ativo) root.LuiggiStory3D.efeito(tipo, 2.4);
 
           if (tipo === 'vhs') {
             if (root.LuiggiAudio) root.LuiggiAudio.playSFX('vhs');

@@ -1,6 +1,6 @@
 /**
  * src/scenes/GameOrchestrator.js
- * Orquestrador principal em tela cheia (Dating Simulator / Visual Novel + Phaser 3 backdrop).
+ * Orquestrador principal em tela cheia (Visual Novel com palco 3D em Three.js).
  * Molde cronológico:
  *   Menu Principal -> Dentro do Subaru Azul no Safepoint (POV Luis -> Fabricio) ->
  *   História -> Relatório -> Volta pro Subaru no Safepoint comentando e puxando a próxima história -> ...
@@ -51,43 +51,62 @@
     14: 'Fabricio: "EU PROTEGI OS SENTIMENTOS DE QUEM QUERIA VOCÊ O TEMPO TODO KKKKKK"'
   };
 
-  function iniciarPhaser() {
-    if (phaserGame || typeof Phaser === 'undefined') return;
-
-    class AmbientScene extends Phaser.Scene {
-      constructor() {
-        super('AmbientScene');
-      }
-      create() {
-        this.cameras.main.setBackgroundColor('#0c0d14');
-        const g = this.add.graphics();
-        g.fillStyle(0xfbbf24, 0.28);
-        this.parts = [];
-        for (let i = 0; i < 24; i++) {
-          const c = this.add.circle(Math.random() * 960, Math.random() * 540, 1.5 + Math.random() * 2.5, 0xfde68a, 0.25);
-          this.parts.push({ c, vy: 0.2 + Math.random() * 0.45 });
-        }
-      }
-      update() {
-        if (!this.parts) return;
-        for (const p of this.parts) {
-          p.c.y -= p.vy;
-          if (p.c.y < -10) {
-            p.c.y = 550;
-            p.c.x = Math.random() * 960;
-          }
-        }
-      }
+  function iniciarPalco3D() {
+    const ok = root.LuiggiStory3D && root.LuiggiStory3D.init(document.getElementById('stage3d-container'));
+    document.body.classList.toggle('modo-3d', !!ok);
+    if (ok) {
+      root.LuiggiStory3D.onGato(() => {
+        root.LuiggiAudio?.playSFX('blip');
+        root.LuiggiAchievements?.verificarContadores(root.LuiggiSave.state);
+      });
     }
+    return ok;
+  }
 
-    phaserGame = new Phaser.Game({
-      type: Phaser.AUTO,
-      parent: 'phaser-container',
-      width: 960,
-      height: 540,
-      scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-      transparent: true,
-      scene: [AmbientScene]
+  // Abertura do capítulo: foto real do lugar com título, enquanto o cenário 3D é montado por trás
+  function mostrarAberturaCapitulo(cap) {
+    return new Promise((resolve) => {
+      const ov = document.getElementById('chapter-intro-overlay');
+      if (!ov) return resolve();
+      const pal = cap.paleta || { accent: '#f59e0b' };
+      ov.style.setProperty('--accent', pal.accent || '#f59e0b');
+      ov.innerHTML = `
+        <div class="ci-photo" style="${cap.cenarioImagem ? `background-image:url('${encodeURI(cap.cenarioImagem)}')` : ''}"></div>
+        <div class="ci-shade"></div>
+        <div class="ci-content">
+          <div class="ci-kicker">${cap.codigo}</div>
+          <h1 class="ci-title">${cap.titulo}</h1>
+          <div class="ci-era">${cap.era}</div>
+          <div class="ci-vibe">${VIBE_POR_CAPITULO[cap.id] || ''}</div>
+        </div>
+        <div class="ci-skip">clique ou espaço para pular</div>`;
+      ov.classList.remove('hidden', 'saindo');
+      void ov.offsetWidth;
+      ov.classList.add('entrando');
+      let feito = false;
+      const fim = () => {
+        if (feito) return;
+        feito = true;
+        clearTimeout(t);
+        window.removeEventListener('keydown', onKey);
+        ov.removeEventListener('click', fim);
+        ov.classList.add('saindo');
+        setTimeout(() => {
+          ov.classList.add('hidden');
+          ov.classList.remove('entrando', 'saindo');
+          ov.innerHTML = '';
+        }, 750);
+        resolve();
+      };
+      const onKey = (e) => {
+        if (e.code === 'Space' || e.code === 'Enter' || e.code === 'Escape') {
+          e.preventDefault();
+          fim();
+        }
+      };
+      const t = setTimeout(fim, 3600);
+      ov.addEventListener('click', fim);
+      window.addEventListener('keydown', onKey);
     });
   }
 
@@ -98,7 +117,9 @@
     const save = root.LuiggiSave;
     const data = root.LuiggiData.cache;
 
-    if (bgEl) {
+    const usa3D = !!root.LuiggiStory3D?.ativo;
+    if (usa3D) root.LuiggiStory3D.entrarCapitulo(cap);
+    if (bgEl && !usa3D) {
       const pal = cap.paleta || { bg: '#16192b', accent: '#f59e0b' };
       if (cap.cenarioImagem) {
         bgEl.style.backgroundImage = `url('${encodeURI(cap.cenarioImagem)}')`;
@@ -122,7 +143,7 @@
     if (hotspotsEl) {
       hotspotsEl.innerHTML = '';
 
-      if (cap.temGatoEscondido && !save.state.gatosVistos.includes(cap.id)) {
+      if (!usa3D && cap.temGatoEscondido && !save.state.gatosVistos.includes(cap.id)) {
         const catBtn = document.createElement('button');
         catBtn.className = 'vn-hotspot-btn';
         catBtn.textContent = '🐈‍⬛';
@@ -156,9 +177,28 @@
   function dispararFelpsPop() {
     if (root.LuiggiSave) root.LuiggiSave.incrementarContador('felpsOmeter', 1);
     if (root.LuiggiAudio) root.LuiggiAudio.playSFX('felps');
+    if (root.LuiggiStory3D?.ativo) root.LuiggiStory3D.efeito('felps');
+    const frame = document.querySelector('.stage-frame');
+    if (frame) {
+      const b = document.createElement('div');
+      b.className = 'felps-banner';
+      b.textContent = 'FELPS!!';
+      frame.appendChild(b);
+      setTimeout(() => b.remove(), 1100);
+    }
   }
 
   async function executarMinigame(minigameId, modoLivre = false) {
+    const st = root.LuiggiStory3D;
+    if (st?.ativo && minigameId !== 'ajude_vitor') st.pausar();
+    try {
+      return await executarMinigameInterno(minigameId, modoLivre);
+    } finally {
+      if (st?.ativo) st.retomar();
+    }
+  }
+
+  async function executarMinigameInterno(minigameId, modoLivre = false) {
     if (minigameId === 'fabrica_cookies') return root.LuiggiCookies.abrirFabricaCookies(modoLivre ? 'livre' : 'historia');
     if (minigameId === 'luiggibeats_hero') return root.LuiggiRhythm.abrirLuiggiBeatsHero({ direto: !modoLivre });
     if (minigameId === 'passinho_sad') return root.LuiggiRhythm.abrirPassinhoSad();
@@ -191,7 +231,7 @@
           <div class="menu-kicker">VOLTANDO PARA CASA COM O SUBARU AZUL...</div>
           <h2 style="margin:6px 0 4px;">🌙 Ruas de Curitiba · Fim da Noite no Safepoint</h2>
           <p style="color:#9ca3af;font-size:0.86rem;margin:0;">Todas as histórias foram contadas em ordem cronológica. Ronco boxer no escape, LuiggiBeats no rádio, rumo a casa.</p>
-          <div class="road-scene">
+          <div class="road-scene" id="dh-3d">
             <div class="road-dashes"></div>
             <div class="headlight-beam"></div>
             <div class="cruising-subaru">${root.LuiggiRig.renderVehicleSVG(subaru)}</div>
@@ -204,15 +244,19 @@
         </div>
       `;
 
+      const palco3D = root.LuiggiSubaruPOV.cenaVoltaPraCasa?.(document.getElementById('dh-3d'), 9);
+      if (palco3D) document.getElementById('dh-3d').classList.add('road-3d');
+
       const avancar = () => {
         clearTimeout(autoTimer);
+        if (palco3D) palco3D.dispose();
         ov.classList.add('hidden');
         ov.innerHTML = '';
         root.LuiggiAudio.pararMusica();
         resolve();
       };
 
-      const autoTimer = setTimeout(avancar, 6500);
+      const autoTimer = setTimeout(avancar, 9500);
       document.getElementById('dh-next').addEventListener('click', avancar);
     });
   }
@@ -273,6 +317,7 @@
     }
 
     configurarCenarioDatingSim(cap);
+    await mostrarAberturaCapitulo(cap);
 
     const estiloMap = { 2: 'trap', 8: 'sad', 11: 'sonho', 12: 'gotico', 13: 'underground' };
     root.LuiggiAudio.tocarEstiloSintetizado(estiloMap[capId] || 'lofi', 118);
@@ -325,12 +370,15 @@
     root.LuiggiAudio.pararMusica();
     runningChapter = false;
 
+    root.LuiggiStory3D?.pausar();
     if (capId < 15) {
       await root.LuiggiSubaruPOV.abrirSubaruSafepoint(capId);
+      root.LuiggiStory3D?.retomar();
       iniciarCapitulo(capId + 1);
     } else {
       await root.LuiggiSubaruPOV.abrirSubaruSafepoint(15);
       await telaVoltandoParaCasaComSubaru();
+      root.LuiggiStory3D?.retomar();
       mostrarMenuPrincipal();
     }
   }
@@ -424,7 +472,9 @@
       if (temSave && !confirm('Começar um novo jogo do início no Subaru? (Suas conquistas serão mantidas!)')) return;
       save.resetarJogo(true);
       esconderMenuPrincipal();
+      root.LuiggiStory3D?.pausar();
       await root.LuiggiSubaruPOV.abrirSubaruSafepoint('intro');
+      root.LuiggiStory3D?.retomar();
       iniciarCapitulo(0);
     });
     document.getElementById('mm-museum').addEventListener('click', () => root.LuiggiMuseum.abrirMuseu('saguao'));
@@ -554,7 +604,8 @@
 
   async function boot() {
     await root.LuiggiData.carregarTudo();
-    iniciarPhaser();
+    iniciarPalco3D();
+    const atalho = aplicarAtalhosDeTeste();
     atualizarHUD();
 
     document.getElementById('btn-top-fs').addEventListener('click', alternarTelaCheia);
@@ -562,7 +613,19 @@
     document.getElementById('btn-top-menu').addEventListener('click', () => mostrarMenuPrincipal());
     document.getElementById('btn-top-cfg').addEventListener('click', () => abrirConfiguracoes());
 
-    mostrarMenuPrincipal();
+    if (!atalho) mostrarMenuPrincipal();
+  }
+
+  // Atalhos por URL (úteis para testar): ?capitulo=3  ·  ?minigame=basquete_maria_clara  ·  ?safepoint=4
+  function aplicarAtalhosDeTeste() {
+    const q = new URLSearchParams(location.search);
+    if (q.has('capitulo')) setTimeout(() => iniciarCapitulo(Number(q.get('capitulo'))), 50);
+    else if (q.has('minigame')) setTimeout(() => executarMinigame(q.get('minigame'), true).then(() => mostrarMenuPrincipal()), 50);
+    else if (q.has('safepoint')) {
+      root.LuiggiStory3D?.pausar();
+      setTimeout(() => root.LuiggiSubaruPOV.abrirSubaruSafepoint(isNaN(Number(q.get('safepoint'))) ? q.get('safepoint') : Number(q.get('safepoint'))).then(() => mostrarMenuPrincipal()), 50);
+    } else return false;
+    return true;
   }
 
   root.LuiggiUI = { atualizarHUD };

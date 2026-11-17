@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>LuiggiBeats: O Destino Já Foi Escrito</title>
   <link rel="stylesheet" href="src/styles/game.css" />
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="vendor/three.min.js"></script>
 </head>
 <body>
   <div id="game-shell">
@@ -22,7 +21,7 @@
     </header>
 
     <div class="stage-frame">
-      <div id="phaser-container"></div>
+      <div id="stage3d-container"></div>
       <div id="vn-backdrop" class="vn-backdrop"></div>
       <div id="vn-day-hud" class="vn-day-hud"></div>
       <div id="vn-cast-layer" class="vn-cast-layer"></div>
@@ -50,6 +49,8 @@
       <div id="choice-cards" class="choice-cards"></div>
     </div>
   </div>
+
+  <div id="chapter-intro-overlay" class="chapter-intro hidden"></div>
 
   <div id="convergence-overlay" class="convergence-overlay hidden">
     <div id="convergence-content" class="convergence-content"></div>
@@ -93,6 +94,9 @@
   <script src="src/engine/AchievementManager.js"></script>
   <script src="src/engine/DialogueSystem.js"></script>
   <script src="src/engine/Minigame3DEngine.js"></script>
+  <script src="src/engine/Character3D.js"></script>
+  <script src="src/engine/Environments3D.js"></script>
+  <script src="src/engine/StoryStage3D.js"></script>
   <script src="src/minigames/CookieFactoryGame.js"></script>
   <script src="src/minigames/RhythmEngine.js"></script>
   <script src="src/minigames/FLStudioGame.js"></script>
