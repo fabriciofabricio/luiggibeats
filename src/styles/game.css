@@ -1583,3 +1583,8 @@ body.modo-3d .vn-backdrop { display: none; }
 .mgk-cameo .vn-sprite-wrap { height: 100%; }
 .mgk-cameo .vn-sprite-img, .mgk-cameo svg { height: 100%; width: auto; }
 @keyframes cameoIn { from { transform: translateX(60%); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.mgk-evidencias { position: absolute; left: 2%; top: 12%; width: min(300px, 32%); background: rgba(8, 10, 20, 0.85); border: 1px solid rgba(34,197,94,0.35); border-radius: 12px; padding: 10px 12px; font-size: 0.78rem; backdrop-filter: blur(6px); }
+.mgk-evidencias h4 { margin: 0 0 6px; color: #4ade80; font-size: 0.85rem; }
+.mgk-evidencias div { padding: 5px 0; border-top: 1px solid rgba(255,255,255,0.06); color: #64748b; }
+.mgk-evidencias div.ok { color: #fca5a5; animation: msgPop 0.3s ease; }

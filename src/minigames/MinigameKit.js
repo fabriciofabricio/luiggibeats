@@ -68,6 +68,7 @@
         stage.addUpdate((dt, t) => env.update(dt, t));
       }
       if (stage && cfg.grade) stage.setGrade(cfg.grade);
+      if (stage) stage.start();
     }
 
     const kit = {
@@ -202,7 +203,7 @@
         return id;
       },
       loop(fn) {
-        if (stage) stage.start((dt, t) => !terminado && fn(dt, t));
+        if (stage) stage.addUpdate((dt, t) => !terminado && fn(dt, t));
         else {
           let last = performance.now();
           let raf = 0;
