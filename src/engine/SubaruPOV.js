@@ -452,14 +452,14 @@
       }
       if (stage) {
         const THREE = root.THREE;
-        env = root.Luiggi3DEnv.build('safepoint', { semSubaru: true });
+        env = root.Luiggi3DEnv.build('safepoint', { semSubaru: true, raio: 9, arco: Math.PI * 0.62 });
         env.group.position.z = 2.5;
         stage.scene.add(env.group);
         root.Luiggi3DEnv.aplicar(stage, env);
-        stage.setGrade({ vignette: 0.85, bloom: 1.1 });
+        stage.setGrade(env.foto ? { vignette: 0.7, bloom: 0.5, threshold: 1.4 } : { vignette: 0.85, bloom: 1.1 });
         interior = construirInterior();
         stage.scene.add(interior.group);
-        card = L().createCharacterCard(fabricio, { altura: 0.98, tint: '#dfe6ff' });
+        card = L().createCharacterCard(fabricio, { altura: 0.98, tint: env.foto ? '#ffffff' : '#dfe6ff', emotes: false });
         card.group.position.set(0.5, 0.52, -0.02);
         stage.scene.add(card.group);
         stage.camera.position.set(-0.38, 1.2, 0.18);

@@ -1,10 +1,16 @@
 # LUIGGIBEATS: O DESTINO JÁ FOI ESCRITO
 
-Jogo web de aventura narrativa 2D (HTML5 + Phaser 3 + Web Audio API + Rigs SVG em camadas), em português do Brasil, sobre a vida real de **Luis Felipe (LuiggiBeats)** e seus amigos em Curitiba.
+Jogo web de aventura narrativa em 3D (HTML5 + Three.js + Web Audio API), em português do Brasil, sobre a vida real de **Luis Felipe (LuiggiBeats)** e seus amigos em Curitiba.
+
+- Como a história é contada (Fabricio narrando, cenas, ritmo): [ROTEIRO_REFORMULADO.md](ROTEIRO_REFORMULADO.md)
+- Plano técnico do remake 3D: [PLANO_REMAKE_3D.md](PLANO_REMAKE_3D.md)
+- Laboratório para ver cenários e bonecos 3D: [laboratorio3d.html](laboratorio3d.html)
 
 ---
 
 ## Como rodar o jogo
+
+0. **Mais fácil (Windows):** dê dois cliques em `INICIAR_JOGO.bat`. Ele sobe um servidor local e abre o jogo.
 
 1. **Opção recomendada (servidor estático simples):**
    ```bash
@@ -43,7 +49,8 @@ Jogo web de aventura narrativa 2D (HTML5 + Phaser 3 + Web Audio API + Rigs SVG e
   node ferramentas/empacotar_dados.js
   ```
   Confira o resultado em `galeria_personagens.html`.
-- **Diálogos e capítulos (Prólogo + 1 a 15):** edite `data/dialogos.json`.
+- **Diálogos e capítulos (Prólogo + 1 a 15):** edite `data/dialogos.json`. Falas do Fabricio comentando usam `"quem": "narrador"`; trocas de lugar usam eventos `cena` (veja ROTEIRO_REFORMULADO.md).
+- **Sprites de meio corpo sem arte pintada (Emily, Eloiza):** `node ferramentas/gerar_busto_anime.js` gera os SVGs; para trocar por arte pintada, salve `assets/sprites/<id>/cartoon.png` (896x1200, fundo transparente).
 - **Escolhas, mini-cenas e convergências:** edite `data/escolhas.json`.
 - **Charts manuais do LuiggiBeats Hero:** salve um arquivo `/data/charts/<id-da-musica>.json` (ou use o **● Modo Gravação** escondido dentro do seletor do Hero para exportar o JSON no ritmo!).
 - **Receitas de cookies e upgrades:** edite `data/receitas.json`.

@@ -1760,3 +1760,5 @@ body.modo-3d .top-hud:hover, body.modo-3d .top-hud:focus-within, body.modo-3d.hu
 
 /* Retrato sem emoji flutuante */
 .dialogue-portrait .vn-emote { display: none; }
+
+.sp3d-portrait .vn-emote, .menu-duo-stage .vn-emote { display: none; }

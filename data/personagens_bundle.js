@@ -1126,19 +1126,18 @@ window.__LUIGGI_PERSONAGENS__ = {
       "fraseMarcante": "Vocês dois dividem um neurônio só, tanto faz!",
       "temFoto": true,
       "fotos": [
-        "assets/Emily Doces/Screenshot 2026-11-17 011301.png"
+        "assets/Emily Doces/Screenshot 2026-11-17 011301.png",
+        "assets/Emily Doces/Screenshot 2026-11-17 045656.png"
       ],
       "suposicoes": [
-        "tomPele (foto em P&B)",
-        "olhos.cor (foto em P&B)",
         "alturaRelativa",
         "pecaInferior"
       ],
       "fichaVisual": {
-        "tomPele": "#EFC8B4",
-        "sombreamentoPele": "#D1A692",
+        "tomPele": "#F0CBB8",
+        "sombreamentoPele": "#D3A692",
         "cabelo": {
-          "cor": "#2B2220",
+          "cor": "#231B19",
           "corMecha": null,
           "comprimento": "médio-curto",
           "textura": "ondulado/repicado",
@@ -1149,9 +1148,9 @@ window.__LUIGGI_PERSONAGENS__ = {
         "rosto": {
           "formato": "oval",
           "olhos": {
-            "cor": "#5E6B64",
+            "cor": "#6D7B47",
             "formato": "medio",
-            "delineado": false
+            "delineado": true
           },
           "sobrancelhas": {
             "cor": "#2B2220",
@@ -1286,7 +1285,10 @@ window.__LUIGGI_PERSONAGENS__ = {
       "fraseMarcante": "Vou parar com isso.",
       "temFoto": true,
       "fotos": [
-        "assets/Eloiza/Screenshot 2026-11-17 011849.png"
+        "assets/Eloiza/Screenshot 2026-11-17 011849.png",
+        "assets/Eloiza/Screenshot 2026-11-17 045525.png",
+        "assets/Eloiza/Screenshot 2026-11-17 045532.png",
+        "assets/Eloiza/Screenshot 2026-11-17 045559.png"
       ],
       "suposicoes": [
         "pecaInferior"
@@ -1589,46 +1591,49 @@ window.__LUIGGI_PERSONAGENS__ = {
       "papel": "Melhor amigo do ensino médio e músico desafinado",
       "capituloPrimeiraAparicao": 1,
       "fraseMarcante": "Por que você fez isso?!",
-      "temFoto": false,
-      "fotos": [],
-      "statusFoto": "SEM FOTO em /assets.",
+      "temFoto": true,
+      "fotos": [
+        "assets/tiagomusic/Screenshot 2026-11-17 043859.png"
+      ],
       "suposicoes": [
-        "tomPele",
-        "cabelo",
-        "rosto",
-        "corpo",
-        "roupa"
+        "alturaRelativa",
+        "tipoCorpo",
+        "pecaInferior"
       ],
       "fichaVisual": {
-        "tomPele": "#EBC0A8",
-        "sombreamentoPele": "#CC9D85",
+        "tomPele": "#F0C8B6",
+        "sombreamentoPele": "#CFA08C",
         "cabelo": {
-          "cor": "#291E19",
+          "cor": "#5C4332",
           "corMecha": null,
-          "comprimento": "curto-médio",
-          "textura": "liso",
-          "penteado": "franja caída pro lado",
-          "franja": "lateral",
-          "estilo": "casual_baguncado"
+          "comprimento": "médio (na altura da nuca)",
+          "textura": "ondulado/volumoso",
+          "penteado": "volumoso com franja bagunçada na testa e pontas para fora atrás",
+          "franja": "bagunçada na testa",
+          "estilo": "shaggy_franja"
         },
         "rosto": {
-          "formato": "oval",
+          "formato": "oval_arredondado",
           "olhos": {
-            "cor": "#3B2820",
-            "formato": "grande",
+            "cor": "#4A3528",
+            "formato": "medio",
             "delineado": false
           },
           "sobrancelhas": {
-            "cor": "#291E19",
+            "cor": "#4A3528",
             "espessura": "media",
-            "estilo": "expressiva"
+            "estilo": "natural"
           },
           "nariz": "medio",
           "sorriso": "empolgado"
         },
         "detalhes": {
-          "barbaBigode": "nenhuma",
-          "oculos": null,
+          "barbaBigode": "barba por fazer / barba curta castanho-avermelhada",
+          "oculos": {
+            "tipo": "retangular_grosso",
+            "corArmacao": "#1C1C20",
+            "lenteTinta": null
+          },
           "piercings": [],
           "alargadores": false,
           "tatuagens": [],
@@ -1636,18 +1641,19 @@ window.__LUIGGI_PERSONAGENS__ = {
         },
         "corpo": {
           "alturaRelativa": 3,
-          "tipoCorpo": "magro"
+          "tipoCorpo": "medio"
         },
         "roupa": {
-          "estilo": "escolar / músico",
+          "estilo": "casual / músico",
           "paletaCores": [
-            "#1B5E3C",
-            "#F3F4F6",
-            "#92400E"
+            "#222328",
+            "#141418",
+            "#60A5FA"
           ],
-          "pecaSuperior": "jaqueta verde escolar",
-          "pecaInferior": "calça escura",
+          "pecaSuperior": "jaqueta puffer preta/grafite aberta sobre camiseta preta com estampa azul e branca 'GO! GO! GO!'",
+          "pecaInferior": "calça escura (suposição)",
           "acessorios": [
+            "óculos de armação retangular preta",
             "violão"
           ]
         }

@@ -1,17 +1,16 @@
 // Gerado automaticamente por ferramentas/gerar_manifest.js
 window.__LUIGGI_MANIFEST__ = {
   "versao": 1,
-  "geradoEm": "2026-11-17T01:38:31.910Z",
+  "geradoEm": "2026-11-17T04:03:45.069Z",
   "resumo": {
-    "totalArquivos": 71,
-    "imagens": 71,
-    "audios": 0,
-    "personagensComFoto": 21,
+    "totalArquivos": 108,
+    "imagens": 77,
+    "audios": 31,
+    "personagensComFoto": 22,
     "veiculosComFoto": 2,
     "cenarios": 16,
-    "extrasForaSecao13": 9,
+    "extrasForaSecao13": 10,
     "semFotoSecao13": [
-      "tiago_music",
       "gi_eta",
       "gato_luiza",
       "rebeca",
@@ -31,10 +30,14 @@ window.__LUIGGI_MANIFEST__ = {
       "assets/cecilia/Screenshot 2026-11-17 014750.png"
     ],
     "eloiza": [
-      "assets/Eloiza/Screenshot 2026-11-17 011849.png"
+      "assets/Eloiza/Screenshot 2026-11-17 011849.png",
+      "assets/Eloiza/Screenshot 2026-11-17 045525.png",
+      "assets/Eloiza/Screenshot 2026-11-17 045532.png",
+      "assets/Eloiza/Screenshot 2026-11-17 045559.png"
     ],
     "emily": [
-      "assets/Emily Doces/Screenshot 2026-11-17 011301.png"
+      "assets/Emily Doces/Screenshot 2026-11-17 011301.png",
+      "assets/Emily Doces/Screenshot 2026-11-17 045656.png"
     ],
     "erion": [
       "assets/Erion/Screenshot 2026-11-17 012048.png"
@@ -79,6 +82,9 @@ window.__LUIGGI_MANIFEST__ = {
     ],
     "sol": [
       "assets/Sol/Screenshot 2026-11-17 011041.png"
+    ],
+    "tiago_music": [
+      "assets/tiagomusic/Screenshot 2026-11-17 043859.png"
     ],
     "tutuluiza": [
       "assets/tutuluiza/Screenshot 2026-11-17 011827.png"
@@ -234,7 +240,256 @@ window.__LUIGGI_MANIFEST__ = {
       "foraSecao13": true
     }
   ],
-  "musicas": [],
+  "musicas": [
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/GO_EVIE_GO_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/MENINAS_MALVADAS_damet_fitaowo_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/N_FODE_ft_YamishawtyAshy_Fita_owo_prodLxrente_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/ODEIO1SSO_2_ft_Yamishawty_Drade3333_prodLxrente_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/pendrive_prod_residentevie_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/raken_-_closet_prod_squirlbeats_x_kinsage_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/ﾟﾟProfissionalKillerﾟﾟ_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Dujazz/Dujazz_-_To_Fumando_Blunt_Slowed_Reverb_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Dujazz/Meia_noite_feat_Tareq_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Dujazz/Passei_a_noite_pensando_em_você_yxngdena_DISPONIVEL_NO_SPOTIFY_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Dujazz/tareq_-_Garagem_feat_Dujazz_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Luis outras musicas/Mensagens_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Luis outras musicas/pensando_em_você_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Luis outras musicas/Xavegod_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Luis outras musicas/You_dont_text_me_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Roddie/algo_a_p_mav_luangelus_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Roddie/kumbaya_freestyle_p_elysian_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Roddie/milha_w_twikipedia_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Roddie/sintobem_w_mugshotsade_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/siris69/durateston_raken_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/siris69/sempre_p_jundanxer_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/siris69/siris_-_nancy_prod_jundanxer_ser_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/siris69/siris_roddie_-_te_amo_3_prod_rip_borba_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/siris69/vai_verão_vem_verão_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-01-Mafe-1084955074.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-02-Web Date-1084955053.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-03-Ela Mudou-1084955029.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-04-Hemisferio-1084955014.m4a",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-05-Nosso Fim-1084954984.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-06-Promessas-1084954978.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-07-Bandido Bonus Track-1084954963.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    }
+  ],
   "spritesLegados": [
     {
       "caminho": "assets/personagens/amanda_becker.png",
@@ -413,6 +668,15 @@ window.__LUIGGI_MANIFEST__ = {
       "associadoId": "mateustuon",
       "ambiguo": true,
       "notaAmbiguidade": "Arquivo/pasta \"Mateus Tuon\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/Imagem capa do album.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "musicasmp3",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Musicas mp3\" não consta na lista da seção 13.",
       "foraSecao13": true
     }
   ],
@@ -648,7 +912,39 @@ window.__LUIGGI_MANIFEST__ = {
       "foraSecao13": false
     },
     {
+      "caminho": "assets/Eloiza/Screenshot 2026-11-17 045525.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "eloiza",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Eloiza/Screenshot 2026-11-17 045532.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "eloiza",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Eloiza/Screenshot 2026-11-17 045559.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "eloiza",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
       "caminho": "assets/Emily Doces/Screenshot 2026-11-17 011301.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "emily",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Emily Doces/Screenshot 2026-11-17 045656.png",
       "tipo": "imagem",
       "categoria": "personagem",
       "associadoId": "emily",
@@ -827,6 +1123,263 @@ window.__LUIGGI_MANIFEST__ = {
       "foraSecao13": false
     },
     {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/GO_EVIE_GO_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/MENINAS_MALVADAS_damet_fitaowo_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/N_FODE_ft_YamishawtyAshy_Fita_owo_prodLxrente_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/ODEIO1SSO_2_ft_Yamishawty_Drade3333_prodLxrente_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/pendrive_prod_residentevie_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/raken_-_closet_prod_squirlbeats_x_kinsage_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/CyberSupremacy/ﾟﾟProfissionalKillerﾟﾟ_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Dujazz/Dujazz_-_To_Fumando_Blunt_Slowed_Reverb_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Dujazz/Meia_noite_feat_Tareq_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Dujazz/Passei_a_noite_pensando_em_você_yxngdena_DISPONIVEL_NO_SPOTIFY_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Dujazz/tareq_-_Garagem_feat_Dujazz_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Luis outras musicas/Mensagens_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Luis outras musicas/pensando_em_você_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Luis outras musicas/Xavegod_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Luis outras musicas/You_dont_text_me_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Roddie/algo_a_p_mav_luangelus_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Roddie/kumbaya_freestyle_p_elysian_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Roddie/milha_w_twikipedia_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/Roddie/sintobem_w_mugshotsade_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/siris69/durateston_raken_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/siris69/sempre_p_jundanxer_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/siris69/siris_-_nancy_prod_jundanxer_ser_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/siris69/siris_roddie_-_te_amo_3_prod_rip_borba_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Bonus/siris69/vai_verão_vem_verão_KLICKAUD.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/Imagem capa do album.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "musicasmp3",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Musicas mp3\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-01-Mafe-1084955074.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-02-Web Date-1084955053.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-03-Ela Mudou-1084955029.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-04-Hemisferio-1084955014.m4a",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-05-Nosso Fim-1084954984.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-06-Promessas-1084954978.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-07-Bandido Bonus Track-1084954963.mp3",
+      "tipo": "audio",
+      "categoria": "musica",
+      "associadoId": "luiggibeats",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
       "caminho": "assets/personagens/amanda_becker.png",
       "tipo": "imagem",
       "categoria": "sprite_legado",
@@ -939,6 +1492,14 @@ window.__LUIGGI_MANIFEST__ = {
       "foraSecao13": false
     },
     {
+      "caminho": "assets/tiagomusic/Screenshot 2026-11-17 043859.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "tiago_music",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
       "caminho": "assets/tutuluiza/Screenshot 2026-11-17 011827.png",
       "tipo": "imagem",
       "categoria": "personagem",
@@ -997,72 +1558,410 @@ window.__LUIGGI_MANIFEST__ = {
   ]
 };
 window.__LUIGGI_MUSICAS__ = {
-  "nota": "Nenhum arquivo MP3 encontrado em /assets até o momento. Coloque os MP3s em /assets e rode `node ferramentas/gerar_manifest.js`.",
-  "mp3sEncontrados": 0,
+  "nota": "Lista gerada a partir dos MP3s em /assets. Mude \"aConfirmar\" para false após revisar.",
+  "mp3sEncontrados": 31,
   "faixas": [
     {
-      "id": "tiago_primeira_musica_placeholder",
-      "arquivo": null,
-      "titulo": "Primeira Música do Tiago (Placeholder Desafinado)",
-      "artista": "Tiago Music",
-      "ano": 2019,
-      "descricao": "Nenhum MP3 com \"tiago\" foi encontrado em /assets. Áudio propositalmente desafinado sintetizado via Web Audio.",
-      "desbloqueiaNoCapitulo": 1,
-      "bpm": 112,
-      "ehMusicaDoTiago": true,
-      "sintetizadaFallback": true,
-      "aConfirmar": true
-    },
-    {
-      "id": "vitor_no_date_shittrap",
-      "arquivo": null,
-      "titulo": "Vitor no Date (Shittrap 2020)",
-      "artista": "LuiggiBeats feat. Fabricio",
+      "id": "goeviegoklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/CyberSupremacy/GO_EVIE_GO_KLICKAUD.mp3",
+      "titulo": "GO EVIE GO KLICKAUD",
+      "artista": "LuiggiBeats",
       "ano": 2020,
-      "descricao": "Faixa placeholder sintetizada até os MP3s reais do LuiggiBeats serem adicionados em /assets.",
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
       "desbloqueiaNoCapitulo": 2,
       "bpm": 140,
       "ehMusicaDoTiago": false,
-      "sintetizadaFallback": true,
+      "sintetizadaFallback": false,
       "aConfirmar": true
     },
     {
-      "id": "subaru_madrugada_beat",
-      "arquivo": null,
-      "titulo": "Subaru 3h da Manhã",
+      "id": "meninasmalvadasdametfitaowoklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/CyberSupremacy/MENINAS_MALVADAS_damet_fitaowo_KLICKAUD.mp3",
+      "titulo": "MENINAS MALVADAS damet fitaowo KLICKAUD",
       "artista": "LuiggiBeats",
-      "ano": 2022,
-      "descricao": "Beat placeholder atmosférico para as cenas noturnas em Curitiba.",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 2,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "nfodeftyamishawtyashyfitaowoprodlxrenteklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/CyberSupremacy/N_FODE_ft_YamishawtyAshy_Fita_owo_prodLxrente_KLICKAUD.mp3",
+      "titulo": "N FODE ft YamishawtyAshy Fita owo prodLxrente KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 2,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "odeio1sso2ftyamishawtydrade3333prodlxrenteklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/CyberSupremacy/ODEIO1SSO_2_ft_Yamishawty_Drade3333_prodLxrente_KLICKAUD.mp3",
+      "titulo": "ODEIO1SSO 2 ft Yamishawty Drade3333 prodLxrente KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 3,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "pendriveprodresidentevieklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/CyberSupremacy/pendrive_prod_residentevie_KLICKAUD.mp3",
+      "titulo": "pendrive prod residentevie KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 3,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "rakenclosetprodsquirlbeatsxkinsageklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/CyberSupremacy/raken_-_closet_prod_squirlbeats_x_kinsage_KLICKAUD.mp3",
+      "titulo": "raken closet prod squirlbeats x kinsage KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 4,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "profissionalkillerklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/CyberSupremacy/ﾟﾟProfissionalKillerﾟﾟ_KLICKAUD.mp3",
+      "titulo": "ﾟﾟProfissionalKillerﾟﾟ KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 4,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "dujazztofumandobluntslowedreverbklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/Dujazz/Dujazz_-_To_Fumando_Blunt_Slowed_Reverb_KLICKAUD.mp3",
+      "titulo": "Dujazz To Fumando Blunt Slowed Reverb KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 4,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "meianoitefeattareqklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/Dujazz/Meia_noite_feat_Tareq_KLICKAUD.mp3",
+      "titulo": "Meia noite feat Tareq KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 5,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "passeianoitepensandoemvoceyxngdenadisponivelnospotifyklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/Dujazz/Passei_a_noite_pensando_em_você_yxngdena_DISPONIVEL_NO_SPOTIFY_KLICKAUD.mp3",
+      "titulo": "Passei a noite pensando em você yxngdena DISPONIVEL NO SPOTIFY KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 5,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "tareqgaragemfeatdujazzklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/Dujazz/tareq_-_Garagem_feat_Dujazz_KLICKAUD.mp3",
+      "titulo": "featzada",
+      "artista": "Tareq Hanna",
+      "ano": 2019,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
       "desbloqueiaNoCapitulo": 6,
-      "bpm": 128,
+      "bpm": 140,
       "ehMusicaDoTiago": false,
-      "sintetizadaFallback": true,
+      "sintetizadaFallback": false,
       "aConfirmar": true
     },
     {
-      "id": "sad_baile_type_beat",
-      "arquivo": null,
-      "titulo": "Sad Baile (Choro no Grave)",
+      "id": "mensagensklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/Luis outras musicas/Mensagens_KLICKAUD.mp3",
+      "titulo": "Mensagens KLICKAUD",
       "artista": "LuiggiBeats",
-      "ano": 2023,
-      "descricao": "Beat placeholder melancólico do capítulo 8.",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 6,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "pensandoemvoceklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/Luis outras musicas/pensando_em_você_KLICKAUD.mp3",
+      "titulo": "pensando em você KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 7,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "xavegodklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/Luis outras musicas/Xavegod_KLICKAUD.mp3",
+      "titulo": "Xavegod KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 7,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "youdonttextmeklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/Luis outras musicas/You_dont_text_me_KLICKAUD.mp3",
+      "titulo": "You dont text me KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 7,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "algoapmavluangelusklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/Roddie/algo_a_p_mav_luangelus_KLICKAUD.mp3",
+      "titulo": "algo a p mav luangelus KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
       "desbloqueiaNoCapitulo": 8,
-      "bpm": 132,
+      "bpm": 140,
       "ehMusicaDoTiago": false,
-      "sintetizadaFallback": true,
+      "sintetizadaFallback": false,
       "aConfirmar": true
     },
     {
-      "id": "red_flag_queen_anthem",
-      "arquivo": null,
-      "titulo": "Melhores Amigos Bloqueados",
+      "id": "kumbayafreestylepelysianklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/Roddie/kumbaya_freestyle_p_elysian_KLICKAUD.mp3",
+      "titulo": "kumbaya freestyle p elysian KLICKAUD",
       "artista": "LuiggiBeats",
-      "ano": 2024,
-      "descricao": "Beat placeholder gótico/trap da era Eloiza.",
-      "desbloqueiaNoCapitulo": 12,
-      "bpm": 145,
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 8,
+      "bpm": 140,
       "ehMusicaDoTiago": false,
-      "sintetizadaFallback": true,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "milhawtwikipediaklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/Roddie/milha_w_twikipedia_KLICKAUD.mp3",
+      "titulo": "milha w twikipedia KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 9,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "sintobemwmugshotsadeklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/Roddie/sintobem_w_mugshotsade_KLICKAUD.mp3",
+      "titulo": "sintobem w mugshotsade KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 8,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "duratestonrakenklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/siris69/durateston_raken_KLICKAUD.mp3",
+      "titulo": "durateston raken KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 9,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "semprepjundanxerklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/siris69/sempre_p_jundanxer_KLICKAUD.mp3",
+      "titulo": "sempre p jundanxer KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 10,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "sirisnancyprodjundanxerserklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/siris69/siris_-_nancy_prod_jundanxer_ser_KLICKAUD.mp3",
+      "titulo": "siris nancy prod jundanxer ser KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 10,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "sirisroddieteamo3prodripborbaklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/siris69/siris_roddie_-_te_amo_3_prod_rip_borba_KLICKAUD.mp3",
+      "titulo": "siris roddie te amo 3 prod rip borba KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 11,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "vaiveraovemveraoklickaud",
+      "arquivo": "assets/Musicas mp3/Bonus/siris69/vai_verão_vem_verão_KLICKAUD.mp3",
+      "titulo": "vai verão vem verão KLICKAUD",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 11,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "soundcloud01mafe1084955074",
+      "arquivo": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-01-Mafe-1084955074.mp3",
+      "titulo": "soundcloud 01 Mafe 1084955074",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 12,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "soundcloud02webdate1084955053",
+      "arquivo": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-02-Web Date-1084955053.mp3",
+      "titulo": "soundcloud 02 Web Date 1084955053",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 12,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "soundcloud03elamudou1084955029",
+      "arquivo": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-03-Ela Mudou-1084955029.mp3",
+      "titulo": "soundcloud 03 Ela Mudou 1084955029",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 12,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "soundcloud04hemisferio1084955014",
+      "arquivo": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-04-Hemisferio-1084955014.m4a",
+      "titulo": "soundcloud 04 Hemisferio 1084955014",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 13,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "soundcloud05nossofim1084954984",
+      "arquivo": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-05-Nosso Fim-1084954984.mp3",
+      "titulo": "soundcloud 05 Nosso Fim 1084954984",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 13,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "soundcloud06promessas1084954978",
+      "arquivo": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-06-Promessas-1084954978.mp3",
+      "titulo": "soundcloud 06 Promessas 1084954978",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 14,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
+      "aConfirmar": true
+    },
+    {
+      "id": "soundcloud07bandidobonustrack1084954963",
+      "arquivo": "assets/Musicas mp3/Primeiro album luis Bandido sobre o vitor/soundcloud-07-Bandido Bonus Track-1084954963.mp3",
+      "titulo": "soundcloud 07 Bandido Bonus Track 1084954963",
+      "artista": "LuiggiBeats",
+      "ano": 2020,
+      "descricao": "Faixa original do LuiggiBeats detectada automaticamente em /assets.",
+      "desbloqueiaNoCapitulo": 14,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": false,
       "aConfirmar": true
     }
   ]

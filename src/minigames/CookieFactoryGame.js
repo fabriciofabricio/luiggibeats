@@ -53,16 +53,15 @@
                 <span class="badge-pill">⚡ Hiperfoco: ${hiperfoco}%</span>
               </div>
             </div>
-            ${
-              etapa === 1 && disponiveis.length > 1
-                ? `<div class="recipe-strip">Receitas: ${disponiveis
-                    .map(
-                      (r) =>
-                        `<button class="mini-btn ${r.id === receitaAtual.id ? 'active' : ''}" data-rec="${r.id}">${r.nome}</button>`
-                    )
-                    .join('')}</div>`
-                : ''
-            }
+            ${etapa === 1 && disponiveis.length > 1
+            ? `<div class="recipe-strip">Receitas: ${disponiveis
+              .map(
+                (r) =>
+                  `<button class="mini-btn ${r.id === receitaAtual.id ? 'active' : ''}" data-rec="${r.id}">${r.nome}</button>`
+              )
+              .join('')}</div>`
+            : ''
+          }
             <div class="mg-body">${innerHtml}</div>
           </div>
         `;
@@ -280,14 +279,14 @@
           <p>Clique nos 6 espaços da assadeira para modelar as bolinhas (tente deixar todas com tamanho ~3!).</p>
           <div class="tray-grid">
             ${tamanhos
-              .map(
-                (_, i) => `
+            .map(
+              (_, i) => `
               <button class="tray-slot" data-slot="${i}">
                 <div class="ball-preview" id="ball-${i}" style="background:${receitaAtual.corMassa}"></div>
                 <span id="ball-lbl-${i}">Vazio</span>
               </button>`
-              )
-              .join('')}
+            )
+            .join('')}
           </div>
           <div class="mg-actions"><button class="mg-btn primary" id="ck-tray-go">🔥 Botar no Forno</button></div>
         `);

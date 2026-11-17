@@ -55,11 +55,11 @@
                   <label>Música:</label>
                   <select id="hero-song" class="mg-select">
                     ${liberadas
-                      .map(
-                        (m) =>
-                          `<option value="${m.id}" ${m.id === faixa.id ? 'selected' : ''}>${m.titulo} — ${m.artista} (${m.bpm || 140} BPM)</option>`
-                      )
-                      .join('')}
+            .map(
+              (m) =>
+                `<option value="${m.id}" ${m.id === faixa.id ? 'selected' : ''}>${m.titulo} — ${m.artista} (${m.bpm || 140} BPM)</option>`
+            )
+            .join('')}
                   </select>
                 </div>
                 <div>
@@ -532,11 +532,10 @@
             <div class="mg-modal hero-theme">
               <div class="mg-header"><h3>${falhou ? '💀 A MÚSICA PAROU!' : '🏆 Fim da Apresentação'}</h3></div>
               <div class="mg-body" style="text-align:center;">
-                ${
-                  falhou
-                    ? `<div style="font-size:1.3rem;color:#f87171;margin:10px 0;">Tiago Music apareceu na plateia: <strong>"Por que você fez isso?"</strong></div>`
-                    : `<div style="font-size:2rem;color:#fbbf24;">${'★'.repeat(estrelas)}${'☆'.repeat(5 - estrelas)}</div>`
-                }
+                ${falhou
+              ? `<div style="font-size:1.3rem;color:#f87171;margin:10px 0;">Tiago Music apareceu na plateia: <strong>"Por que você fez isso?"</strong></div>`
+              : `<div style="font-size:2rem;color:#fbbf24;">${'★'.repeat(estrelas)}${'☆'.repeat(5 - estrelas)}</div>`
+            }
                 <p><strong>Ranking:</strong> ${ranking}</p>
                 <p>Pontuação: <strong>${score}</strong> · Precisão: <strong>${precisao}%</strong> · Maior Combo: <strong>${maxCombo}</strong></p>
                 <div class="mg-actions">
@@ -726,11 +725,11 @@
               <p style="font-size:0.84rem;color:#9ca3af;">Aperte o som perfeito pro timing da piada!</p>
               <div class="soundboard-grid">
                 ${falas
-                  .map(
-                    (b) =>
-                      `<button class="mg-btn ${b.alvo === f.alvo ? '' : ''}" data-sb="${b.alvo}">${b.label}</button>`
-                  )
-                  .join('')}
+            .map(
+              (b) =>
+                `<button class="mg-btn ${b.alvo === f.alvo ? '' : ''}" data-sb="${b.alvo}">${b.label}</button>`
+            )
+            .join('')}
               </div>
             </div>
           </div>

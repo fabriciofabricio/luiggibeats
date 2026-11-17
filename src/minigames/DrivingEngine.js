@@ -21,17 +21,16 @@
         <div class="mg-modal drive-theme">
           <div class="mg-header">
             <div>
-              <h3>🚙 Subaru Legacy 3D: ${
-                modo === 'racha'
-                  ? 'Racha x Civic da Emily'
-                  : modo === 'madrugada'
-                  ? 'Centro 3h da Manhã'
-                  : modo === 'amanhecer'
-                  ? 'Amanhecer em Curitiba'
-                  : modo === 'curitiba'
-                  ? 'Bacacheri → Centro'
-                  : 'Direção Livre'
-              }</h3>
+              <h3>🚙 Subaru Legacy 3D: ${modo === 'racha'
+          ? 'Racha x Civic da Emily'
+          : modo === 'madrugada'
+            ? 'Centro 3h da Manhã'
+            : modo === 'amanhecer'
+              ? 'Amanhecer em Curitiba'
+              : modo === 'curitiba'
+                ? 'Bacacheri → Centro'
+                : 'Direção Livre'
+        }</h3>
               <div class="mg-sub" id="drv-gps">GPS: "Siga em frente rumo ao marcador amarelo, Tico."</div>
             </div>
             <div class="btn-row">
@@ -86,18 +85,18 @@
       const checkpoints =
         modo === 'racha'
           ? [
-              { x: 640, y: 260, nome: 'Reta da Avenida' },
-              { x: 1180, y: 420, nome: 'Teatro Guaíra' },
-              { x: 1360, y: 760, nome: 'Praça Tiradentes' },
-              { x: 900, y: 980, nome: 'Prudente de Moraes (CHEGADA!)' }
-            ]
+            { x: 640, y: 260, nome: 'Reta da Avenida' },
+            { x: 1180, y: 420, nome: 'Teatro Guaíra' },
+            { x: 1360, y: 760, nome: 'Praça Tiradentes' },
+            { x: 900, y: 980, nome: 'Prudente de Moraes (CHEGADA!)' }
+          ]
           : modo === 'curitiba'
-          ? [
+            ? [
               { x: 240, y: 260, nome: 'Casa do Fabricio (Buzine [H]!)' },
               { x: 920, y: 540, nome: 'Estação-Tubo Central' },
               { x: 1620, y: 860, nome: 'Emily Doces (CHEGADA!)' }
             ]
-          : [
+            : [
               { x: 860, y: 540, nome: 'Centro de Curitiba' },
               { x: 1360, y: 760, nome: 'Praça Tiradentes (CHEGADA!)' }
             ];
@@ -112,26 +111,26 @@
         modo === 'amanhecer'
           ? []
           : Array.from({ length: 7 }, (_, i) => ({
-              x: 420 + i * 190,
-              y: 260 + ((i * 137) % 680),
-              desviada: false
-            }));
+            x: 420 + i * 190,
+            y: 260 + ((i * 137) % 680),
+            desviada: false
+          }));
 
       const radares =
         modo === 'amanhecer'
           ? []
           : [
-              { x: 680, y: 340, lim: 4.3, cd: 0 },
-              { x: 1100, y: 600, lim: 4.3, cd: 0 }
-            ];
+            { x: 680, y: 340, lim: 4.3, cd: 0 },
+            { x: 1100, y: 600, lim: 4.3, cd: 0 }
+          ];
 
       const biarticulados =
         modo === 'amanhecer' || modo === 'madrugada'
           ? []
           : [
-              { x: 760, y: 520, vx: 1.4, w: 96, h: 30 },
-              { x: 1200, y: 720, vx: -1.4, w: 96, h: 30 }
-            ];
+            { x: 760, y: 520, vx: 1.4, w: 96, h: 30 },
+            { x: 1200, y: 720, vx: -1.4, w: 96, h: 30 }
+          ];
 
       const turboOrbs = Array.from({ length: 8 }, (_, i) => ({
         x: 360 + i * 170,
@@ -622,13 +621,12 @@
           <div class="mg-modal drive-theme" style="max-width:460px;text-align:center;">
             <div class="mg-header"><h3>🏁 ${modo === 'racha' ? (venceu ? 'SUBARU VENCEU!' : 'ELA TEM TURBO!') : 'Trajeto Concluído'}</h3></div>
             <div class="mg-body">
-              <p>${
-                modo === 'racha'
-                  ? venceu
-                    ? 'Emily sai do Civic rindo: "Tá, Tico, essa foi sua!"'
-                    : 'O Civic passa estalando o escapamento: "TCHAU, LÉ E CRÉ!"'
-                  : 'Você sobreviveu ao trânsito de Curitiba!'
-              }</p>
+              <p>${modo === 'racha'
+            ? venceu
+              ? 'Emily sai do Civic rindo: "Tá, Tico, essa foi sua!"'
+              : 'O Civic passa estalando o escapamento: "TCHAU, LÉ E CRÉ!"'
+            : 'Você sobreviveu ao trânsito de Curitiba!'
+          }</p>
               <p>Dano ao Subaru: <strong>${car.damage}%</strong> · Radares: <strong>${car.radars}</strong> · Turbos: <strong>${car.turbos}</strong></p>
               <div class="mg-actions">
                 ${modo === 'racha' ? `<button class="mg-btn" id="drv-revanche">↻ Revanche</button>` : ''}

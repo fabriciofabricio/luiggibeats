@@ -1546,7 +1546,7 @@
     const { box, plane, M, textures, createSubaruMesh, createParticles, addHeadlights } = L();
     const g = new THREE.Group();
     // Com a foto real do Safepoint (servidor local): cenário 2.5D com a foto ao fundo
-    const foto = fotoPanorama(g, FOTO_SAFEPOINT, { raio: o.raio || 16, arco: Math.PI * 0.7, corte: 0.22, brilho: o.brilhoFoto ?? 0.95 });
+    const foto = fotoPanorama(g, FOTO_SAFEPOINT, { raio: o.raio || 12, arco: o.arco || Math.PI * 0.46, corte: 0.2, brilho: o.brilhoFoto ?? 1.0 });
     if (foto) {
       ceu(g, [[0, '#6ea8e8'], [0.6, '#bcd8f5'], [1, '#e8f1fa']], 140);
       const asfalto = plane(40, 40, M.std('#ffffff', 0.85, 0.05, { map: textures.asphalt(8, 8, { lines: false, base: '#4b4f57' }) }), 0, -0.005, 4);
