@@ -1,10 +1,10 @@
 // Gerado automaticamente por ferramentas/gerar_manifest.js
 window.__LUIGGI_MANIFEST__ = {
   "versao": 1,
-  "geradoEm": "2026-11-17T04:03:45.069Z",
+  "geradoEm": "2026-11-17T04:24:11.037Z",
   "resumo": {
-    "totalArquivos": 108,
-    "imagens": 77,
+    "totalArquivos": 110,
+    "imagens": 79,
     "audios": 31,
     "personagensComFoto": 22,
     "veiculosComFoto": 2,
@@ -53,7 +53,9 @@ window.__LUIGGI_MANIFEST__ = {
       "assets/isabela dominik/Screenshot 2026-11-17 011108.png"
     ],
     "lara": [
-      "assets/Lara/Screenshot 2026-11-17 010824.png"
+      "assets/Lara/Screenshot 2026-11-17 010824.png",
+      "assets/Lara/Screenshot 2026-11-17 050428.png",
+      "assets/Lara/Screenshot 2026-11-17 050442.png"
     ],
     "luis": [
       "assets/Luis Felipe (personagem principal)/Screenshot 2026-11-17 014551.png"
@@ -1027,6 +1029,22 @@ window.__LUIGGI_MANIFEST__ = {
     },
     {
       "caminho": "assets/Lara/Screenshot 2026-11-17 010824.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "lara",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Lara/Screenshot 2026-11-17 050428.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "lara",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Lara/Screenshot 2026-11-17 050442.png",
       "tipo": "imagem",
       "categoria": "personagem",
       "associadoId": "lara",

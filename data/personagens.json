@@ -809,7 +809,8 @@
         "id": "piscadinha_orelha",
         "nome": "Orelhinhas",
         "descricao": "Mexe as orelhinhas da tiara com um sorriso."
-      }
+      },
+      "spriteCartoon": "assets/sprites/marilis_docinho/cartoon.png"
     },
     {
       "id": "yohana",
@@ -1038,7 +1039,8 @@
         "id": "bracos_cruzados_serio",
         "nome": "Postura de Segurança",
         "descricao": "Cruza os braços tatuados com expressão séria."
-      }
+      },
+      "spriteCartoon": "assets/sprites/erion/cartoon.png"
     },
     {
       "id": "rayssa",
@@ -1114,7 +1116,8 @@
         "id": "servir_cafe",
         "nome": "Latte Art",
         "descricao": "Desenha um coração no café com a leiteira sorrindo."
-      }
+      },
+      "spriteCartoon": "assets/sprites/rayssa/cartoon.png"
     },
     {
       "id": "emily",
@@ -1423,7 +1426,8 @@
         "id": "puxar_fabricio",
         "nome": "Puxar pra Pista",
         "descricao": "Acena chamando o Fabricio para o meio da pista."
-      }
+      },
+      "spriteCartoon": "assets/sprites/lara/cartoon.png"
     },
     {
       "id": "isabela_dominik",
@@ -1506,7 +1510,8 @@
         "id": "danca_empurrao",
         "nome": "Dança na Pista",
         "descricao": "Dança empolgada na frente do casal, ajudando ou empurrando sem querer."
-      }
+      },
+      "spriteCartoon": "assets/sprites/isabela_dominik/cartoon.png"
     },
     {
       "id": "matheus_neuman",
@@ -1581,7 +1586,8 @@
         "id": "narrar_x1",
         "nome": "Comentarista de Luta",
         "descricao": "Aponta espantado narrando a treta no banco de trás."
-      }
+      },
+      "spriteCartoon": "assets/sprites/matheus_neuman/cartoon.png"
     },
     {
       "id": "tiago_music",

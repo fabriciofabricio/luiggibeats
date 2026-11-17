@@ -810,7 +810,8 @@ window.__LUIGGI_PERSONAGENS__ = {
         "id": "piscadinha_orelha",
         "nome": "Orelhinhas",
         "descricao": "Mexe as orelhinhas da tiara com um sorriso."
-      }
+      },
+      "spriteCartoon": "assets/sprites/marilis_docinho/cartoon.png"
     },
     {
       "id": "yohana",
@@ -1039,7 +1040,8 @@ window.__LUIGGI_PERSONAGENS__ = {
         "id": "bracos_cruzados_serio",
         "nome": "Postura de Segurança",
         "descricao": "Cruza os braços tatuados com expressão séria."
-      }
+      },
+      "spriteCartoon": "assets/sprites/erion/cartoon.png"
     },
     {
       "id": "rayssa",
@@ -1115,7 +1117,8 @@ window.__LUIGGI_PERSONAGENS__ = {
         "id": "servir_cafe",
         "nome": "Latte Art",
         "descricao": "Desenha um coração no café com a leiteira sorrindo."
-      }
+      },
+      "spriteCartoon": "assets/sprites/rayssa/cartoon.png"
     },
     {
       "id": "emily",
@@ -1424,7 +1427,8 @@ window.__LUIGGI_PERSONAGENS__ = {
         "id": "puxar_fabricio",
         "nome": "Puxar pra Pista",
         "descricao": "Acena chamando o Fabricio para o meio da pista."
-      }
+      },
+      "spriteCartoon": "assets/sprites/lara/cartoon.png"
     },
     {
       "id": "isabela_dominik",
@@ -1507,7 +1511,8 @@ window.__LUIGGI_PERSONAGENS__ = {
         "id": "danca_empurrao",
         "nome": "Dança na Pista",
         "descricao": "Dança empolgada na frente do casal, ajudando ou empurrando sem querer."
-      }
+      },
+      "spriteCartoon": "assets/sprites/isabela_dominik/cartoon.png"
     },
     {
       "id": "matheus_neuman",
@@ -1582,7 +1587,8 @@ window.__LUIGGI_PERSONAGENS__ = {
         "id": "narrar_x1",
         "nome": "Comentarista de Luta",
         "descricao": "Aponta espantado narrando a treta no banco de trás."
-      }
+      },
+      "spriteCartoon": "assets/sprites/matheus_neuman/cartoon.png"
     },
     {
       "id": "tiago_music",
@@ -1662,7 +1668,8 @@ window.__LUIGGI_PERSONAGENS__ = {
         "id": "cara_destruida",
         "nome": "Cara Destruída",
         "descricao": "Fica em choque dramático segurando o violão."
-      }
+      },
+      "spriteCartoon": "assets/sprites/tiago_music/cartoon.png"
     },
     {
       "id": "cecilia",
