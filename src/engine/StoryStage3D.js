@@ -26,6 +26,7 @@
   let gato = null;
   let gatoCallback = null;
   let picker = null;
+  let modoMenu = false;
 
   const camAlvo = { pos: null, look: null, roll: 0, fov: 42 };
   const camAtual = { look: null, roll: 0 };
@@ -47,8 +48,28 @@
     stage.start(update);
     ativo = true;
     // Fundo ambiente enquanto nenhum capítulo foi aberto (menu)
-    montarAmbiente('safepoint', { farois: true });
+    montarMenu();
     return true;
+  }
+
+  /** Menu: Subaru no mirante com Luis e Fabricio ao lado, câmera orbitando. */
+  function montarMenu() {
+    montarAmbiente('safepoint', { farois: true, rotSubaru: Math.PI * 0.82 });
+    modoMenu = true;
+    // Luz de destaque no Subaru
+    const spot = new root.THREE.SpotLight('#cfe0ff', 40, 18, 0.5, 0.6, 1.2);
+    spot.position.set(3, 6, 2);
+    spot.target.position.set(0, 0.5, -3.2);
+    env.group.add(spot, spot.target);
+    const map = root.LuiggiData?.cache?.personagemMap;
+    [['luis', [1.4, 0, -0.9]], ['fabricio', [2.5, 0, -0.2]]].forEach(([id, pos]) => {
+      const ch = map?.get(id);
+      if (!ch) return;
+      const card = L().createCharacterCard(ch, { altura: 2.25, tint: '#dfe6ff', expr: 'feliz' });
+      card.group.position.set(...pos);
+      stage.scene.add(card.group);
+      cartas.set(id, { card, slot: null });
+    });
   }
 
   function montarAmbiente(nome, opts) {
@@ -92,6 +113,7 @@
   // ------------------------------------------------------------------
   function entrarCapitulo(cap) {
     if (!ativo) return;
+    modoMenu = false;
     capAtual = cap;
     limparCenario();
     env = E().paraCapitulo(cap.id);
@@ -108,6 +130,7 @@
   /** Cenário avulso (minigames que reaproveitam o palco, flashbacks...). */
   function usarCenario(nome, opts) {
     if (!ativo) return;
+    modoMenu = false;
     montarAmbiente(nome, opts);
   }
 
@@ -269,8 +292,21 @@
       const piscar = (t % 4) < 0.12;
       gato.children.forEach((c) => c.name === 'olho' && (c.scale.y = piscar ? 0.15 : 1));
     }
-    // Câmera suave + leve câmera na mão
     const cam = stage.camera;
+    if (modoMenu) {
+      // Órbita lenta; o alvo é deslocado para a esquerda para o carro aparecer à direita do painel do menu
+      const a = Math.sin(t * 0.07) * 0.55 + 0.35;
+      const centro = new root.THREE.Vector3(0.9, 1.0, -2.0);
+      const pos = new root.THREE.Vector3(centro.x + Math.sin(a) * 7.2, 2.0 + Math.sin(t * 0.13) * 0.25, centro.z + Math.cos(a) * 7.2);
+      U().dampVec3(cam.position, pos, 1.5, dt);
+      const dir = centro.clone().sub(cam.position).normalize();
+      const direita = new root.THREE.Vector3().crossVectors(dir, new root.THREE.Vector3(0, 1, 0)).normalize();
+      const alvo = centro.clone().addScaledVector(direita, -(window.innerWidth > 900 ? 2.4 : 0));
+      U().dampVec3(camAtual.look, alvo, 2, dt);
+      cam.lookAt(camAtual.look);
+      return;
+    }
+    // Câmera suave + leve câmera na mão
     U().dampVec3(cam.position, camAlvo.pos, 2.6, dt);
     U().dampVec3(camAtual.look, camAlvo.look, 3.2, dt);
     camAtual.roll = U().damp(camAtual.roll, camAlvo.roll, 3, dt);
@@ -330,6 +366,13 @@
     stage.start();
   }
 
+  function retomarSeguro() {
+    if (pausado) {
+      pausado = false;
+      stage.start();
+    }
+  }
+
   root.LuiggiStory3D = {
     init,
     entrarCapitulo,
@@ -342,7 +385,8 @@
     voltarAoMenu() {
       if (!ativo) return;
       capAtual = null;
-      montarAmbiente('safepoint', { farois: true });
+      if (!modoMenu) montarMenu();
+      retomarSeguro();
     },
     onGato(cb) {
       gatoCallback = cb;

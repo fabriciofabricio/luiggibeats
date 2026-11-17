@@ -610,7 +610,8 @@
       bocaT: 0,
       velocidade: 1,
       olharY: 0,
-      olharX: 0
+      olharX: 0,
+      inclinar: 0
     };
     const alvo = {};
     const zera = () => {
@@ -792,6 +793,23 @@
         alvo.spine.x = -0.2;
         alvo.sL.z = -1.4;
         alvo.sR.z = 1.4;
+      } else if (p === 'balance') {
+        const w = Math.sin(t * 3.1) * 0.25;
+        alvo.sL.z = -1.45 + w;
+        alvo.sR.z = 1.45 + w;
+        alvo.eL.x = -0.1;
+        alvo.eR.x = -0.1;
+        alvo.spine.z = -w * 0.4 + estado.inclinar;
+        alvo.hipsY = -0.05;
+        alvo.kL.x = 0.25;
+        alvo.kR.x = 0.25;
+        alvo.hL.x = -0.12;
+        alvo.hR.x = -0.12;
+      } else if (p === 'point') {
+        alvo.sR.x = -1.5;
+        alvo.eR.x = -0.1;
+        alvo.sR.z = 0.2;
+        alvo.head.y = -0.2;
       } else if (p === 'look_back') {
         alvo.spine.y = Math.PI * 0.32;
         alvo.neck.y = Math.PI * 0.32;
@@ -971,6 +989,10 @@
       },
       setTalking(v) {
         estado.falando = !!v;
+        return api;
+      },
+      inclinar(v = 0) {
+        estado.inclinar = v;
         return api;
       },
       lookAt(yaw = 0, pitch = 0) {

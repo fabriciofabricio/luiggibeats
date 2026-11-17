@@ -875,9 +875,9 @@
       bg: gotica ? 0x0d0709 : 0x0c0f15,
       fog: [gotica ? 0x1a0a0e : 0x111827, 0.03],
       luz: gotica
-        ? { sky: '#a14a5a', ground: '#14070a', hemi: 0.55, key: '#ff6b6b', keyI: 0.9, keyPos: [-4, 9, 5] }
-        : { sky: '#cfe3ff', ground: '#1f2937', hemi: 0.95, key: '#ffffff', keyI: 1.6, keyPos: [4, 10, 6] },
-      grade: gotica ? { tint: [1.1, 0.88, 0.92], saturation: 0.8, contrast: 1.12, bloom: 0.9 } : { tint: [0.98, 1.0, 1.04], saturation: 1.08 },
+        ? { sky: '#c86b7a', ground: '#2a0d12', hemi: 1.0, key: '#ff8a8a', keyI: 1.4, keyPos: [-4, 9, 5], fillI: 0.6, fill: '#ffb3b3' }
+        : { sky: '#cfe3ff', ground: '#334155', hemi: 1.25, key: '#ffffff', keyI: 2.0, keyPos: [4, 10, 6], fillI: 0.6 },
+      grade: gotica ? { tint: [1.08, 0.9, 0.94], saturation: 0.85, contrast: 1.06, bloom: 0.7, exposure: 1.35, threshold: 1.3 } : { tint: [0.98, 1.0, 1.04], saturation: 1.08, exposure: 1.15 },
       update(dt, t) {
         luzNeon.intensity = 7 * (gotica ? 0.8 + Math.sin(t * 2) * 0.2 : 1 + (Math.random() < 0.01 ? -0.7 : 0));
       }

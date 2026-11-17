@@ -406,8 +406,13 @@
     const temSave = save.temSaveAtivo();
     const totalAchs = data.conquistas?.conquistas?.length || 123;
     const desbAchs = save.state.conquistas.length || 0;
+    const menu3D = !!root.LuiggiStory3D?.ativo;
+    if (menu3D) root.LuiggiStory3D.voltarAoMenu();
+    const dlg = document.getElementById('dialogue-overlay');
+    if (dlg) dlg.classList.add('hidden');
 
     m.classList.remove('hidden');
+    m.classList.toggle('menu-3d', menu3D);
     m.innerHTML = `
       <div class="menu-fullscreen-wrap">
         <div class="menu-bg-photo" style="background-image:url('${encodeURI(SAFEPOINT_BG)}')"></div>
@@ -415,7 +420,7 @@
 
         <div class="menu-showcase-card">
           <div class="menu-left-panel">
-            <div class="menu-kicker">DATING SIMULATOR · VISUAL NOVEL · CURITIBA</div>
+            <div class="menu-kicker">VISUAL NOVEL 3D · CURITIBA</div>
             <h1 class="menu-title">LUIGGIBEATS:<br/><span>O DESTINO JÁ FOI ESCRITO</span></h1>
             <p class="menu-tagline">"Dentro do Subaru azul no Safepoint, toda a nossa história em ordem cronológica. Todas as escolhas têm 3 opções. Nenhuma muda o passado. Exceto a última."</p>
 
@@ -451,7 +456,7 @@
       }
           </div>
 
-          <div class="menu-right-showcase">
+          ${menu3D ? '' : `<div class="menu-right-showcase">
             <div class="menu-duo-stage">
               ${luis && root.LuiggiRig ? root.LuiggiRig.renderVisualNovelSprite(luis, { expressao: 'feliz', speaking: false }) : ''}
               ${fabricio && root.LuiggiRig ? root.LuiggiRig.renderVisualNovelSprite(fabricio, { expressao: 'feliz', speaking: true }) : ''}
@@ -460,7 +465,7 @@
               ${subaru && root.LuiggiRig ? root.LuiggiRig.renderVehicleSVG(subaru) : ''}
               <div class="menu-subaru-caption">Subaru Legacy Azul · Safepoint Curitiba</div>
             </div>
-          </div>
+          </div>`}
         </div>
       </div>
     `;
