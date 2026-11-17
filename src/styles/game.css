@@ -1588,3 +1588,41 @@ body.modo-3d .vn-backdrop { display: none; }
 .mgk-evidencias h4 { margin: 0 0 6px; color: #4ade80; font-size: 0.85rem; }
 .mgk-evidencias div { padding: 5px 0; border-top: 1px solid rgba(255,255,255,0.06); color: #64748b; }
 .mgk-evidencias div.ok { color: #fca5a5; animation: msgPop 0.3s ease; }
+/* ==================== X1: THE RED FLAG BATTLE ==================== */
+.fx-select { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 14px; background: linear-gradient(180deg, rgba(10, 4, 6, 0.55), rgba(10, 4, 6, 0.88)); }
+.fx-select-top { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.fx-select-top h2 { margin: 0; font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 900; letter-spacing: 0.04em; color: #fecaca; text-shadow: 0 0 20px rgba(239, 68, 68, 0.8); }
+.fx-roster { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; width: min(900px, 100%); }
+.fx-card { position: relative; background: rgba(15, 8, 12, 0.88); color: #f8fafc; border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 8px 10px 10px; text-align: left; cursor: pointer; overflow: hidden; transition: transform 0.15s ease, border-color 0.15s ease; }
+.fx-card:hover { transform: translateY(-3px); border-color: var(--c); }
+.fx-card.p1 { border-color: var(--c); box-shadow: 0 0 24px color-mix(in srgb, var(--c) 50%, transparent); }
+.fx-card.p1::after { content: "P1"; position: absolute; top: 6px; right: 8px; background: var(--c); color: #000; font-weight: 900; font-size: 0.7rem; padding: 2px 6px; border-radius: 6px; }
+.fx-card.p2:not(.p1)::after { content: "CPU / P2"; position: absolute; top: 6px; right: 8px; background: #334155; color: #fff; font-weight: 800; font-size: 0.62rem; padding: 2px 6px; border-radius: 6px; }
+.fx-card-art { height: 110px; display: flex; justify-content: center; align-items: flex-end; overflow: hidden; }
+.fx-card-art .vn-sprite-wrap { height: 100%; }
+.fx-card-art .vn-sprite-img, .fx-card-art svg { height: 130px; width: auto; object-fit: cover; object-position: top; }
+.fx-card-name { font-weight: 900; color: var(--c); margin-top: 4px; }
+.fx-card-stats { font-size: 0.68rem; color: #cbd5e1; margin: 3px 0; }
+.fx-card-moves { font-size: 0.66rem; color: #94a3b8; }
+.fx-help { font-size: 0.78rem; color: #cbd5e1; margin: 0; text-align: center; }
+.fx-go { font-size: 1.1rem; padding: 10px 26px; animation: pulseBtn 1s infinite; }
+.fx-hud { position: absolute; inset: 0; pointer-events: none; }
+.fx-hud .fx-side { position: absolute; top: 10px; left: 14px; width: 40%; }
+.fx-hud .fx-side.right { left: auto; right: 14px; text-align: right; }
+.fx-name { font-weight: 900; font-size: 0.85rem; letter-spacing: 0.06em; text-shadow: 0 2px 6px #000; }
+.fx-hp { height: 16px; background: rgba(0, 0, 0, 0.6); border: 2px solid rgba(255, 255, 255, 0.25); border-radius: 4px; overflow: hidden; transform: skewX(-12deg); }
+.fx-side.right .fx-hp { transform: skewX(12deg); }
+.fx-hp > div { height: 100%; width: 100%; transition: width 0.12s ease; box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.25); }
+.fx-side.right .fx-hp > div { margin-left: auto; }
+.fx-sp { height: 6px; margin-top: 3px; background: rgba(0, 0, 0, 0.6); border-radius: 3px; overflow: hidden; width: 70%; }
+.fx-side.right .fx-sp { margin-left: auto; }
+.fx-sp > div { height: 100%; width: 0; background: #facc15; }
+.fx-sp.cheio > div { animation: superPulse 0.5s infinite alternate; }
+@keyframes superPulse { from { background: #facc15; box-shadow: 0 0 6px #facc15; } to { background: #fff7ae; box-shadow: 0 0 16px #fde047; } }
+.fx-wins { font-size: 0.85rem; min-height: 1.1em; }
+.fx-timer { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 0 12px rgba(239, 68, 68, 0.8), 0 3px 0 #000; font-variant-numeric: tabular-nums; }
+.fx-announce { position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%) scale(0.6); font-size: clamp(2.4rem, 7vw, 5rem); font-weight: 900; font-style: italic; letter-spacing: 0.04em; text-shadow: 0 6px 0 #000, 0 0 40px currentColor; opacity: 0; white-space: nowrap; }
+.fx-announce.show { animation: announce 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+@keyframes announce { 0% { opacity: 0; transform: translate(-50%, -50%) scale(2.2); } 20% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 75% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -60%) scale(1.05); } }
+.fx-commentary { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 999px; padding: 5px 14px; font-size: 0.8rem; color: #fecaca; white-space: nowrap; max-width: 92%; overflow: hidden; text-overflow: ellipsis; }
+.fx-credits { position: absolute; inset: 22% 10%; background: rgba(0, 0, 0, 0.92); display: flex; align-items: center; justify-content: center; font-family: Georgia, serif; color: #e5e7eb; font-size: 1.2rem; border-radius: 10px; }

@@ -310,6 +310,15 @@
         });
       },
 
+      /** Encerra sem tela de resultado, resolvendo a promessa com `valor`. */
+      encerrar(valor) {
+        if (terminado) return promessa;
+        terminado = true;
+        limpar();
+        resolver(valor);
+        return promessa;
+      },
+
       /**
        * Termina o minigame: mostra o resultado e resolve com { pontos, ...extra }.
        * o: { max, titulo, texto, extra, rapido }

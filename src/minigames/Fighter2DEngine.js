@@ -1,10 +1,15 @@
 /**
  * src/minigames/Fighter2DEngine.js
- * Jogo de Luta 2D pastelão: X1 Eloiza vs Yohana (+ secretos: Cara Aleatório e Luis).
- * Suporta 1P vs CPU e 2P local no mesmo teclado.
+ * X1: THE RED FLAG BATTLE — Eloiza vs Yohana (+ secretos: Cara Aleatório e Luis).
+ * Lógica de luta 2D original (mesmos golpes, danos, CPU e 2P local), agora encenada em 3D:
+ * arena no galpão underground do TNT, lutadoras como bonecos 3D animados, projéteis 3D,
+ * faíscas de impacto, câmera dinâmica e câmera lenta no nocaute.
  */
 (function (root) {
   'use strict';
+
+  const L = () => root.Luiggi3D;
+  const U = () => root.Luiggi3D.U;
 
   const LUTADORES = {
     eloiza: {
@@ -44,522 +49,472 @@
   };
 
   function abrirLutaX1(modoLivre = false) {
-    return new Promise((resolve) => {
-      const host = document.getElementById('minigame-overlay');
-      const save = root.LuiggiSave;
-      const conq = save?.state?.conquistas || [];
-      const jogoZerado = save?.state?.jogoZerado;
+    const save = root.LuiggiSave;
+    const conq = save?.state?.conquistas || [];
+    const jogoZerado = save?.state?.jogoZerado;
+    const liberarSecretos = modoLivre || jogoZerado || conq.includes('red_flag_battle');
 
-      let p1Pick = 'eloiza';
-      let p2Pick = 'yohana';
-      let twoPlayers = false;
+    if (!root.LuiggiKit || !L()?.hasThree()) return Promise.resolve({ winId: 'eloiza' });
 
-      function telaSelecao() {
-        host.classList.remove('hidden');
-        const liberarSecretos = modoLivre || jogoZerado || conq.includes('red_flag_battle');
+    const kit = root.LuiggiKit.abrir({ id: 'x1_eloiza_yohana', titulo: 'THE RED FLAG BATTLE', icone: '🥊', capitulo: 13, subtitulo: 'X1 no galpão do TNT', cor: '#ef4444', ambiente: 'galpao', max: 1200 });
+    const { stage, THREE } = kit;
+    const cam = stage.camera;
+    cam.position.set(0, 2.2, 7);
+    cam.lookAt(0, 1.2, 0);
+    // Holofotes brancos sobre a arena para as lutadoras ficarem legíveis
+        [[-3, '#fff1e0'], [3, '#e0e7ff']].forEach(([x, cor]) => {
+      const sp = new THREE.SpotLight(cor, 12, 16, 0.55, 0.5, 1.2);
+      sp.position.set(x, 6.5, 4.5);
+      sp.target.position.set(x * 0.3, 1, 0.8);
+      sp.castShadow = stage.renderer.shadowMap.enabled;
+      stage.scene.add(sp, sp.target);
+    });
+    stage.setGrade({ tint: [1.02, 0.97, 0.97], exposure: 1.15, saturation: 1.05 });
 
-        host.innerHTML = `
-          <div class="mg-modal fight-theme">
-            <div class="mg-header">
-              <h3>🥊 THE RED FLAG BATTLE — Seleção de Lutador</h3>
-              <div class="btn-row">
-                <button class="mini-btn ${!twoPlayers ? 'active' : ''}" id="f-1p">1P vs CPU</button>
-                <button class="mini-btn ${twoPlayers ? 'active' : ''}" id="f-2p">2P Local</button>
-                ${modoLivre ? `<button class="mini-btn" id="f-close">Sair</button>` : ''}
-              </div>
-            </div>
-            <div class="mg-body">
-              <div class="fighter-grid">
-                ${Object.values(LUTADORES)
-                  .filter((l) => !l.secreto || liberarSecretos)
-                  .map(
-                    (l) => `
-                  <button class="fighter-card ${p1Pick === l.id ? 'p1-sel' : ''}" data-pick="${l.id}">
-                    <div class="f-name" style="color:${l.cor}">${l.nome} ${l.secreto ? '★' : ''}</div>
-                    <div class="f-stats">${l.stats}</div>
-                    <div class="f-moves">${l.especialNome}<br/>${l.superNome}</div>
-                  </button>`
-                  )
-                  .join('')}
-              </div>
-              <p style="font-size:0.8rem;color:#cbd5e1;margin-top:10px;text-align:center;">
-                Controles 1P: <strong>← → ↑ ↓</strong> mover/pular · <strong>A</strong> Soco · <strong>S</strong> Chute · <strong>D</strong> Especial/Super · <strong>F</strong> Defender
-              </p>
-              <div class="mg-actions"><button class="mg-btn primary" id="f-start">🔥 FIGHT!</button></div>
-            </div>
+    let p1Pick = 'eloiza';
+    let p2Pick = 'yohana';
+    let twoPlayers = false;
+    let b1 = null;
+    let b2 = null;
+
+    function montarBonecos() {
+      [b1, b2].forEach((b) => b && stage.scene.remove(b.group));
+      b1 = root.Luiggi3DChar.create(kit.personagem(p1Pick), { escala: 1.15 });
+      b2 = root.Luiggi3DChar.create(kit.personagem(p2Pick), { escala: 1.15 });
+      b1.group.position.set(-2.2, 0, 0.8);
+      b2.group.position.set(2.2, 0, 0.8);
+      b1.group.rotation.y = Math.PI / 2 - 0.35;
+      b2.group.rotation.y = -Math.PI / 2 + 0.35;
+      b1.setPose('fight');
+      b2.setPose('fight');
+      stage.scene.add(b1.group, b2.group);
+    }
+    stage.addUpdate((dt) => {
+      if (b1) b1.update(dt);
+      if (b2) b2.update(dt);
+    });
+
+    // ------------------------------------------------------------------
+    // SELEÇÃO
+    // ------------------------------------------------------------------
+    function telaSelecao() {
+      montarBonecos();
+      kit.botoes([]);
+      kit.hud('');
+      const el = document.createElement('div');
+      el.className = 'fx-select';
+      el.innerHTML = `
+        <div class="fx-select-top">
+          <h2>🥊 THE RED FLAG BATTLE</h2>
+          <div class="btn-row">
+            <button class="mini-btn ${!twoPlayers ? 'active' : ''}" data-modo="1">1P vs CPU</button>
+            <button class="mini-btn ${twoPlayers ? 'active' : ''}" data-modo="2">2P Local</button>
+            ${modoLivre ? '<button class="mini-btn" data-sair="1">Sair</button>' : ''}
           </div>
-        `;
-
-        document.getElementById('f-1p').addEventListener('click', () => {
-          twoPlayers = false;
+        </div>
+        <div class="fx-roster">
+          ${Object.values(LUTADORES)
+          .filter((l) => !l.secreto || liberarSecretos)
+          .map(
+            (l) => `
+            <button class="fx-card ${p1Pick === l.id ? 'p1' : ''} ${p2Pick === l.id ? 'p2' : ''}" data-pick="${l.id}" style="--c:${l.cor}">
+              <div class="fx-card-art">${root.LuiggiRig.renderVisualNovelSprite(kit.personagem(l.id), { expressao: 'bravo' })}</div>
+              <div class="fx-card-name">${l.nome} ${l.secreto ? '★' : ''}</div>
+              <div class="fx-card-stats">${l.stats}</div>
+              <div class="fx-card-moves">${l.especialNome}<br/>${l.superNome}</div>
+            </button>`
+          )
+          .join('')}
+        </div>
+        <p class="fx-help">1P: <b>← → ↑</b> mover/pular · <b>A</b> Soco · <b>S</b> Chute · <b>D</b> Especial/Super · <b>F</b> Defender${twoPlayers ? ' · 2P: <b>N M I</b> mover · <b>J K L</b> golpes · <b>U</b> defender' : ''}</p>
+        <button class="mg-btn primary fx-go">🔥 FIGHT!</button>`;
+      kit.layer.innerHTML = '';
+      kit.layer.appendChild(el);
+      el.querySelectorAll('[data-modo]').forEach((b) =>
+        b.addEventListener('click', () => {
+          twoPlayers = b.dataset.modo === '2';
           telaSelecao();
-        });
-        document.getElementById('f-2p').addEventListener('click', () => {
-          twoPlayers = true;
+        })
+      );
+      el.querySelector('[data-sair]')?.addEventListener('click', () => kit.encerrar({ cancelado: true }));
+      el.querySelectorAll('[data-pick]').forEach((b) =>
+        b.addEventListener('click', () => {
+          p1Pick = b.dataset.pick;
+          p2Pick = p1Pick === 'yohana' ? 'eloiza' : 'yohana';
+          kit.sfx('blip');
           telaSelecao();
-        });
-        const cl = document.getElementById('f-close');
-        if (cl) {
-          cl.addEventListener('click', () => {
-            host.classList.add('hidden');
-            host.innerHTML = '';
-            resolve({ cancelado: true });
-          });
-        }
+        })
+      );
+      el.querySelector('.fx-go').addEventListener('click', () => {
+        el.remove();
+        iniciarLuta();
+      });
+    }
 
-        host.querySelectorAll('[data-pick]').forEach((btn) => {
-          btn.addEventListener('click', () => {
-            p1Pick = btn.dataset.pick;
-            p2Pick = p1Pick === 'yohana' ? 'eloiza' : 'yohana';
-            telaSelecao();
-          });
-        });
+    // ------------------------------------------------------------------
+    // LUTA (lógica original em coordenadas 720x360, a 60 passos/s)
+    // ------------------------------------------------------------------
+    function iniciarLuta() {
+      montarBonecos();
+      const hudEl = document.createElement('div');
+      hudEl.className = 'fx-hud';
+      hudEl.innerHTML = `
+        <div class="fx-side"><div class="fx-name" style="color:${LUTADORES[p1Pick].cor}">${LUTADORES[p1Pick].nome}</div><div class="fx-hp"><div id="f-hp1" style="background:${LUTADORES[p1Pick].cor}"></div></div><div class="fx-sp"><div id="f-sp1"></div></div><div class="fx-wins" id="f-w1"></div></div>
+        <div class="fx-timer" id="f-timer">99</div>
+        <div class="fx-side right"><div class="fx-name" style="color:${LUTADORES[p2Pick].cor}">${LUTADORES[p2Pick].nome}</div><div class="fx-hp"><div id="f-hp2" style="background:${LUTADORES[p2Pick].cor}"></div></div><div class="fx-sp"><div id="f-sp2"></div></div><div class="fx-wins" id="f-w2"></div></div>
+        <div class="fx-announce" id="f-announce"></div>
+        <div class="fx-commentary" id="f-comment">🎙️ Fabricio & Matheus Neuman: "THE RED FLAG BATTLE!"</div>
+        <div class="fx-credits hidden" id="f-credits">PÓS-CRÉDITOS BLOQUEANDO A VISÃO...</div>`;
+      kit.layer.innerHTML = '';
+      kit.layer.appendChild(hudEl);
+      const $ = (id) => hudEl.querySelector('#' + id);
+      kit.hud(kit.pill(`${LUTADORES[p1Pick].nome} vs ${LUTADORES[p2Pick].nome}`));
 
-        document.getElementById('f-start').addEventListener('click', () => iniciarLuta());
+      const faiscas = kit.particulas({ count: 200, size: 0.12, shape: 'spark', colors: ['#fde047', '#fb923c', '#ffffff'], intensity: 3, gravity: 6, life: [0.2, 0.5], drag: 2 });
+      const cartas3D = [];
+
+      const keys = {};
+      let round = 1;
+      let winsP1 = 0;
+      let winsP2 = 0;
+      let timer = 99;
+      let frame = 0;
+      let creditsOverlay = 0;
+      let acumulado = 0;
+      let slowmo = 0;
+      let pausaRound = 1.2;
+
+      function makeFighter(id, x, facing) {
+        return { id, x, y: 300, vy: 0, hp: 100, superMeter: 0, facing, defending: false, stun: 0, cd: 0, tookDamage: false, animTxt: '' };
+      }
+      let f1 = makeFighter(p1Pick, 170, 1);
+      let f2 = makeFighter(p2Pick, 550, -1);
+      const projectiles = [];
+      const to3X = (px) => (px - 360) * 0.0125;
+      const to3Y = (py) => Math.max(0, (300 - py) * 0.0125);
+      const bonecoDe = (f) => (f === f1 ? b1 : b2);
+
+      function anunciar(txt, cor = '#fde047') {
+        const a = $('f-announce');
+        a.textContent = txt;
+        a.style.color = cor;
+        a.classList.remove('show');
+        void a.offsetWidth;
+        a.classList.add('show');
+      }
+      function addPopup(txt, x, y, col = '#FACC15') {
+        kit.pop(txt, new THREE.Vector3(to3X(x), to3Y(y) + 0.6, 0.8), col);
+      }
+      function comentar(txt) {
+        $('f-comment').textContent = `🎙️ ${txt}`;
+      }
+      function impacto(f, forte) {
+        const b = bonecoDe(f);
+        b.play('hit', 0.35).setExpression('bravo');
+        faiscas.burst(forte ? 40 : 18, new THREE.Vector3(to3X(f.x), to3Y(f.y) + 1.5, 0.8), forte ? 4 : 2.5);
+        stage.shake(forte ? 0.22 : 0.08, 7);
+        kit.sfx('punch');
       }
 
-      function iniciarLuta() {
-        host.innerHTML = `
-          <div class="mg-modal fight-theme">
-            <div class="mg-header">
-              <div>
-                <h3>🥊 ${LUTADORES[p1Pick].nome} vs ${LUTADORES[p2Pick].nome}</h3>
-                <div class="mg-sub" id="f-comment">🎙️ Fabricio & Matheus Neuman: "THE RED FLAG BATTLE!"</div>
-              </div>
-              <span class="badge-pill" id="f-round-lbl">ROUND 1 · 99</span>
-            </div>
-            <div class="fight-wrap" style="position:relative;">
-              <div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:8px;">
-                <div style="flex:1;">
-                  <div style="font-size:0.74rem;font-weight:800;color:${LUTADORES[p1Pick].cor}">${LUTADORES[p1Pick].nome}</div>
-                  <div style="height:12px;background:#1f2937;border-radius:6px;overflow:hidden;"><div id="f-hp1" style="height:100%;width:100%;background:${LUTADORES[p1Pick].cor};transition:width 0.12s;"></div></div>
-                  <div style="height:5px;background:#111827;border-radius:4px;margin-top:3px;overflow:hidden;"><div id="f-sp1" style="height:100%;width:0%;background:#facc15;"></div></div>
-                </div>
-                <div style="flex:1;text-align:right;">
-                  <div style="font-size:0.74rem;font-weight:800;color:${LUTADORES[p2Pick].cor}">${LUTADORES[p2Pick].nome}</div>
-                  <div style="height:12px;background:#1f2937;border-radius:6px;overflow:hidden;"><div id="f-hp2" style="height:100%;width:100%;background:${LUTADORES[p2Pick].cor};margin-left:auto;transition:width 0.12s;"></div></div>
-                  <div style="height:5px;background:#111827;border-radius:4px;margin-top:3px;overflow:hidden;"><div id="f-sp2" style="height:100%;width:0%;background:#facc15;margin-left:auto;"></div></div>
-                </div>
-              </div>
-              <div id="f-viewport" style="width:100%;height:360px;border-radius:12px;overflow:hidden;border:1px solid #3f1d28;position:relative;"></div>
-              <div id="f-float-msg" style="position:absolute;top:52%;left:50%;transform:translate(-50%,-50%);font-weight:900;font-size:1.4rem;color:#facc15;text-shadow:0 3px 10px #000;pointer-events:none;"></div>
-              <div class="touch-pad">
-                <button data-fk="left">◀</button>
-                <button data-fk="up">▲</button>
-                <button data-fk="right">▶</button>
-                <button data-fk="a">A Soco</button>
-                <button data-fk="s">S Chute</button>
-                <button data-fk="d">D Esp</button>
-                <button data-fk="f">F Def</button>
-              </div>
-            </div>
-          </div>
-        `;
+      function ataque(atk, def, tipo) {
+        if (atk.cd > 0 || atk.stun > 0 || pausaRound > 0) return;
+        atk.cd = tipo === 'a' ? 18 : tipo === 's' ? 24 : 34;
+        const ba = bonecoDe(atk);
+        ba.play(tipo === 'a' ? (Math.random() < 0.5 ? 'punch' : 'punchL') : tipo === 's' ? 'kick' : 'special', tipo === 'd' ? 0.5 : 0.32);
+        kit.sfx('punch');
 
-        const viewport = document.getElementById('f-viewport');
-        const hp1El = document.getElementById('f-hp1');
-        const hp2El = document.getElementById('f-hp2');
-        const sp1El = document.getElementById('f-sp1');
-        const sp2El = document.getElementById('f-sp2');
-        const floatEl = document.getElementById('f-float-msg');
-        const comEl = document.getElementById('f-comment');
-        const roundEl = document.getElementById('f-round-lbl');
-
-        const stage3D =
-          root.Luiggi3D &&
-          root.Luiggi3D.createStage(viewport, {
-            bg: 0x12070b,
-            fog: 0.03,
-            fov: 46,
-            camPos: [0, 4.2, 13.5],
-            lookAt: [0, 1.5, 0]
-          });
-        let fallbackCtx = null;
-        const fight3D = { p1: null, p2: null, s1: null, s2: null, projs: [] };
-
-        if (stage3D) {
-          const { THREE, scene } = stage3D;
-          const floor = new THREE.Mesh(
-            new THREE.BoxGeometry(24, 0.4, 12),
-            new THREE.MeshStandardMaterial({ color: 0x26131a, roughness: 0.45, metalness: 0.25 })
-          );
-          floor.position.y = -0.2;
-          floor.receiveShadow = true;
-          scene.add(floor);
-
-          // Subaru azul estacionado ao fundo do galpão!
-          const sub = root.Luiggi3D.createSubaruMesh('#1245A8', true);
-          sub.scale.setScalar(0.9);
-          sub.position.set(0, 0, -4.4);
-          sub.rotation.y = Math.PI / 2;
-          scene.add(sub);
-
-          const makeFighterMesh = (colHex) => {
-            const g = new THREE.Group();
-            const mat = new THREE.MeshStandardMaterial({ color: new THREE.Color(colHex), roughness: 0.38, metalness: 0.2 });
-            const skin = new THREE.MeshStandardMaterial({ color: 0xfde2d4, roughness: 0.6 });
-            const torso = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.35, 0.55), mat);
-            torso.position.y = 1.45;
-            torso.castShadow = true;
-            const head = new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 14), skin);
-            head.position.y = 2.52;
-            const legL = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.85, 0.35), mat);
-            legL.position.set(-0.24, 0.42, 0);
-            const legR = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.85, 0.35), mat);
-            legR.position.set(0.24, 0.42, 0);
-            const shield = new THREE.Mesh(
-              new THREE.SphereGeometry(1.5, 16, 14),
-              new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.28, wireframe: true })
-            );
-            shield.position.y = 1.45;
-            shield.visible = false;
-            g.add(torso, head, legL, legR, shield);
-            g.userData.shield = shield;
-            return g;
-          };
-
-          fight3D.p1 = makeFighterMesh(LUTADORES[p1Pick].cor);
-          fight3D.p2 = makeFighterMesh(LUTADORES[p2Pick].cor);
-          scene.add(fight3D.p1, fight3D.p2);
-        } else {
-          const cv = document.createElement('canvas');
-          cv.width = 720;
-          cv.height = 360;
-          viewport.appendChild(cv);
-          fallbackCtx = cv.getContext('2d');
-        }
-
-        const keys = {};
-        let round = 1;
-        let winsP1 = 0;
-        let winsP2 = 0;
-        let timer = 99;
-        let ended = false;
-        let rafId = null;
-        let frame = 0;
-        let creditsOverlay = 0;
-
-        function makeFighter(id, x, facing) {
-          return {
-            id,
-            x,
-            y: 300,
-            vy: 0,
-            hp: 100,
-            superMeter: 0,
-            facing,
-            defending: false,
-            stun: 0,
-            cd: 0,
-            tookDamage: false,
-            animTxt: ''
-          };
-        }
-
-        let f1 = makeFighter(p1Pick, 170, 1);
-        let f2 = makeFighter(p2Pick, 550, -1);
-        const projectiles = [];
-        const popups = [];
-
-        function addPopup(txt, x, y, col = '#FACC15') {
-          popups.push({ txt, x, y, col, life: 36 });
-        }
-
-        function comentar(txt) {
-          if (comEl) comEl.textContent = `🎙️ ${txt}`;
-        }
-
-        function ataque(atk, def, tipo) {
-          if (atk.cd > 0 || atk.stun > 0) return;
-          atk.cd = tipo === 'a' ? 18 : tipo === 's' ? 24 : 34;
-          if (root.LuiggiAudio) root.LuiggiAudio.playSFX('punch');
-
-          if (atk.id === 'luis') {
-            atk.animTxt = tipo === 'd' ? '🍪 Vou fazer cookie!' : '🙏 Calma aí!';
-            atk.hp = Math.min(100, atk.hp + 4);
-            addPopup('CALMA!', atk.x, atk.y - 70, '#60A5FA');
-            // Luis pacifista dá dano moral mínimo se o oponente tentar atacar ou vence por tempo/paciência!
-            if (tipo === 'd') {
-              def.hp -= 12;
-              def.tookDamage = true;
-              addPopup('SILÊNCIO!', def.x, def.y - 60, '#93C5FD');
-            }
-            return;
-          }
-
-          if (atk.id === 'cara_aleatorio') {
-            atk.animTxt = 'É... verdade.';
-            if (Math.abs(atk.x - def.x) < 110) {
-              def.hp -= def.defending ? 1 : 4;
-              def.tookDamage = true;
-              addPopup('É... VERDADE', def.x, def.y - 65, '#CBD5E1');
-            }
-            return;
-          }
-
+        if (atk.id === 'luis') {
+          atk.animTxt = tipo === 'd' ? '🍪 Vou fazer cookie!' : '🙏 Calma aí!';
+          atk.hp = Math.min(100, atk.hp + 4);
+          addPopup('CALMA!', atk.x, atk.y - 70, '#60A5FA');
           if (tipo === 'd') {
-            // Especial ou Super!
-            if (atk.superMeter >= 100) {
-              atk.superMeter = 0;
-              if (atk.id === 'eloiza') {
-                atk.x = Math.max(40, Math.min(680, def.x - def.facing * 50));
-                def.hp -= 26;
-                def.tookDamage = true;
-                addPopup('MINHA MÃE NÃO SABE!', def.x, 180, '#C084FC');
-                comentar('Fabricio: "QUE GOLPE, NEUMAN!"');
-              } else {
-                def.hp -= 24;
-                def.tookDamage = true;
-                addPopup('O CARA ALEATÓRIO CONCORDA!', def.x, 180, '#FBBF24');
-                comentar('Neuman: "ISSO VAI DEIXAR MARCA NO GRUPO!"');
-              }
-              return;
-            }
-            if (atk.id === 'eloiza') {
-              projectiles.push({ owner: atk, x: atk.x + atk.facing * 24, y: atk.y - 35, vx: atk.facing * 6.5, dmg: 12, label: '🔒⭐' });
-              addPopup('MELHORES AMIGOS!', atk.x, atk.y - 75, '#4ADE80');
-            } else {
-              projectiles.push({ owner: atk, x: def.x, y: 40, vx: 0, vy: 6, dmg: 13, label: '🧾🇫🇷' });
-              if (Math.random() < 0.4) creditsOverlay = 90;
-              addPopup('TINDER NA FRANÇA!', atk.x, atk.y - 75, '#F59E0B');
-            }
-            return;
-          }
-
-          const alcance = tipo === 's' ? 92 : 76;
-          if (Math.abs(atk.x - def.x) <= alcance && Math.abs(atk.y - def.y) < 55) {
-            const dmg = (tipo === 's' ? 11 : 8) * (def.defending ? 0.3 : 1);
-            def.hp = Math.max(0, def.hp - dmg);
+            def.hp -= 12;
             def.tookDamage = true;
-            atk.superMeter = Math.min(100, atk.superMeter + 18);
-            addPopup(tipo === 's' ? 'PLAFT!' : 'POW!', def.x, def.y - 60);
+            addPopup('SILÊNCIO!', def.x, def.y - 60, '#93C5FD');
+            impacto(def, false);
           }
+          return;
         }
-
-        function onKeyDown(e) {
-          keys[e.code] = true;
-          if (e.code === 'KeyA') ataque(f1, f2, 'a');
-          if (e.code === 'KeyS') ataque(f1, f2, 's');
-          if (e.code === 'KeyD') ataque(f1, f2, 'd');
-          if (twoPlayers) {
-            if (e.code === 'KeyJ') ataque(f2, f1, 'a');
-            if (e.code === 'KeyK') ataque(f2, f1, 's');
-            if (e.code === 'KeyL') ataque(f2, f1, 'd');
+        if (atk.id === 'cara_aleatorio') {
+          atk.animTxt = 'É... verdade.';
+          if (Math.abs(atk.x - def.x) < 110) {
+            def.hp -= def.defending ? 1 : 4;
+            def.tookDamage = true;
+            addPopup('É... VERDADE', def.x, def.y - 65, '#CBD5E1');
+            impacto(def, false);
           }
+          return;
         }
-        function onKeyUp(e) {
-          keys[e.code] = false;
-        }
-        window.addEventListener('keydown', onKeyDown);
-        window.addEventListener('keyup', onKeyUp);
-
-        host.querySelectorAll('[data-fk]').forEach((b) => {
-          const k = b.dataset.fk;
-          b.addEventListener('pointerdown', () => {
-            if (k === 'left') keys['ArrowLeft'] = true;
-            if (k === 'right') keys['ArrowRight'] = true;
-            if (k === 'up') keys['ArrowUp'] = true;
-            if (k === 'f') keys['KeyF'] = true;
-            if (k === 'a' || k === 's' || k === 'd') ataque(f1, f2, k);
-          });
-          b.addEventListener('pointerup', () => {
-            keys['ArrowLeft'] = false;
-            keys['ArrowRight'] = false;
-            keys['ArrowUp'] = false;
-            keys['KeyF'] = false;
-          });
-        });
-
-        function cleanup() {
-          ended = true;
-          cancelAnimationFrame(rafId);
-          window.removeEventListener('keydown', onKeyDown);
-          window.removeEventListener('keyup', onKeyUp);
-          if (stage3D) stage3D.dispose();
-        }
-
-        function proximoRound(vencedor) {
-          if (vencedor === 1) {
-            winsP1++;
-            if (!f1.tookDamage && root.LuiggiAchievements) root.LuiggiAchievements.desbloquear('perfect_x1');
-          } else {
-            winsP2++;
-          }
-          if (winsP1 >= 2 || winsP2 >= 2) {
-            cleanup();
-            finalizarLuta(winsP1 >= 2 ? 1 : 2);
+        if (tipo === 'd') {
+          if (atk.superMeter >= 100) {
+            atk.superMeter = 0;
+            stage.pulseGrade('flash', 0.6, 0.5, 0);
+            stage.pulseGrade('aberration', 4, 0.8, 0);
+            if (atk.id === 'eloiza') {
+              atk.x = Math.max(40, Math.min(680, def.x - def.facing * 50));
+              def.hp -= 26;
+              def.tookDamage = true;
+              addPopup('MINHA MÃE NÃO SABE!', def.x, 180, '#C084FC');
+              anunciar('MINHA MÃE NÃO SABE!', '#c084fc');
+              comentar('Fabricio: "QUE GOLPE, NEUMAN!"');
+            } else {
+              def.hp -= 24;
+              def.tookDamage = true;
+              addPopup('O CARA ALEATÓRIO CONCORDA!', def.x, 180, '#FBBF24');
+              anunciar('O CARA ALEATÓRIO CONCORDA!', '#fbbf24');
+              comentar('Neuman: "ISSO VAI DEIXAR MARCA NO GRUPO!"');
+            }
+            impacto(def, true);
             return;
           }
+          if (atk.id === 'eloiza') {
+            projectiles.push({ owner: atk, x: atk.x + atk.facing * 24, y: atk.y - 35, vx: atk.facing * 6.5, dmg: 12, label: '🔒⭐' });
+            addPopup('MELHORES AMIGOS!', atk.x, atk.y - 75, '#4ADE80');
+          } else {
+            projectiles.push({ owner: atk, x: def.x, y: 40, vx: 0, vy: 6, dmg: 13, label: '🧾🇫🇷' });
+            if (Math.random() < 0.4) creditsOverlay = 90;
+            addPopup('TINDER NA FRANÇA!', atk.x, atk.y - 75, '#F59E0B');
+          }
+          return;
+        }
+        const alcance = tipo === 's' ? 92 : 76;
+        if (Math.abs(atk.x - def.x) <= alcance && Math.abs(atk.y - def.y) < 55) {
+          const dmg = (tipo === 's' ? 11 : 8) * (def.defending ? 0.3 : 1);
+          def.hp = Math.max(0, def.hp - dmg);
+          def.tookDamage = true;
+          atk.superMeter = Math.min(100, atk.superMeter + 18);
+          addPopup(tipo === 's' ? 'PLAFT!' : 'POW!', def.x, def.y - 60);
+          if (def.defending) faiscas.burst(10, new THREE.Vector3(to3X(def.x), to3Y(def.y) + 1.3, 0.8), 1.5, '#38bdf8');
+          else impacto(def, tipo === 's');
+        }
+      }
+
+      kit.tecla((e) => {
+        keys[e.code] = true;
+        if (['ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) e.preventDefault();
+        if (e.code === 'KeyA') ataque(f1, f2, 'a');
+        if (e.code === 'KeyS') ataque(f1, f2, 's');
+        if (e.code === 'KeyD') ataque(f1, f2, 'd');
+        if (twoPlayers) {
+          if (e.code === 'KeyJ') ataque(f2, f1, 'a');
+          if (e.code === 'KeyK') ataque(f2, f1, 's');
+          if (e.code === 'KeyL') ataque(f2, f1, 'd');
+        }
+      });
+      kit.tecla((e) => (keys[e.code] = false), 'keyup');
+      const tecla = (code) => ({ onDown: () => (keys[code] = true), onUp: () => (keys[code] = false) });
+      kit.botoes([
+        { label: '◀', ...tecla('ArrowLeft') },
+        { label: '▲', ...tecla('ArrowUp') },
+        { label: '▶', ...tecla('ArrowRight') },
+        { label: '👊 Soco', tecla: 'A', onClick: () => ataque(f1, f2, 'a') },
+        { label: '🦵 Chute', tecla: 'S', onClick: () => ataque(f1, f2, 's') },
+        { label: '✨ Especial', tecla: 'D', primary: true, onClick: () => ataque(f1, f2, 'd') },
+        { label: '🛡️ Defender', tecla: 'F', ...tecla('KeyF') }
+      ]);
+
+      function proximoRound(vencedor) {
+        const perdedor = vencedor === 1 ? f2 : f1;
+        bonecoDe(perdedor).setPose('ko').setExpression('chocado');
+        bonecoDe(vencedor === 1 ? f1 : f2).setPose('cheer').setExpression('feliz');
+        anunciar(perdedor.hp <= 0 ? 'K.O.!' : 'TEMPO!', '#ef4444');
+        slowmo = 1.4;
+        kit.sfx('bruh');
+        if (vencedor === 1) {
+          winsP1++;
+          if (!f1.tookDamage) kit.conquista('perfect_x1');
+        } else winsP2++;
+        $('f-w1').textContent = '🏆'.repeat(winsP1);
+        $('f-w2').textContent = '🏆'.repeat(winsP2);
+        if (winsP1 >= 2 || winsP2 >= 2) {
+          kit.timeout(() => finalizarLuta(winsP1 >= 2 ? 1 : 2), 2200);
+          pausaRound = 999;
+          return;
+        }
+        pausaRound = 2.6;
+        kit.timeout(() => {
           round++;
           timer = 99;
           f1 = makeFighter(p1Pick, 170, 1);
           f2 = makeFighter(p2Pick, 550, -1);
+          b1.setPose('fight').setExpression('neutro');
+          b2.setPose('fight').setExpression('neutro');
           comentar(`ROUND ${round}... FIGHT!`);
-        }
-
-        function updateFighter(f, left, right, up, def) {
-          if (f.cd > 0) f.cd--;
-          if (f.stun > 0) {
-            f.stun--;
-            return;
-          }
-          f.defending = def;
-          if (!def) {
-            if (left) f.x -= 4.2;
-            if (right) f.x += 4.2;
-            if (up && f.y >= 300) f.vy = -12.5;
-          }
-          f.vy += 0.65;
-          f.y += f.vy;
-          if (f.y >= 300) {
-            f.y = 300;
-            f.vy = 0;
-          }
-          f.x = Math.max(45, Math.min(675, f.x));
-        }
-
-        function loop() {
-          if (ended) return;
-          frame++;
-          if (frame % 60 === 0 && timer > 0) timer--;
-          if (creditsOverlay > 0) creditsOverlay--;
-
-          updateFighter(f1, keys['ArrowLeft'], keys['ArrowRight'], keys['ArrowUp'], keys['KeyF']);
-          f1.facing = f2.x >= f1.x ? 1 : -1;
-          f2.facing = f1.x >= f2.x ? 1 : -1;
-
-          if (twoPlayers) {
-            updateFighter(f2, keys['KeyN'], keys['KeyM'], keys['KeyI'], keys['KeyU']);
-          } else {
-            // CPU simples e justa
-            const dist = f2.x - f1.x;
-            const moveL = dist > 78;
-            const moveR = dist < -78;
-            updateFighter(f2, moveL, moveR, Math.random() < 0.015, Math.random() < 0.12);
-            if (Math.abs(dist) < 92 && frame % 34 === 0) {
-              ataque(f2, f1, Math.random() < 0.25 ? 'd' : Math.random() < 0.5 ? 's' : 'a');
-            }
-          }
-
-          // Projéteis
-          for (let i = projectiles.length - 1; i >= 0; i--) {
-            const p = projectiles[i];
-            p.x += p.vx || 0;
-            p.y += p.vy || 0;
-            const target = p.owner === f1 ? f2 : f1;
-            if (Math.abs(p.x - target.x) < 28 && Math.abs(p.y - (target.y - 35)) < 45) {
-              target.hp = Math.max(0, target.hp - (target.defending ? p.dmg * 0.3 : p.dmg));
-              target.tookDamage = true;
-              p.owner.superMeter = Math.min(100, p.owner.superMeter + 20);
-              addPopup('ACERTOU!', target.x, target.y - 70);
-              projectiles.splice(i, 1);
-            } else if (p.x < 0 || p.x > 720 || p.y > 390) {
-              projectiles.splice(i, 1);
-            }
-          }
-
-          if (f1.hp <= 0) proximoRound(2);
-          else if (f2.hp <= 0) proximoRound(1);
-          else if (timer <= 0) proximoRound(f1.hp >= f2.hp ? 1 : 2);
-
-          // Atualiza HUD HTML & Cena 3D
-          if (hp1El) hp1El.style.width = `${Math.max(0, f1.hp)}%`;
-          if (hp2El) hp2El.style.width = `${Math.max(0, f2.hp)}%`;
-          if (sp1El) sp1El.style.width = `${Math.min(100, f1.superMeter)}%`;
-          if (sp2El) sp2El.style.width = `${Math.min(100, f2.superMeter)}%`;
-
-          const lastPop = popups[popups.length - 1];
-          if (floatEl) {
-            floatEl.textContent = creditsOverlay > 0 ? 'PÓS-CRÉDITOS BLOQUEANDO A VISÃO...' : lastPop ? lastPop.txt : '';
-            if (lastPop) floatEl.style.color = lastPop.col;
-          }
-          for (let i = popups.length - 1; i >= 0; i--) {
-            popups[i].life--;
-            if (popups[i].life <= 0) popups.splice(i, 1);
-          }
-
-          if (stage3D) {
-            const { THREE, scene, camera, renderer } = stage3D;
-            const to3X = (px) => (px - 360) * 0.025;
-            const to3Y = (py) => Math.max(0, (300 - py) * 0.025);
-
-            fight3D.p1.position.set(to3X(f1.x), to3Y(f1.y), 0);
-            fight3D.p1.rotation.y = f1.facing > 0 ? 0.35 : -0.35;
-            fight3D.p1.userData.shield.visible = f1.defending;
-
-            fight3D.p2.position.set(to3X(f2.x), to3Y(f2.y), 0);
-            fight3D.p2.rotation.y = f2.facing > 0 ? 0.35 : -0.35;
-            fight3D.p2.userData.shield.visible = f2.defending;
-
-            // Sincroniza projéteis 3D
-            while (fight3D.projs.length < projectiles.length) {
-              const pm = new THREE.Mesh(
-                new THREE.OctahedronGeometry(0.32, 0),
-                new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xf59e0b, emissiveIntensity: 1.5 })
-              );
-              scene.add(pm);
-              fight3D.projs.push(pm);
-            }
-            fight3D.projs.forEach((pm, i) => {
-              const p = projectiles[i];
-              pm.visible = !!p;
-              if (p) {
-                pm.position.set(to3X(p.x), to3Y(p.y) + 1.2, 0.3);
-                pm.rotation.z += 0.18;
-              }
-            });
-
-            const midX = (to3X(f1.x) + to3X(f2.x)) * 0.35;
-            camera.position.x += (midX - camera.position.x) * 0.1;
-            camera.lookAt(midX, 1.4, 0);
-            renderer.render(scene, camera);
-          } else if (fallbackCtx) {
-            fallbackCtx.fillStyle = '#14060A';
-            fallbackCtx.fillRect(0, 0, 720, 360);
-          }
-
-          roundEl.textContent = `ROUND ${round} (${winsP1}x${winsP2}) · ${timer}`;
-          rafId = requestAnimationFrame(loop);
-        }
-
-        rafId = requestAnimationFrame(loop);
-
-        function finalizarLuta(vencedorNum) {
-          const winId = vencedorNum === 1 ? p1Pick : p2Pick;
-          if (root.LuiggiAchievements) {
-            root.LuiggiAchievements.desbloquear('red_flag_battle');
-            if (winId === 'eloiza') root.LuiggiAchievements.desbloquear('time_eloiza');
-            if (winId === 'yohana') root.LuiggiAchievements.desbloquear('time_yohana');
-            if (winId === 'cara_aleatorio') root.LuiggiAchievements.desbloquear('lenda_do_concordo');
-            if (winId === 'luis') root.LuiggiAchievements.desbloquear('pacifista');
-          }
-          if (save) save.salvarRecordeMinigame('x1_eloiza_yohana', winsP1 * 500 + 200);
-
-          host.innerHTML = `
-            <div class="mg-modal fight-theme" style="max-width:480px;text-align:center;">
-              <div class="mg-header"><h3>🏆 ${LUTADORES[winId].nome} WINS!</h3></div>
-              <div class="mg-body">
-                <div class="fx-stamp" style="margin:8px auto;">MAS NA VIDA REAL...</div>
-                <p>Ninguém venceu. O Luis perdeu a paz, o Fabricio perdeu o rolê, e o Cara Aleatório continua concordando até hoje.</p>
-                <div class="mg-actions">
-                  ${modoLivre ? `<button class="mg-btn" id="f-again">↻ Outro X1</button>` : ''}
-                  <button class="mg-btn primary" id="f-done">Continuar</button>
-                </div>
-              </div>
-            </div>
-          `;
-          const ag = document.getElementById('f-again');
-          if (ag) ag.addEventListener('click', () => telaSelecao());
-          document.getElementById('f-done').addEventListener('click', () => {
-            host.classList.add('hidden');
-            host.innerHTML = '';
-            resolve({ winId });
-          });
-        }
+          anunciar(`ROUND ${round}`, '#fde047');
+          kit.timeout(() => anunciar('FIGHT!', '#ef4444'), 900);
+        }, 1800);
       }
 
-      telaSelecao();
+      function updateFighter(f, left, right, up, def) {
+        if (f.cd > 0) f.cd--;
+        if (f.stun > 0) {
+          f.stun--;
+          return;
+        }
+        f.defending = def;
+        if (!def) {
+          if (left) f.x -= 4.2;
+          if (right) f.x += 4.2;
+          if (up && f.y >= 300) {
+            f.vy = -12.5;
+            bonecoDe(f).play('jump', 0.6);
+          }
+        }
+        f.vy += 0.65;
+        f.y += f.vy;
+        if (f.y >= 300) {
+          f.y = 300;
+          f.vy = 0;
+        }
+        f.x = Math.max(45, Math.min(675, f.x));
+      }
+
+      function passo() {
+        frame++;
+        if (frame % 60 === 0 && timer > 0) timer--;
+        if (creditsOverlay > 0) creditsOverlay--;
+        updateFighter(f1, keys.ArrowLeft, keys.ArrowRight, keys.ArrowUp, keys.KeyF);
+        f1.facing = f2.x >= f1.x ? 1 : -1;
+        f2.facing = f1.x >= f2.x ? 1 : -1;
+        if (twoPlayers) updateFighter(f2, keys.KeyN, keys.KeyM, keys.KeyI, keys.KeyU);
+        else {
+          const dist = f2.x - f1.x;
+          updateFighter(f2, dist > 78, dist < -78, Math.random() < 0.015, Math.random() < 0.12);
+          if (Math.abs(dist) < 92 && frame % 34 === 0) ataque(f2, f1, Math.random() < 0.25 ? 'd' : Math.random() < 0.5 ? 's' : 'a');
+        }
+        for (let i = projectiles.length - 1; i >= 0; i--) {
+          const p = projectiles[i];
+          p.x += p.vx || 0;
+          p.y += p.vy || 0;
+          const target = p.owner === f1 ? f2 : f1;
+          if (Math.abs(p.x - target.x) < 28 && Math.abs(p.y - (target.y - 35)) < 45) {
+            target.hp = Math.max(0, target.hp - (target.defending ? p.dmg * 0.3 : p.dmg));
+            target.tookDamage = true;
+            p.owner.superMeter = Math.min(100, p.owner.superMeter + 20);
+            addPopup('ACERTOU!', target.x, target.y - 70);
+            impacto(target, false);
+            projectiles.splice(i, 1);
+          } else if (p.x < 0 || p.x > 720 || p.y > 390) projectiles.splice(i, 1);
+        }
+        if (f1.hp <= 0) proximoRound(2);
+        else if (f2.hp <= 0) proximoRound(1);
+        else if (timer <= 0) proximoRound(f1.hp >= f2.hp ? 1 : 2);
+      }
+
+      function projetil3D(p) {
+        const g = new THREE.Group();
+        if (p.label === '🔒⭐') {
+          const estrela = new THREE.Mesh(new THREE.OctahedronGeometry(0.22, 0), L().M.glow('#4ade80', 2.5));
+          g.add(estrela);
+          const cad = L().box(0.2, 0.16, 0.08, L().M.std('#facc15', 0.3, 0.9), 0, -0.02, 0.12);
+          g.add(cad);
+          g.add(L().halo('#4ade80', 0.9, 1.2));
+        } else {
+          const nota = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.56), new THREE.MeshBasicMaterial({ map: L().textures.text('🧾\nFRANÇA\n€€€', { w: 128, h: 170, size: 34, color: '#111827', bg: '#f8fafc' }), side: THREE.DoubleSide }));
+          g.add(nota);
+          g.add(L().halo('#f59e0b', 0.8, 1.0));
+        }
+        stage.scene.add(g);
+        return g;
+      }
+
+      anunciar('ROUND 1', '#fde047');
+      kit.timeout(() => anunciar('FIGHT!', '#ef4444'), 900);
+      const look = new THREE.Vector3(0, 1.4, 0);
+
+      kit.loop((dt, t) => {
+        const escala = slowmo > 0 ? 0.25 : 1;
+        slowmo = Math.max(0, slowmo - dt);
+        pausaRound = Math.max(0, pausaRound - dt);
+        if (pausaRound <= 0) {
+          acumulado += dt * escala;
+          while (acumulado >= 1 / 60) {
+            acumulado -= 1 / 60;
+            passo();
+            if (pausaRound > 0) break;
+          }
+        }
+        // HUD
+        $('f-hp1').style.width = `${Math.max(0, f1.hp)}%`;
+        $('f-hp2').style.width = `${Math.max(0, f2.hp)}%`;
+        $('f-sp1').style.width = `${Math.min(100, f1.superMeter)}%`;
+        $('f-sp2').style.width = `${Math.min(100, f2.superMeter)}%`;
+        $('f-sp1').parentElement.classList.toggle('cheio', f1.superMeter >= 100);
+        $('f-sp2').parentElement.classList.toggle('cheio', f2.superMeter >= 100);
+        $('f-timer').textContent = timer;
+        $('f-credits').classList.toggle('hidden', creditsOverlay <= 0);
+        // Bonecos
+        [[f1, b1], [f2, b2]].forEach(([f, b]) => {
+          const x = to3X(f.x);
+          b.group.position.x = U().damp(b.group.position.x, x, 18, dt);
+          b.group.position.y = to3Y(f.y);
+          b.group.rotation.y = U().damp(b.group.rotation.y, f.facing > 0 ? Math.PI / 2 - 0.35 : -Math.PI / 2 + 0.35, 12, dt);
+          if (b.pose !== 'ko' && b.pose !== 'cheer') {
+            const andando = Math.abs(b.group.position.x - x) > 0.01;
+            b.setPose(f.defending ? 'block' : andando && f.y >= 300 ? 'walk' : 'fight', 1.6);
+          }
+        });
+        // Projéteis
+        while (cartas3D.length < projectiles.length) cartas3D.push(projetil3D(projectiles[cartas3D.length]));
+        while (cartas3D.length > projectiles.length) {
+          const g = cartas3D.pop();
+          stage.scene.remove(g);
+        }
+        cartas3D.forEach((g, i) => {
+          const p = projectiles[i];
+          g.position.set(to3X(p.x), to3Y(p.y) + 1.4, 0.8);
+          g.rotation.y += dt * 6;
+        });
+        // Câmera
+        const xa = b1.group.position.x;
+        const xb = b2.group.position.x;
+        const mid = (xa + xb) / 2;
+        const sep = Math.abs(xa - xb);
+        const alvoZ = 4.0 + sep * 0.45 + (slowmo > 0 ? -1.2 : 0);
+        cam.position.x = U().damp(cam.position.x, mid * 0.8, 4, dt);
+        cam.position.z = U().damp(cam.position.z, alvoZ, 3, dt);
+        cam.position.y = U().damp(cam.position.y, 1.9 + Math.sin(t * 0.4) * 0.08, 3, dt);
+        look.set(U().damp(look.x, mid, 5, dt), 1.2, 0.6);
+        cam.lookAt(look);
+      });
+
+      function finalizarLuta(vencedorNum) {
+        const winId = vencedorNum === 1 ? p1Pick : p2Pick;
+        kit.conquista('red_flag_battle');
+        if (winId === 'eloiza') kit.conquista('time_eloiza');
+        if (winId === 'yohana') kit.conquista('time_yohana');
+        if (winId === 'cara_aleatorio') kit.conquista('lenda_do_concordo');
+        if (winId === 'luis') kit.conquista('pacifista');
+        if (save) save.salvarRecordeMinigame('x1_eloiza_yohana', winsP1 * 500 + 200);
+        const el = document.createElement('div');
+        el.className = 'mgk-result';
+        el.innerHTML = `
+          <div class="mgk-result-card">
+            <div class="mgk-result-kicker">Vitória</div>
+            <h2 style="margin:6px 0;color:${LUTADORES[winId].cor}">🏆 ${LUTADORES[winId].nome} WINS!</h2>
+            <div class="fx-stamp" style="margin:8px auto;">MAS NA VIDA REAL...</div>
+            <p>Ninguém venceu. O Luis perdeu a paz, o Fabricio perdeu o rolê, e o Cara Aleatório continua concordando até hoje.</p>
+            <div class="mg-actions">
+              ${modoLivre ? '<button class="mg-btn" data-again="1">↻ Outro X1</button>' : ''}
+              <button class="mg-btn primary" data-done="1">Continuar ▶</button>
+            </div>
+          </div>`;
+        kit.layer.appendChild(el);
+        el.querySelector('[data-done]').addEventListener('click', () => kit.encerrar({ winId }));
+        el.querySelector('[data-again]')?.addEventListener('click', () => {
+          kit.encerrar(null);
+          abrirLutaX1(modoLivre).then((r) => resolverExterno(r));
+        });
+      }
+    }
+
+    let resolverExterno = null;
+    const promessaFinal = new Promise((r) => (resolverExterno = r));
+    kit.promessa.then((v) => {
+      if (v !== null) resolverExterno(v);
     });
+    telaSelecao();
+    return promessaFinal;
   }
 
   root.LuiggiFighter = { abrirLutaX1 };
