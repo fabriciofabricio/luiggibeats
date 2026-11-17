@@ -542,7 +542,9 @@
             <label>Volume Vozes: <input type="range" id="cfg-voz" min="0" max="1" step="0.05" value="${cfg.volVozes}" /></label>
             <label>Velocidade do Texto (ms): <input type="range" id="cfg-txt" min="8" max="50" step="2" value="${cfg.velocidadeTexto}" /></label>
             <label>Calibração Latência Hero (ms): <input type="number" id="cfg-lat" value="${cfg.latenciaHeroMs}" style="width:80px;" /></label>
-            <label><input type="checkbox" id="cfg-tim" ${cfg.timerEscolhas ? 'checked' : ''} /> Timer dramático nas escolhas</label>
+            <label><input type="checkbox" id="cfg-carro" ${cfg.trilhaModoCarro !== false ? 'checked' : ''} /> <strong>🚗 Modo Trilha</strong> (música abafada de carro, mais baixa nos diálogos)</label>
+            <label><input type="checkbox" id="cfg-trilha" ${cfg.trilhaAtiva !== false ? 'checked' : ''} /> Tocar as músicas do LuiggiCloud como trilha sonora</label>
+            <button class="mini-btn" id="cfg-cloud">☁ Abrir LuiggiCloud</button>
             <label><input type="checkbox" id="cfg-cab" ${cfg.modoCabecao ? 'checked' : ''} /> <strong>Modo Cabeção</strong> (foto real recortada no corpo cartoon!)</label>
           </div>
         </div>
@@ -572,9 +574,21 @@
       cfg.latenciaHeroMs = Number(e.target.value) || 0;
       root.LuiggiSave.salvar();
     });
-    document.getElementById('cfg-tim').addEventListener('change', (e) => {
-      cfg.timerEscolhas = e.target.checked;
+    document.getElementById('cfg-carro').addEventListener('change', (e) => {
+      cfg.trilhaModoCarro = e.target.checked;
       root.LuiggiSave.salvar();
+      root.LuiggiCloud?.aplicarModo?.();
+      root.LuiggiCloud?.aplicarVolume?.();
+    });
+    document.getElementById('cfg-trilha').addEventListener('change', (e) => {
+      cfg.trilhaAtiva = e.target.checked;
+      root.LuiggiSave.salvar();
+      if (!e.target.checked) root.LuiggiCloud?.pause?.(true);
+    });
+    document.getElementById('cfg-cloud').addEventListener('click', () => {
+      host.classList.add('hidden');
+      host.innerHTML = '';
+      root.LuiggiCloud?.abrirPainel?.(true);
     });
     document.getElementById('cfg-cab').addEventListener('change', (e) => {
       cfg.modoCabecao = e.target.checked;
@@ -589,6 +603,7 @@
   async function boot() {
     await root.LuiggiData.carregarTudo();
     iniciarPalco3D();
+    root.LuiggiCloud?.init();
     const atalho = aplicarAtalhosDeTeste();
     atualizarHUD();
 

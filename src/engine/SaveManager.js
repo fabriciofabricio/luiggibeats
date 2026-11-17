@@ -67,8 +67,11 @@
         velocidadeTexto: 24, // ms por letra
         timerEscolhas: true,
         latenciaHeroMs: 0,
-        modoCabecao: false
-      }
+        modoCabecao: false,
+        trilhaModoCarro: true,
+        trilhaAtiva: true
+      },
+      trilha: { ultima: null, curtidas: [] }
     };
   }
 

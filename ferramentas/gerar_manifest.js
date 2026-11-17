@@ -496,7 +496,13 @@ function main() {
     faixas: faixasFallback
   };
 
-  fs.writeFileSync(musicasPath, JSON.stringify(musicasJson, null, 2), 'utf8');
+  // O catálogo da trilha (LuiggiCloud) é gerado por ferramentas/gerar_trilha_sonora.js: não sobrescrever
+  let catalogoNovo = false;
+  try {
+    catalogoNovo = Array.isArray(JSON.parse(fs.readFileSync(musicasPath, 'utf8')).artistas);
+  } catch (_) { }
+  if (catalogoNovo) console.log('data/musicas.json mantido (use ferramentas/gerar_trilha_sonora.js para atualizar as músicas).');
+  else fs.writeFileSync(musicasPath, JSON.stringify(musicasJson, null, 2), 'utf8');
 
   // Bundle JS para compatibilidade com abertura direta via file://
   const bundleContent = `// Gerado automaticamente por ferramentas/gerar_manifest.js\nwindow.__LUIGGI_MANIFEST__ = ${JSON.stringify(manifest, null, 2)};\nwindow.__LUIGGI_MUSICAS__ = ${JSON.stringify(musicasJson, null, 2)};\n`;

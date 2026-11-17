@@ -114,6 +114,7 @@
       const nextBtn = el('dialogue-next');
       if (!box) return resolve();
 
+      root.LuiggiCloud?.duck?.(true);
       const info = detectarCanal(quem, fala, canal);
       const quemReal = info.canal === 'adendo' ? 'fabricio' : quem;
       const texto = info.texto;
@@ -188,6 +189,7 @@
       const frame = document.querySelector('.stage-frame');
       let ligarFrame = null;
       function cleanup() {
+        root.LuiggiCloud?.duck?.(false);
         clearInterval(timer);
         clearTimeout(ligarFrame);
         nextBtn.removeEventListener('click', onNext);

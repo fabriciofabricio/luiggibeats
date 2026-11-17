@@ -44,6 +44,7 @@
     musicGain.gain.value = cfg.volMusica ?? 0.7;
     sfxGain.gain.value = cfg.volSfx ?? 0.85;
     voiceGain.gain.value = cfg.volVozes ?? 0.75;
+    root.LuiggiCloud?.aplicarVolume?.();
   }
 
   function getCurrentTime() {
@@ -430,8 +431,10 @@
     }
   }
 
-  function tocarEstiloSintetizado(estilo = 'lofi', bpm = 120) {
+  function tocarEstiloSintetizado(estilo = 'lofi', bpm = 120, o = {}) {
     pararMusica();
+    // A trilha sonora agora é o LuiggiCloud (músicas reais); o sintetizador é só reserva
+    if (!o.forcar && root.LuiggiCloud?.assumirTrilha?.()) return () => { };
     const c = ensureContext();
     if (!c) return () => {};
     let stopped = false;
@@ -661,6 +664,7 @@
 
   root.LuiggiAudio = {
     ensureContext,
+    obterContexto: ensureContext,
     aplicarVolumes,
     getCurrentTime,
     playSFX,

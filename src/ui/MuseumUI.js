@@ -176,9 +176,9 @@
                 (f) => `
               <div class="mus-card">
                 <h4>🎵 ${f.titulo}</h4>
-                <p><small>${f.artista} (${f.ano}) · Cap. ${f.desbloqueiaNoCapitulo}</small></p>
+                <p><small>${f.artista}${f.album ? ' · ' + f.album : ''}${f.ano ? ' (' + f.ano + ')' : ''}</small></p>
                 <p>${f.descricao}</p>
-                <button class="mini-btn" data-play-jb="${f.id}">▶ Ouvir Prévia</button>
+                <button class="mini-btn" data-play-jb="${f.id}">▶ Ouvir no LuiggiCloud</button>
               </div>`
               )
               .join('')}
@@ -188,10 +188,14 @@
         el.querySelectorAll('[data-play-jb]').forEach((b) => {
           b.addEventListener('click', () => {
             const f = faixas.find((x) => x.id === b.dataset.playJb);
-            if (f) root.LuiggiAudio.tocarEstiloSintetizado(f.ehMusicaDoTiago ? 'tiago' : 'trap', f.bpm || 136);
+            if (f && root.LuiggiCloud?.ativo) root.LuiggiCloud.tocarFaixa(f.id);
+            else if (f) root.LuiggiAudio.tocarEstiloSintetizado(f.ehMusicaDoTiago ? 'tiago' : 'trap', f.bpm || 136, { forcar: true });
           });
         });
-        document.getElementById('jb-stop').addEventListener('click', () => root.LuiggiAudio.pararMusica());
+        document.getElementById('jb-stop').addEventListener('click', () => {
+          root.LuiggiAudio.pararMusica();
+          root.LuiggiCloud?.pause?.(true);
+        });
       } else if (aba === 'garagem') {
         el.innerHTML = `
           <h3>🔧 Garagem & Direção Livre</h3>

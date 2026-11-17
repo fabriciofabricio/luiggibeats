@@ -380,9 +380,18 @@
     ctx.fillStyle = '#020617';
     ctx.fillRect(0, 0, 256, 128);
     ctx.fillStyle = '#38bdf8';
-    ctx.font = 'bold 22px monospace';
+    ctx.font = 'bold 20px monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('📻 ' + (NOMES_RADIO[estilo] || estilo.toUpperCase()), 128, 44);
+    const f = root.LuiggiCloud?.faixa;
+    const nome = f ? f.titulo : NOMES_RADIO[estilo] || estilo.toUpperCase();
+    const largura = ctx.measureText(nome).width;
+    const x = largura > 230 ? 128 + ((240 - largura) / 2) * Math.sin(t * 0.6) : 128;
+    ctx.fillText(nome, x, 40);
+    if (f) {
+      ctx.font = '13px monospace';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(f.artista, 128, 60);
+    }
     for (let i = 0; i < 16; i++) {
       const hh = 8 + Math.abs(Math.sin(t * 6 + i * 0.7)) * 38;
       ctx.fillStyle = i % 2 ? '#0ea5e9' : '#a855f7';
@@ -557,9 +566,16 @@
             stage.pulseGrade('vignette', 1.2, 1.2, 0.85);
           }
         } else if (acao === 'radio') {
-          st3.radio = (st3.radio + 1) % ESTILOS_RADIO.length;
-          root.LuiggiAudio.tocarEstiloSintetizado(ESTILOS_RADIO[st3.radio], 122);
-          document.getElementById('pov-radio-lbl').textContent = NOMES_RADIO[ESTILOS_RADIO[st3.radio]];
+          if (root.LuiggiCloud?.ativo) {
+            root.LuiggiCloud.proxima();
+            const f = root.LuiggiCloud.faixa;
+            document.getElementById('pov-radio-lbl').textContent = f ? `${f.titulo} · ${f.artista}` : 'Rádio';
+            falar(f ? `📻 Tocando agora: "${f.titulo}" — ${f.artista}` : 'Rádio LuiggiBeats');
+          } else {
+            st3.radio = (st3.radio + 1) % ESTILOS_RADIO.length;
+            root.LuiggiAudio.tocarEstiloSintetizado(ESTILOS_RADIO[st3.radio], 122);
+            document.getElementById('pov-radio-lbl').textContent = NOMES_RADIO[ESTILOS_RADIO[st3.radio]];
+          }
         } else if (acao === 'portaluvas') {
           root.LuiggiAudio.playSFX('forno');
           st3.portaAberta = !st3.portaAberta;

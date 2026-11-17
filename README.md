@@ -27,19 +27,28 @@ Jogo web de aventura narrativa em 3D (HTML5 + Three.js + Web Audio API), em port
 
 ---
 
-## Como adicionar seus MP3s depois
+## Trilha sonora (LuiggiCloud)
 
-1. Coloque seus arquivos `.mp3` dentro de `/assets/` (ou em `/assets/musicas/`).
-   - Se houver a primeira música do Tiago, inclua `tiago` no nome do arquivo (ex.: `tiago_primeira_musica.mp3`).
-2. Rode os scripts de atualização (sem dependências externas):
+A trilha do jogo é o **LuiggiCloud**, um mini player no estilo SoundCloud (canto superior esquerdo; clique na capa para abrir o painel). Ele toca as músicas de `assets/Musicas mp3/`, separadas por artista, e continua tocando entre os capítulos.
+
+- **🚗 Modo Trilha (som de carro):** liga e desliga no botão 🚗 do player ou em Configurações. Deixa a música abafada (passa-alta + passa-baixa), comprimida, quase mono, com ambiência curta de cabine e mais baixa enquanto alguém fala, para não competir com o texto.
+- O volume de cada faixa é normalizado (medido com o ffmpeg), então nenhuma música estoura mais que as outras.
+- O player pausa sozinho nos minigames com música própria (LuiggiBeats Hero, FL Estúdio, Passinho Sad, Soundboard).
+- O botão de rádio do Subaru, no Safepoint, pula para a próxima faixa.
+
+### Adicionar ou trocar músicas
+
+1. Coloque os arquivos em `assets/Musicas mp3/<Pasta do artista>/` (`.mp3`, `.m4a`, `.wav` ou `.ogg`).
+2. Se for um artista novo, cadastre a pasta em `PASTAS` e o artista em `ARTISTAS`, no topo de `ferramentas/gerar_trilha_sonora.js`. Uma imagem `capa` na pasta vira a capa do álbum.
+3. Rode:
    ```bash
-   node ferramentas/gerar_manifest.js
+   node ferramentas/gerar_trilha_sonora.js
    node ferramentas/empacotar_dados.js
    ```
-3. Abra `data/musicas.json` para conferir títulos, anos, descrições e o campo `"desbloqueiaNoCapitulo"`. Quando terminar de revisar uma faixa, mude `"aConfirmar": true` para `false` para que futuras execuções do script não a sobrescrevam.
-4. Todas as músicas entram automaticamente no **LuiggiBeats Hero** (com geração automática de notas via `OfflineAudioContext`), na **Jukebox Rádio LuiggiBeats** e no **Rádio do Subaru**.
+   Com o ffmpeg instalado, o script calcula duração, forma de onda e volume de cada faixa.
+4. Para corrigir um título à mão, edite a faixa em `data/musicas.json` e mude `"aConfirmar"` para `false`. Assim a próxima geração preserva a sua edição.
 
----
+As mesmas músicas aparecem no **LuiggiBeats Hero** e na Jukebox do Museu.
 
 ## Como editar conteúdo, personagens, textos e charts
 
