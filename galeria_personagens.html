@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galeria de Personagens — LuiggiBeats: O Destino Já Foi Escrito</title>
+  <style>
+    :root {
+      --bg: #0f1016;
+      --surface: #181a24;
+      --surface2: #222534;
+      --border: #2e3246;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --accent: #f59e0b;
+      --accent2: #3b82f6;
+      --ok: #10b981;
+      --warn: #f97316;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+    header {
+      background: linear-gradient(135deg, #161824 0%, #1d243b 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px;
+    }
+    .container {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.55rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+    .badge-ok { background: rgba(16,185,129,0.14); color: #34d399; border-color: rgba(16,185,129,0.35); }
+    .badge-warn { background: rgba(249,115,22,0.15); color: #fb923c; border-color: rgba(249,115,22,0.35); }
+    .badge-info { background: rgba(59,130,246,0.15); color: #60a5fa; border-color: rgba(59,130,246,0.35); }
+    .badge-gold { background: rgba(245,158,11,0.16); color: #fbbf24; border-color: rgba(245,158,11,0.4); }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin: 0 0 14px;
+    }
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(15, 16, 22, 0.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+    }
+    .toolbar-inner {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    button, .tab-btn {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 11px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    button:hover { border-color: var(--accent2); }
+    button.active {
+      background: var(--accent2);
+      border-color: var(--accent2);
+      color: #fff;
+      font-weight: 600;
+    }
+    button.active-gold {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #111;
+      font-weight: 700;
+    }
+    input[type="search"] {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 0.86rem;
+      min-width: 220px;
+    }
+    main {
+      padding: 22px 0 60px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+      gap: 20px;
+    }
+    @media (max-width: 680px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-head {
+      padding: 14px 16px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .card-title {
+      margin: 0;
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .card-role {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .compare-box {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 14px;
+      padding: 16px;
+    }
+    @media (max-width: 520px) {
+      .compare-box { grid-template-columns: 1fr; }
+    }
+    .photo-pane, .rig-pane {
+      background: #12131c;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .pane-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .real-photo-wrap {
+      width: 100%;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0b0c12;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .real-photo-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .no-photo-box {
+      text-align: center;
+      padding: 20px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    .thumbs {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .thumbs img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+    .thumbs img.active {
+      border-color: var(--accent);
+      opacity: 1;
+    }
+    .rig-stage {
+      width: 100%;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 60%, #26293d 0%, #12131c 75%);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+    .rig-stage svg, .rig-stage .vn-sprite-img {
+      height: 92%;
+      width: auto;
+      max-width: 95%;
+      max-height: 235px;
+      object-fit: contain;
+    }
+    .vn-sprite-wrap { position: relative; display: flex; align-items: center; justify-content: center; height: 100%; }
+    .vn-emote { position: absolute; top: 6px; right: 6px; font-size: 1.4rem; }
+    .dialogue-preview {
+      margin-top: 8px;
+      width: 100%;
+      background: #0d0e15;
+      border: 1px solid #2c3044;
+      border-radius: 6px;
+      padding: 6px 9px;
+      font-size: 0.78rem;
+      min-height: 34px;
+      color: #e5e7eb;
+      font-family: 'Consolas', monospace;
+    }
+    .card-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px;
+      width: 100%;
+      justify-content: center;
+    }
+    .card-controls button {
+      font-size: 0.72rem;
+      padding: 4px 8px;
+    }
+    .expr-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      padding: 0 16px 14px;
+    }
+    .expr-item {
+      background: #12131c;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 4px 4px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .expr-item:hover { border-color: var(--accent); }
+    .expr-item svg {
+      width: 100%;
+      height: 64px;
+    }
+    .expr-item span {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-transform: capitalize;
+    }
+    .meta-footer {
+      padding: 10px 16px 14px;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .swatches {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .swatch {
+      width: 15px;
+      height: 15px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.35);
+      display: inline-block;
+    }
+    details {
+      margin-top: 4px;
+    }
+    details summary {
+      cursor: pointer;
+      color: #93c5fd;
+      font-size: 0.76rem;
+    }
+    pre {
+      background: #0b0c12;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      overflow: auto;
+      max-height: 220px;
+      font-size: 0.74rem;
+      color: #d1d5db;
+    }
+    .extra-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .extra-thumbs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .extra-thumbs img {
+      height: 92px;
+      width: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #0b0c12;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>
+        🎨 Galeria de Comparação — LuiggiBeats: O Destino Já Foi Escrito
+        <span class="badge badge-gold">Parte 0 · Seção 11.1</span>
+      </h1>
+      <p class="subtitle">
+        Foto real ao lado do personagem 2D animado (SVG em camadas), com idle, caminhada, fala sincronizada, 5 expressões, animação especial e Modo Cabeção.
+        Edite <code>data/personagens.json</code> e rode <code>node ferramentas/gerar_sprites.js</code> para ajustar qualquer traço.
+      </p>
+      <div class="stats-row" id="stats-row"></div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <div class="btn-group" id="filter-tabs">
+        <button class="active" data-filter="todos">Todos</button>
+        <button data-filter="com_foto">Com Foto Real</button>
+        <button data-filter="sem_foto">Sem Foto / Placeholders</button>
+        <button data-filter="veiculos">Veículos</button>
+        <button data-filter="extras">Extras fora da Seção 13</button>
+      </div>
+
+      <div class="btn-group">
+        <input type="search" id="search-input" placeholder="Buscar personagem ou capítulo..." />
+      </div>
+
+      <div class="btn-group" id="global-controls">
+        <span style="font-size:0.76rem;color:var(--muted);">Global:</span>
+        <button data-ganim="idle" class="active">Idle</button>
+        <button data-ganim="walk">Andar</button>
+        <button data-ganim="talk">Falar</button>
+        <button data-ganim="especial">Especial</button>
+        <button id="btn-global-scale">Retrato</button>
+        <button id="btn-global-cabecao">Modo Cabeção</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <div id="gallery-root" class="grid"></div>
+  </main>
+
+  <script src="data/manifest_bundle.js"></script>
+  <script src="data/personagens_bundle.js"></script>
+  <script src="src/engine/CharacterRig.js"></script>
+  <script>
+    (function () {
+      const EXPRESSOES = ['neutro', 'feliz', 'bravo', 'envergonhado', 'chocado'];
+      let data = window.__LUIGGI_PERSONAGENS__;
+      let manifest = window.__LUIGGI_MANIFEST__;
+      let activeFilter = 'todos';
+      let searchTerm = '';
+      let globalAnim = 'idle';
+      let globalScale = 'full';
+      let globalCabecao = false;
+      const animators = [];
+
+      async function carregarDados() {
+        try {
+          const res = await fetch('data/personagens.json', { cache: 'no-store' });
+          if (res.ok) data = await res.json();
+        } catch (_) {
+          // Abertura direta via file:// usa data/personagens_bundle.js
+        }
+        try {
+          const resM = await fetch('assets/manifest.json', { cache: 'no-store' });
+          if (resM.ok) manifest = await resM.json();
+        } catch (_) {}
+      }
+
+      function renderStats() {
+        const row = document.getElementById('stats-row');
+        const comFoto = data.personagens.filter((p) => p.temFoto).length;
+        const semFoto = data.personagens.filter((p) => !p.temFoto).length;
+        const mp3s = manifest?.resumo?.audios ?? 0;
+        const extras = data.extrasForaSecao13?.length ?? 0;
+
+        row.innerHTML = `
+          <span class="badge badge-ok">✓ ${comFoto} personagens com foto real</span>
+          <span class="badge badge-warn">⚠ ${semFoto} sem foto (placeholders ativos)</span>
+          <span class="badge badge-info">🚗 ${data.veiculos.filter((v) => v.temFoto).length}/${data.veiculos.length} veículos com foto</span>
+          <span class="badge badge-warn">🎵 ${mp3s} MP3s encontrados</span>
+          <span class="badge badge-info">📁 ${extras} pastas extras fora da Seção 13</span>
+        `;
+      }
+
+      function limparAnimators() {
+        while (animators.length) {
+          const a = animators.pop();
+          a.destroy();
+        }
+      }
+
+      function typePhrase(el, text, animator) {
+        if (!el) return;
+        clearInterval(el._timer);
+        el.textContent = '';
+        let i = 0;
+        el._timer = setInterval(() => {
+          if (i >= text.length) {
+            clearInterval(el._timer);
+            return;
+          }
+          el.textContent += text[i++];
+          animator.pulseTalk();
+        }, 38);
+      }
+
+      function criarCardPersonagem(p) {
+        const card = document.createElement('article');
+        card.className = 'card';
+
+        const statusBadge = p.notaAmbiguidade
+          ? `<span class="badge badge-warn">Ambíguo</span>`
+          : p.temFoto
+          ? `<span class="badge badge-ok">Foto Real</span>`
+          : `<span class="badge badge-warn">Sem Foto (Placeholder)</span>`;
+
+        const capLabel = p.capituloPrimeiraAparicao === 0 ? 'Prólogo' : `Cap. ${p.capituloPrimeiraAparicao}`;
+
+        card.innerHTML = `
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">${p.nome} ${statusBadge}</h2>
+              <div class="card-role">${p.apelido} · ${capLabel} · ${p.papel}</div>
+            </div>
+            <span class="badge badge-info" style="flex-shrink:0;"><code>${p.id}</code></span>
+          </div>
+          <div class="compare-box">
+            <div class="photo-pane">
+              <div class="pane-label">
+                <span>Referência Real (/assets)</span>
+                <span>${p.fotos.length} foto(s)</span>
+              </div>
+              <div class="real-photo-wrap">
+                ${
+                  p.fotos.length
+                    ? `<img class="main-photo" src="${encodeURI(p.fotos[0])}" alt="${p.nome}" />`
+                    : `<div class="no-photo-box">
+                         <strong>Sem foto em /assets</strong><br/>
+                         ${p.statusFoto || 'Usando ficha provisória.'}
+                       </div>`
+                }
+              </div>
+              <div class="thumbs">
+                ${
+                  p.fotos.length > 1
+                    ? p.fotos
+                        .map(
+                          (src, idx) =>
+                            `<img src="${encodeURI(src)}" class="${idx === 0 ? 'active' : ''}" data-src="${encodeURI(src)}" title="Foto ${idx + 1}" />`
+                        )
+                        .join('')
+                    : ''
+                }
+              </div>
+            </div>
+
+            <div class="rig-pane">
+              <div class="pane-label">
+                <span>Personagem 2D Animado</span>
+                <span class="rig-state-label">${globalAnim} · neutro</span>
+              </div>
+              <div class="rig-stage"></div>
+              <div class="dialogue-preview">"${p.fraseMarcante}"</div>
+              <div class="card-controls">
+                <button data-anim="idle" class="${globalAnim === 'idle' ? 'active' : ''}">Idle</button>
+                <button data-anim="walk" class="${globalAnim === 'walk' ? 'active' : ''}">Andar</button>
+                <button data-anim="talk" class="${globalAnim === 'talk' ? 'active' : ''}">Falar</button>
+                <button data-anim="susto">Susto</button>
+                <button data-anim="raiva">Raiva</button>
+                <button data-anim="especial" class="${globalAnim === 'especial' ? 'active' : ''}" title="${p.animacaoEspecial?.descricao || ''}">★ ${p.animacaoEspecial?.nome || 'Especial'}</button>
+                <button data-toggle-scale="1">${globalScale === 'portrait' ? 'Corpo' : 'Retrato'}</button>
+                ${p.temFoto ? `<button data-toggle-cab="1" class="${globalCabecao ? 'active-gold' : ''}">Cabeção</button>` : ''}
+              </div>
+            </div>
+          </div>
+          ${
+            p.isPet
+              ? ''
+              : `<div class="expr-strip">
+                   ${EXPRESSOES.map(
+                     (e) => `
+                     <div class="expr-item" data-expr="${e}" title="Aplicar expressão ${e}">
+                       ${window.LuiggiRig.renderCharacterSVG(p, { expressao: e, scale: 'portrait' })}
+                       <span>${e}</span>
+                     </div>`
+                   ).join('')}
+                 </div>`
+          }
+          <div class="meta-footer">
+            ${
+              p.fichaVisual?.tomPele
+                ? `<div class="swatches">
+                     <span>Paleta:</span>
+                     <span class="swatch" style="background:${p.fichaVisual.tomPele}" title="Pele ${p.fichaVisual.tomPele}"></span>
+                     ${p.fichaVisual.cabelo?.cor ? `<span class="swatch" style="background:${p.fichaVisual.cabelo.cor}" title="Cabelo ${p.fichaVisual.cabelo.cor}"></span>` : ''}
+                     ${p.fichaVisual.cabelo?.corMecha ? `<span class="swatch" style="background:${p.fichaVisual.cabelo.corMecha}" title="Mecha ${p.fichaVisual.cabelo.corMecha}"></span>` : ''}
+                     ${(p.fichaVisual.roupa?.paletaCores || []).map((c) => `<span class="swatch" style="background:${c}" title="Roupa ${c}"></span>`).join('')}
+                   </div>`
+                : ''
+            }
+            ${p.notaAmbiguidade ? `<div style="color:#fbbf24;">⚠ ${p.notaAmbiguidade}</div>` : ''}
+            ${p.suposicoes?.length ? `<div><strong>Suposições (não visíveis na foto):</strong> ${p.suposicoes.join(', ')}</div>` : ''}
+            <details>
+              <summary>Ver ficha visual JSON</summary>
+              <pre>${JSON.stringify(p.fichaVisual, null, 2)}</pre>
+            </details>
+          </div>
+        `;
+
+        // Thumbnails switcher
+        const mainImg = card.querySelector('.main-photo');
+        card.querySelectorAll('.thumbs img').forEach((th) => {
+          th.addEventListener('click', () => {
+            if (mainImg) mainImg.src = th.dataset.src;
+            card.querySelectorAll('.thumbs img').forEach((t) => t.classList.remove('active'));
+            th.classList.add('active');
+          });
+        });
+
+        // RigAnimator
+        const stage = card.querySelector('.rig-stage');
+        const stateLabel = card.querySelector('.rig-state-label');
+        const diagBox = card.querySelector('.dialogue-preview');
+        const animator = new window.LuiggiRig.RigAnimator(stage, p, {
+          expressao: 'neutro',
+          animacao: globalAnim,
+          scale: globalScale,
+          modoCabecao: globalCabecao
+        });
+        animators.push(animator);
+
+        function updateLabel() {
+          stateLabel.textContent = `${animator.opts.animacao} · ${animator.opts.expressao}${animator.opts.modoCabecao ? ' · CABEÇÃO' : ''}`;
+        }
+
+        card.querySelectorAll('[data-anim]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            card.querySelectorAll('[data-anim]').forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            animator.setOptions({ animacao: btn.dataset.anim });
+            updateLabel();
+            if (btn.dataset.anim === 'talk') {
+              typePhrase(diagBox, `"${p.fraseMarcante}"`, animator);
+            }
+          });
+        });
+
+        card.querySelectorAll('[data-expr]').forEach((el) => {
+          el.addEventListener('click', () => {
+            animator.setOptions({ expressao: el.dataset.expr });
+            updateLabel();
+          });
+        });
+
+        const scaleBtn = card.querySelector('[data-toggle-scale]');
+        if (scaleBtn) {
+          scaleBtn.addEventListener('click', () => {
+            const next = animator.opts.scale === 'full' ? 'portrait' : 'full';
+            animator.setOptions({ scale: next });
+            scaleBtn.textContent = next === 'portrait' ? 'Corpo' : 'Retrato';
+          });
+        }
+
+        const cabBtn = card.querySelector('[data-toggle-cab]');
+        if (cabBtn) {
+          cabBtn.addEventListener('click', () => {
+            const next = !animator.opts.modoCabecao;
+            animator.setOptions({ modoCabecao: next });
+            cabBtn.classList.toggle('active-gold', next);
+            updateLabel();
+          });
+        }
+
+        return card;
+      }
+
+      function criarCardVeiculo(v) {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">🚗 ${v.nome} ${v.temFoto ? '<span class="badge badge-ok">Foto Real</span>' : '<span class="badge badge-warn">Sem Foto</span>'}</h2>
+              <div class="card-role">${v.papel}</div>
+            </div>
+            <span class="badge badge-info"><code>${v.id}</code></span>
+          </div>
+          <div class="compare-box">
+            <div class="photo-pane">
+              <div class="pane-label"><span>Referência Real</span></div>
+              <div class="real-photo-wrap">
+                ${
+                  v.fotos.length
+                    ? `<img src="${encodeURI(v.fotos[0])}" alt="${v.nome}" />`
+                    : `<div class="no-photo-box"><strong>Sem foto em /assets</strong><br/>${v.statusFoto || ''}</div>`
+                }
+              </div>
+            </div>
+            <div class="rig-pane">
+              <div class="pane-label"><span>Veículo 2D Cartoon</span></div>
+              <div class="rig-stage">${window.LuiggiRig.renderVehicleSVG(v)}</div>
+              <div class="dialogue-preview">${(v.fichaVisual?.detalhes || []).join(' · ')}</div>
+            </div>
+          </div>
+        `;
+        return card;
+      }
+
+      function criarCardExtra(ex) {
+        const card = document.createElement('article');
+        card.className = 'extra-card';
+        const imgs = ex.arquivos.filter((a) => /\.(png|jpg|jpeg|webp)$/i.test(a));
+        card.innerHTML = `
+          <h3 style="margin:0 0 4px;font-size:1rem;">📁 ${ex.pasta} <span class="badge badge-warn">Fora da Seção 13</span></h3>
+          <div style="font-size:0.82rem;color:var(--muted);">${ex.observacao}</div>
+          <div class="extra-thumbs">
+            ${imgs.map((src) => `<img src="${encodeURI(src)}" title="${src}" />`).join('')}
+          </div>
+        `;
+        return card;
+      }
+
+      function renderGallery() {
+        limparAnimators();
+        const root = document.getElementById('gallery-root');
+        root.innerHTML = '';
+        const q = searchTerm.trim().toLowerCase();
+
+        if (activeFilter === 'extras') {
+          for (const ex of data.extrasForaSecao13 || []) {
+            if (q && !ex.pasta.toLowerCase().includes(q)) continue;
+            root.appendChild(criarCardExtra(ex));
+          }
+          return;
+        }
+
+        if (activeFilter === 'veiculos') {
+          for (const v of data.veiculos || []) {
+            if (q && !v.nome.toLowerCase().includes(q)) continue;
+            root.appendChild(criarCardVeiculo(v));
+          }
+          return;
+        }
+
+        const lista = data.personagens.filter((p) => {
+          if (activeFilter === 'com_foto' && !p.temFoto) return false;
+          if (activeFilter === 'sem_foto' && p.temFoto) return false;
+          if (q) {
+            const hay = `${p.nome} ${p.apelido} ${p.id} ${p.papel} cap ${p.capituloPrimeiraAparicao}`.toLowerCase();
+            if (!hay.includes(q)) return false;
+          }
+          return true;
+        });
+
+        for (const p of lista) {
+          root.appendChild(criarCardPersonagem(p));
+        }
+
+        if (activeFilter === 'todos' && !q) {
+          for (const v of data.veiculos || []) {
+            root.appendChild(criarCardVeiculo(v));
+          }
+        }
+      }
+
+      // Wire events
+      document.querySelectorAll('#filter-tabs button').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#filter-tabs button').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeFilter = btn.dataset.filter;
+          renderGallery();
+        });
+      });
+
+      document.getElementById('search-input').addEventListener('input', (e) => {
+        searchTerm = e.target.value;
+        renderGallery();
+      });
+
+      document.querySelectorAll('[data-ganim]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-ganim]').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          globalAnim = btn.dataset.ganim;
+          animators.forEach((a) => a.setOptions({ animacao: globalAnim }));
+        });
+      });
+
+      document.getElementById('btn-global-scale').addEventListener('click', (e) => {
+        globalScale = globalScale === 'full' ? 'portrait' : 'full';
+        e.target.classList.toggle('active', globalScale === 'portrait');
+        animators.forEach((a) => a.setOptions({ scale: globalScale }));
+      });
+
+      document.getElementById('btn-global-cabecao').addEventListener('click', (e) => {
+        globalCabecao = !globalCabecao;
+        e.target.classList.toggle('active-gold', globalCabecao);
+        animators.forEach((a) => a.setOptions({ modoCabecao: globalCabecao }));
+      });
+
+      carregarDados().then(() => {
+        renderStats();
+        renderGallery();
+      });
+    })();
+  </script>
+</body>
+</html>

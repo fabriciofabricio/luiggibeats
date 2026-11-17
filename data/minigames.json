@@ -1,0 +1,290 @@
+{
+  "versao": 1,
+  "minigames": {
+    "fabrica_cookies": {
+      "id": "fabrica_cookies",
+      "titulo": "Fábrica de Cookies: Modo Hiperfoco",
+      "capitulo": 0,
+      "motor": "cookies",
+      "descricao": "Pese os ingredientes sem explodir a farinha, misture no ritmo, espalhe as gotas, modele as bolinhas e asse no ponto!"
+    },
+    "ajude_vitor": {
+      "id": "ajude_vitor",
+      "titulo": "Ajude o Vitor",
+      "capitulo": 1,
+      "motor": "quick_choice",
+      "descricao": "Tente salvar o papo do Vitor com uma garota. Spoiler: você não vai conseguir."
+    },
+    "basquete_maria_clara": {
+      "id": "basquete_maria_clara",
+      "titulo": "Basquete com a Maria Clara",
+      "capitulo": 1,
+      "motor": "esporte",
+      "tentativas": 5,
+      "metaCestas": 3,
+      "descricao": "Controle ângulo e força para acertar a cesta na quadra da escola."
+    },
+    "puzzle_armario": {
+      "id": "puzzle_armario",
+      "titulo": "Puzzle do Armário",
+      "capitulo": 1,
+      "motor": "puzzle",
+      "codigo": [4, 2, 0],
+      "descricao": "Tente abrir o cadeado antes que o Mateus Buse resolva em 2 segundos."
+    },
+    "fl_estudio": {
+      "id": "fl_estudio",
+      "titulo": "FL Estúdio do LuiggiBeats",
+      "capitulo": 2,
+      "motor": "estudio",
+      "bpmPadrao": 140,
+      "missoes": [
+        { "id": "kick1", "texto": "Coloque um kick no tempo 1" },
+        { "id": "hihat_roll", "texto": "Faça um hi-hat roll (segure um passo do hi-hat)" },
+        { "id": "sub_808", "texto": "Coloque um 808 no Piano Roll" },
+        { "id": "vitor_3x", "texto": "Use o sample do Vitor pelo menos 3 vezes" },
+        { "id": "playlist_3", "texto": "Monte 3 partes na Playlist e exporte" }
+      ]
+    },
+    "luiggibeats_hero": {
+      "id": "luiggibeats_hero",
+      "titulo": "LuiggiBeats Hero",
+      "capitulo": 2,
+      "motor": "ritmo",
+      "dificuldades": ["facil", "medio", "dificil"],
+      "janelasMs": { "perfeito": 55, "bom": 115 }
+    },
+    "digitando_autocorretor": {
+      "id": "digitando_autocorretor",
+      "titulo": "Digitando... (Autocorretor Traidor)",
+      "capitulo": 3,
+      "motor": "quick_time",
+      "fraseAlvo": "nao posso ir hoje",
+      "sabotagens": { "nao": "sim", "hoje": "agora", "posso": "quero" },
+      "tempoSeg": 22
+    },
+    "nao_olha_porta": {
+      "id": "nao_olha_porta",
+      "titulo": "Não Olha Pra Porta",
+      "capitulo": 3,
+      "motor": "reacao",
+      "duracaoSeg": 28,
+      "descricao": "Mantenha a câmera no quadro do professor e desvie o olhar toda vez que a Cecília aparecer na porta!"
+    },
+    "treino_academia": {
+      "id": "treino_academia",
+      "titulo": "Treino na Academia",
+      "capitulo": 4,
+      "motor": "esporte",
+      "series": 8,
+      "descricao": "Aperte na zona verde de ritmo para levantar o supino sem travar."
+    },
+    "fuga_notificacoes": {
+      "id": "fuga_notificacoes",
+      "titulo": "Fuga das Notificações",
+      "capitulo": 4,
+      "motor": "quick_time",
+      "duracaoSeg": 25,
+      "descricao": "Arquive ou desvie das enxurradas de mensagens da Gi Eta!"
+    },
+    "medidor_dilema": {
+      "id": "medidor_dilema",
+      "titulo": "Medidor de Dilema",
+      "capitulo": 5,
+      "motor": "equilibrio",
+      "duracaoSeg": 24,
+      "descricao": "Equilibre o Fabricio entre a Agatha e a Caliandra usando ← →."
+    },
+    "conversa_luiza": {
+      "id": "conversa_luiza",
+      "titulo": "Conversa com a Luiza",
+      "capitulo": 5,
+      "motor": "quimica",
+      "temas": [
+        { "texto": "Falar de política", "delta": 15, "reacao": "Ela fala por 20 minutos sem respirar. Você concorda." },
+        { "texto": "Mostrar um LuiggiBeats", "delta": -10, "reacao": "Silêncio constrangedor. Ela muda de assunto." },
+        { "texto": "Perguntar da Alemanha", "delta": 35, "reacao": "Os olhos dela brilham! Tudo sempre leva à Alemanha." }
+      ]
+    },
+    "direcao_madrugada": {
+      "id": "direcao_madrugada",
+      "titulo": "Direção na Madrugada (3h)",
+      "capitulo": 6,
+      "motor": "direcao",
+      "modo": "madrugada",
+      "distancia": 2600
+    },
+    "segurando_vela": {
+      "id": "segurando_vela",
+      "titulo": "Segurando Vela",
+      "capitulo": 6,
+      "motor": "equilibrio",
+      "duracaoSeg": 26,
+      "descricao": "Mantenha a distância ideal atrás do Fabricio e da Agatha. Reaja rápido quando ele olhar pra trás!"
+    },
+    "sobrevivencia_centro": {
+      "id": "sobrevivencia_centro",
+      "titulo": "Sobrevivência: Centro 3h",
+      "capitulo": 6,
+      "motor": "furtividade",
+      "modo": "centro_3h",
+      "descricao": "Chegue no Subaru antes que a lanterna acabe ou o medo dispare!"
+    },
+    "conversa_mensagem": {
+      "id": "conversa_mensagem",
+      "titulo": "Conversa por Mensagem",
+      "capitulo": 7,
+      "motor": "quimica",
+      "descricao": "Responda na hora certa: nem ansioso demais (0,2s), nem gelado."
+    },
+    "praca_alimentacao": {
+      "id": "praca_alimentacao",
+      "titulo": "Praça de Alimentação",
+      "capitulo": 7,
+      "motor": "esporte",
+      "duracaoSeg": 25,
+      "descricao": "Equilibre as bandejas e desvie de crianças, cadeiras e chão molhado até a mesa da Luiza."
+    },
+    "grito_no_bar": {
+      "id": "grito_no_bar",
+      "titulo": "Grito no Bar",
+      "capitulo": 8,
+      "motor": "reacao",
+      "rodadas": 5,
+      "descricao": "Grite o pedido exatamente nas pausas da batida para o barman ouvir!"
+    },
+    "namedrop_pietra": {
+      "id": "namedrop_pietra",
+      "titulo": "Name Drop da Pietra",
+      "capitulo": 8,
+      "motor": "quiz",
+      "descricao": "Adivinhe qual famoso a Pietra está chamando pelo primeiro nome."
+    },
+    "passinho_sad": {
+      "id": "passinho_sad",
+      "titulo": "Passinho Sad",
+      "capitulo": 8,
+      "motor": "ritmo",
+      "modo": "ddr",
+      "descricao": "Dance no funk lento triste com setas enquanto a Rebeca se aproxima a cada combo!"
+    },
+    "esconde_esconde_baile": {
+      "id": "esconde_esconde_baile",
+      "titulo": "Esconde-Esconde no Baile",
+      "capitulo": 8,
+      "motor": "furtividade",
+      "modo": "baile",
+      "duracaoSeg": 26
+    },
+    "onde_esta_ruiva": {
+      "id": "onde_esta_ruiva",
+      "titulo": "Onde Está a Ruiva?",
+      "capitulo": 8,
+      "motor": "quick_time",
+      "tempoSeg": 25
+    },
+    "papo_fim_noite": {
+      "id": "papo_fim_noite",
+      "titulo": "Papo de Fim de Noite",
+      "capitulo": 8,
+      "motor": "quimica"
+    },
+    "latte_art": {
+      "id": "latte_art",
+      "titulo": "Latte Art no TNT",
+      "capitulo": 9,
+      "motor": "precisao",
+      "descricao": "Guie o jato de leite para desenhar um coração na xícara!"
+    },
+    "detector_red_flags": {
+      "id": "detector_red_flags",
+      "titulo": "Detector de Red Flags",
+      "capitulo": 9,
+      "motor": "quick_time",
+      "descricao": "Clique nas bandeirinhas vermelhas antes que desapareçam das histórias da Yohana!"
+    },
+    "creditos_infinitos": {
+      "id": "creditos_infinitos",
+      "titulo": "Créditos Infinitos (Nora)",
+      "capitulo": 9,
+      "motor": "meta",
+      "duracaoSeg": 22
+    },
+    "direcao_bacacheri": {
+      "id": "direcao_bacacheri",
+      "titulo": "Direção Bacacheri → Centro",
+      "capitulo": 10,
+      "motor": "direcao",
+      "modo": "curitiba",
+      "distancia": 3200
+    },
+    "latte_art_rayssa": {
+      "id": "latte_art_rayssa",
+      "titulo": "Latte Art da Rayssa",
+      "capitulo": 10,
+      "motor": "precisao"
+    },
+    "garagem_emily": {
+      "id": "garagem_emily",
+      "titulo": "Garagem: Mods do Subaru",
+      "capitulo": 10,
+      "motor": "quimica"
+    },
+    "racha_subaru_civic": {
+      "id": "racha_subaru_civic",
+      "titulo": "Racha: Subaru x Civic",
+      "capitulo": 10,
+      "motor": "direcao",
+      "modo": "racha",
+      "distancia": 4200
+    },
+    "beijo_no_drift": {
+      "id": "beijo_no_drift",
+      "titulo": "Beijo no Drift (Sonho)",
+      "capitulo": 11,
+      "motor": "drift_sonho",
+      "duracaoSeg": 28
+    },
+    "treino_dupla": {
+      "id": "treino_dupla",
+      "titulo": "Treino em Dupla",
+      "capitulo": 12,
+      "motor": "esporte",
+      "series": 8
+    },
+    "detetive_instagram": {
+      "id": "detetive_instagram",
+      "titulo": "Detetive do Instagram",
+      "capitulo": 12,
+      "motor": "investigacao",
+      "provasNecessarias": 4
+    },
+    "x1_eloiza_yohana": {
+      "id": "x1_eloiza_yohana",
+      "titulo": "X1: Eloiza vs Yohana",
+      "capitulo": 13,
+      "motor": "luta2d"
+    },
+    "lembra_quando": {
+      "id": "lembra_quando",
+      "titulo": "Lembra Quando? (Quiz da Escola)",
+      "capitulo": 14,
+      "motor": "quiz"
+    },
+    "operacao_ponto_cego": {
+      "id": "operacao_ponto_cego",
+      "titulo": "Operação Ponto Cego",
+      "capitulo": 14,
+      "motor": "furtividade",
+      "modo": "ponto_cego",
+      "duracaoSeg": 45
+    },
+    "soundboard_discord": {
+      "id": "soundboard_discord",
+      "titulo": "Soundboard do Discord",
+      "capitulo": 15,
+      "motor": "ritmo",
+      "modo": "soundboard"
+    }
+  }
+}

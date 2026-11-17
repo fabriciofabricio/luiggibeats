@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="26 14 168 178" class="luiggi-rig-svg" data-char="agatha">
+      <g class="rig-root">
+        
+        <g class="rig-hair-back">
+        <path d="M56 76 Q42 142 46 218 Q110 232 174 218 Q178 142 164 76 Q110 20 56 76 Z"
+          fill="#151417" stroke="#18141C" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M64 118 Q58 168 62 212 M156 118 Q162 168 158 212" fill="none" stroke="#100f11" stroke-width="2.2" opacity="0.65"/>
+      </g>
+        <g class="rig-legs"></g>
+        <path d="M98 124 L122 124 L124 144 Q110 150 96 144 Z" fill="#B98668" stroke="#18141C" stroke-width="2.4"/>
+        <g class="rig-torso">
+        <path d="M82 142 Q110 132 138 142 L136 214 L84 214 Z" fill="#D8A889" stroke="#18141C" stroke-width="2.4"/>
+        <path d="M89 152 Q110 166 131 152 L135 214 L85 214 Z" fill="#151518" stroke="#18141C" stroke-width="2.4"/>
+        <path d="M98 141 Q110 146 122 141" fill="none" stroke="#B98668" stroke-width="1.8"/>
+      
+          <rect x="89" y="138" width="7" height="16" fill="#151518" stroke="#18141C" stroke-width="2"/>
+          <rect x="124" y="138" width="7" height="16" fill="#151518" stroke="#18141C" stroke-width="2"/>
+        </g>
+        <g class="rig-arms">
+      <g class="rig-arm-l">
+        <rect x="72" y="143" width="12" height="56" rx="6" fill="#D8A889" stroke="#18141C" stroke-width="2.4"/>
+        <circle cx="78" cy="204" r="6" fill="#D8A889" stroke="#18141C" stroke-width="2.4"/>
+      </g>
+      <g class="rig-arm-r">
+        <rect x="136" y="143" width="12" height="56" rx="6" fill="#D8A889" stroke="#18141C" stroke-width="2.4"/>
+        <circle cx="142" cy="204" r="6" fill="#D8A889" stroke="#18141C" stroke-width="2.4"/>
+      </g>
+      
+    </g>
+        <g class="rig-head">
+        <circle cx="66" cy="86" r="7.5" fill="#B98668" stroke="#18141C" stroke-width="2.4"/>
+        <circle cx="154" cy="86" r="7.5" fill="#B98668" stroke="#18141C" stroke-width="2.4"/>
+        <!-- Rosto anime/webtoon afinado no queixo -->
+        <path d="M68 72 Q68 34 110 34 Q152 34 152 72 Q151 104 136 120 Q120 132 110 132 Q100 132 84 120 Q69 104 68 72 Z"
+          fill="#D8A889" stroke="#18141C" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M107 88 L111 96 L106 97" fill="none" stroke="#B98668" stroke-width="2" stroke-linecap="round"/>
+        <ellipse cx="82" cy="96" rx="10" ry="4.5" fill="#F43F5E" opacity="0.22"/>
+        <ellipse cx="138" cy="96" rx="10" ry="4.5" fill="#F43F5E" opacity="0.22"/>
+        
+        <g class="rig-eyes">
+        <path d="M79 85 Q90 73 101 85" fill="none" stroke="#18141C" stroke-width="3" stroke-linecap="round"/>
+        <path d="M119 85 Q130 73 141 85" fill="none" stroke="#18141C" stroke-width="3" stroke-linecap="round"/>
+      </g>
+        <g class="rig-brows">
+      <path d="M77 70 Q89 65 101 70" fill="none" stroke="#151417" stroke-width="2" stroke-linecap="round"/>
+      <path d="M119 70 Q131 65 143 70" fill="none" stroke="#151417" stroke-width="2" stroke-linecap="round"/>
+    </g>
+        <g class="rig-mouth"><path d="M98 106 Q110 119 122 106 Z" fill="#FFFFFF" stroke="#18141C" stroke-width="2" stroke-linejoin="round"/></g>
+      </g>
+        <g class="rig-hair-front">
+        <path d="M56 84 Q56 26 110 24 Q164 26 164 84 Q152 52 126 68 Q114 44 110 42 Q106 44 94 68 Q68 52 56 84 Z"
+          fill="#151417" stroke="#18141C" stroke-width="2.4" stroke-linejoin="round"/>
+      
+      <path d="M74 44 Q92 36 105 41 M116 41 Q128 36 146 44" fill="none" stroke="#504f51" stroke-width="2.6" opacity="0.55" stroke-linecap="round"/>
+    </g>
+        <g class="rig-accessories"><path d="M107 98 Q110 103 113 98" fill="none" stroke="#E5E7EB" stroke-width="2"/><path d="M97 134 Q110 152 123 134" fill="none" stroke="#D1D5DB" stroke-width="2.4"/></g>
+      </g>
+    </svg>

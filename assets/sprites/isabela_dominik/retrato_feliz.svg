@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="26 14 168 178" class="luiggi-rig-svg" data-char="isabela_dominik">
+      <g class="rig-root">
+        
+        <g class="rig-hair-back">
+        <path d="M55 72 Q38 124 44 162 L65 148 L66 170 L154 170 L155 148 L176 162 Q182 124 165 72 Q110 22 55 72 Z"
+          fill="#3E2822" stroke="#18141C" stroke-width="2.4" stroke-linejoin="round"/>
+      </g>
+        <g class="rig-legs"></g>
+        <path d="M98 124 L122 124 L124 144 Q110 150 96 144 Z" fill="#D1A28B" stroke="#18141C" stroke-width="2.4"/>
+        <g class="rig-torso">
+        <path d="M78 142 Q110 132 142 142 L140 214 L80 214 Z" fill="#EFC4AE" stroke="#18141C" stroke-width="2.4"/>
+        <path d="M85 152 Q110 166 135 152 L139 214 L81 214 Z" fill="#1C1C20" stroke="#18141C" stroke-width="2.4"/>
+        <path d="M98 141 Q110 146 122 141" fill="none" stroke="#D1A28B" stroke-width="1.8"/>
+      
+          <rect x="85" y="138" width="7" height="16" fill="#1C1C20" stroke="#18141C" stroke-width="2"/>
+          <rect x="128" y="138" width="7" height="16" fill="#1C1C20" stroke="#18141C" stroke-width="2"/>
+        </g>
+        <g class="rig-arms">
+      <g class="rig-arm-l">
+        <rect x="68" y="143" width="12" height="56" rx="6" fill="#EFC4AE" stroke="#18141C" stroke-width="2.4"/>
+        <circle cx="74" cy="204" r="6" fill="#EFC4AE" stroke="#18141C" stroke-width="2.4"/>
+      </g>
+      <g class="rig-arm-r">
+        <rect x="140" y="143" width="12" height="56" rx="6" fill="#EFC4AE" stroke="#18141C" stroke-width="2.4"/>
+        <circle cx="146" cy="204" r="6" fill="#EFC4AE" stroke="#18141C" stroke-width="2.4"/>
+      </g>
+      
+    </g>
+        <g class="rig-head">
+        <circle cx="66" cy="86" r="7.5" fill="#D1A28B" stroke="#18141C" stroke-width="2.4"/>
+        <circle cx="154" cy="86" r="7.5" fill="#D1A28B" stroke="#18141C" stroke-width="2.4"/>
+        <!-- Rosto anime/webtoon afinado no queixo -->
+        <path d="M68 72 Q68 34 110 34 Q152 34 152 72 Q151 104 136 120 Q120 132 110 132 Q100 132 84 120 Q69 104 68 72 Z"
+          fill="#EFC4AE" stroke="#18141C" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M107 88 L111 96 L106 97" fill="none" stroke="#D1A28B" stroke-width="2" stroke-linecap="round"/>
+        <ellipse cx="82" cy="96" rx="10" ry="4.5" fill="#F43F5E" opacity="0.22"/>
+        <ellipse cx="138" cy="96" rx="10" ry="4.5" fill="#F43F5E" opacity="0.22"/>
+        
+        <g class="rig-eyes">
+        <path d="M79 85 Q90 73 101 85" fill="none" stroke="#18141C" stroke-width="3" stroke-linecap="round"/>
+        <path d="M119 85 Q130 73 141 85" fill="none" stroke="#18141C" stroke-width="3" stroke-linecap="round"/>
+      </g>
+        <g class="rig-brows">
+      <path d="M77 70 Q89 65 101 70" fill="none" stroke="#3E2822" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M119 70 Q131 65 143 70" fill="none" stroke="#3E2822" stroke-width="2.8" stroke-linecap="round"/>
+    </g>
+        <g class="rig-mouth"><path d="M98 106 Q110 119 122 106 Z" fill="#FFFFFF" stroke="#18141C" stroke-width="2" stroke-linejoin="round"/></g>
+      </g>
+        <g class="rig-hair-front">
+        <path d="M56 84 Q56 26 110 24 Q164 26 164 84 Q152 52 126 68 Q114 44 110 42 Q106 44 94 68 Q68 52 56 84 Z"
+          fill="#3E2822" stroke="#18141C" stroke-width="2.4" stroke-linejoin="round"/>
+      
+      <path d="M74 44 Q92 36 105 41 M116 41 Q128 36 146 44" fill="none" stroke="#6e5e59" stroke-width="2.6" opacity="0.55" stroke-linecap="round"/>
+    </g>
+        <g class="rig-accessories">
+          <rect x="74" y="40" width="28" height="12" rx="4" fill="rgba(255,255,255,0.18)" stroke="#8B7D70" stroke-width="2.2"/>
+          <rect x="118" y="40" width="28" height="12" rx="4" fill="rgba(255,255,255,0.18)" stroke="#8B7D70" stroke-width="2.2"/>
+          <line x1="102" y1="46" x2="118" y2="46" stroke="#8B7D70" stroke-width="2.2"/>
+        <rect x="97" y="128" width="26" height="5" rx="2" fill="#18181B" stroke="#18141C" stroke-width="1.5"/><path d="M110 133 L110 144 M106 137 L114 137" stroke="#E5E7EB" stroke-width="2"/></g>
+      </g>
+    </svg>

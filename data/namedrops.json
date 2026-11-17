@@ -1,0 +1,27 @@
+{
+  "versao": 1,
+  "nota": "Lista de name drops da Pietra (seção 8 e 13). Não invente famosos; adicione mais entradas abaixo se desejar.",
+  "namedrops": [
+    {
+      "chamavaDe": "Guilherme",
+      "quemEra": "Aka Rasta",
+      "opcoes": ["Aka Rasta", "Um ex dela", "O segurança da balada"],
+      "falaPietra": "Aí eu falei pro Guilherme, sabe... a gente janta junto direto.",
+      "reacaoDiscord": "Fabricio: 'Guilherme' kkkkkk a intimidade da gata"
+    },
+    {
+      "chamavaDe": "O Gui (de novo)",
+      "quemEra": "Aka Rasta",
+      "opcoes": ["Aka Rasta (de novo)", "O DJ da pista", "O primo do Barman"],
+      "falaPietra": "Inclusive o Gui disse que meu estilo combina muito com o som dele!",
+      "reacaoDiscord": "Mateus: ela realmente chama o Aka Rasta de Gui como se fosse vizinho"
+    },
+    {
+      "chamavaDe": "O Rasta... quer dizer, o Guilherme",
+      "quemEra": "Aka Rasta",
+      "opcoes": ["Aka Rasta (mais uma vez)", "O dono do Sad Baile", "Um figurante aleatório"],
+      "falaPietra": "Outro dia mandei áudio pro Guilherme e ele visualizou na hora!",
+      "reacaoDiscord": "Fabricio: três rodadas e é sempre o mesmo Guilherme KKKKK"
+    }
+  ]
+}

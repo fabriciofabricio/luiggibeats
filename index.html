@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>LuiggiBeats: O Destino Já Foi Escrito</title>
+  <link rel="stylesheet" href="src/styles/game.css" />
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+</head>
+<body>
+  <div id="game-shell">
+    <header class="top-hud">
+      <div style="font-weight:800;color:#fbbf24;">🍪 LUIGGIBEATS: O DESTINO JÁ FOI ESCRITO</div>
+      <div class="hud-counters" id="hud-counters"></div>
+      <div class="btn-row">
+        <button class="mini-btn" id="btn-top-fs" title="Tela Cheia">⛶ Tela Cheia</button>
+        <button class="mini-btn" id="btn-top-museum">🏛️ Museu</button>
+        <button class="mini-btn" id="btn-top-cfg">⚙️ Config</button>
+        <button class="mini-btn" id="btn-top-menu">🏠 Menu</button>
+      </div>
+    </header>
+
+    <div class="stage-frame">
+      <div id="phaser-container"></div>
+      <div id="vn-backdrop" class="vn-backdrop"></div>
+      <div id="vn-day-hud" class="vn-day-hud"></div>
+      <div id="vn-cast-layer" class="vn-cast-layer"></div>
+      <div id="vn-hotspots" class="vn-hotspots"></div>
+
+      <div id="dialogue-overlay" class="dialogue-overlay hidden">
+        <div id="dialogue-portrait" class="dialogue-portrait"></div>
+        <div>
+          <div id="dialogue-name" class="dialogue-name"></div>
+          <div id="dialogue-text" class="dialogue-text"></div>
+        </div>
+        <button id="dialogue-next" class="mg-btn primary">▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlays -->
+  <div id="telltale-badge" class="telltale-badge"></div>
+  <div id="achievement-toast-host"></div>
+
+  <div id="choice-overlay" class="choice-overlay hidden">
+    <div class="choice-box">
+      <div id="choice-timer-wrap" class="choice-timer-wrap"><div id="choice-timer-fill" class="choice-timer-fill"></div></div>
+      <h3 id="choice-question">Escolha</h3>
+      <div id="choice-cards" class="choice-cards"></div>
+    </div>
+  </div>
+
+  <div id="convergence-overlay" class="convergence-overlay hidden">
+    <div id="convergence-content" class="convergence-content"></div>
+  </div>
+
+  <div id="bsod-overlay" class="bsod-overlay hidden">
+    <div style="max-width:540px;padding:24px;">
+      <div style="font-size:3rem;margin-bottom:10px;">:(</div>
+      <p>Ocorreu um problema no arquivo <strong>LUIS_SEM_COOKIES.SYS</strong> e o sistema precisa ser reiniciado.</p>
+      <p>Código de parada: <strong>HIPERFOCO_NOT_STOPPED</strong></p>
+      <p>Reiniciando para a realidade em 2 segundos...</p>
+    </div>
+  </div>
+
+  <div id="blackout-overlay" class="blackout-overlay hidden">
+    <div id="blackout-text" class="blackout-text"></div>
+  </div>
+
+  <div id="report-overlay" class="overlay-host hidden">
+    <div class="mg-modal" style="max-width:520px;">
+      <div class="mg-header"><h3>📊 Relatório da Realidade</h3></div>
+      <div class="mg-body">
+        <div id="report-body"></div>
+        <div class="mg-actions"><button class="mg-btn primary" id="report-continue">Ir para o Safepoint 🚙</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="safepoint-overlay" class="overlay-host hidden"></div>
+  <div id="drivehome-overlay" class="overlay-host hidden"></div>
+  <div id="minigame-overlay" class="overlay-host hidden"></div>
+  <div id="museum-overlay" class="overlay-host hidden"></div>
+  <div id="main-menu-overlay" class="overlay-host hidden"></div>
+
+  <!-- Scripts do jogo -->
+  <script src="data/game_bundle.js"></script>
+  <script src="src/engine/CharacterRig.js"></script>
+  <script src="src/engine/DataLoader.js"></script>
+  <script src="src/engine/SaveManager.js"></script>
+  <script src="src/engine/AudioEngine.js"></script>
+  <script src="src/engine/AchievementManager.js"></script>
+  <script src="src/engine/DialogueSystem.js"></script>
+  <script src="src/engine/Minigame3DEngine.js"></script>
+  <script src="src/minigames/CookieFactoryGame.js"></script>
+  <script src="src/minigames/RhythmEngine.js"></script>
+  <script src="src/minigames/FLStudioGame.js"></script>
+  <script src="src/minigames/DrivingEngine.js"></script>
+  <script src="src/minigames/StealthEngine.js"></script>
+  <script src="src/minigames/Fighter2DEngine.js"></script>
+  <script src="src/minigames/QuickMinigames.js"></script>
+  <script src="src/ui/MuseumUI.js"></script>
+  <script src="src/engine/SubaruPOV.js"></script>
+  <script src="src/scenes/GameOrchestrator.js"></script>
+</body>
+</html>

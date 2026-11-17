@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 150" class="luiggi-rig-svg" data-vehicle="subaru_legacy">
+        <ellipse cx="160" cy="134" rx="135" ry="11" fill="rgba(0,0,0,0.28)"/>
+        <path d="M26 78 L40 66 L54 66 L48 78 Z" fill="#0e3786" stroke="#18141C" stroke-width="2.5"/>
+        <path d="M22 104 L26 82 L68 76 L104 44 L198 44 L236 74 L292 84 Q300 94 296 108 L266 112 L254 112 Q232 112 222 112 L94 112 Q74 112 64 112 L22 108 Z"
+          fill="#1245A8" stroke="#18141C" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M74 78 L196 76 L282 86" fill="none" stroke="#4D88F0" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+        <line x1="136" y1="43" x2="178" y2="43" stroke="#111827" stroke-width="5" stroke-linecap="round"/>
+        <polygon points="108,49 148,49 148,74 78,74" fill="#93C5FD" stroke="#18141C" stroke-width="2.2"/>
+        <polygon points="154,49 194,49 224,74 154,74" fill="#93C5FD" stroke="#18141C" stroke-width="2.2"/>
+        <line x1="115" y1="53" x2="132" y2="70" stroke="#ffffff" stroke-width="3" opacity="0.48"/>
+        <path d="M226 75 L254 71 L258 78 L228 79 Z" fill="#0e347e" stroke="#18141C" stroke-width="2"/>
+        <rect x="92" y="106" width="128" height="7" rx="2" fill="#6B7280" stroke="#18141C" stroke-width="2"/>
+        <rect x="282" y="86" width="14" height="10" rx="2" fill="#FEF08A" stroke="#18141C" stroke-width="2"/>
+        <rect x="22" y="84" width="10" height="10" rx="2" fill="#EF4444" stroke="#18141C" stroke-width="2"/>
+        <rect x="291" y="96" width="6" height="6" fill="#DC2626"/>
+        
+          <g transform="translate(74, 112)">
+            <circle r="21" fill="#18181B" stroke="#18141C" stroke-width="2.6"/>
+            <circle r="14" fill="#D1D5DB" stroke="#18141C" stroke-width="1.6"/>
+            <circle r="11.5" fill="#C5A059" stroke="#947843" stroke-width="1.4"/>
+            <line x1="-10" y1="0" x2="10" y2="0" stroke="#785A28" stroke-width="1.6"/>
+            <line x1="0" y1="-10" x2="0" y2="10" stroke="#785A28" stroke-width="1.6"/>
+            <line x1="-7" y1="-7" x2="7" y2="7" stroke="#785A28" stroke-width="1.4"/>
+            <line x1="-7" y1="7" x2="7" y2="-7" stroke="#785A28" stroke-width="1.4"/>
+            <circle r="3" fill="#18181B"/>
+          </g>
+          <g transform="translate(240, 112)">
+            <circle r="21" fill="#18181B" stroke="#18141C" stroke-width="2.6"/>
+            <circle r="14" fill="#D1D5DB" stroke="#18141C" stroke-width="1.6"/>
+            <circle r="11.5" fill="#C5A059" stroke="#947843" stroke-width="1.4"/>
+            <line x1="-10" y1="0" x2="10" y2="0" stroke="#785A28" stroke-width="1.6"/>
+            <line x1="0" y1="-10" x2="0" y2="10" stroke="#785A28" stroke-width="1.6"/>
+            <line x1="-7" y1="-7" x2="7" y2="7" stroke="#785A28" stroke-width="1.4"/>
+            <line x1="-7" y1="7" x2="7" y2="-7" stroke="#785A28" stroke-width="1.4"/>
+            <circle r="3" fill="#18181B"/>
+          </g>
+      </svg>

@@ -1,0 +1,25 @@
+{
+  "versao": 1,
+  "cidade": "Curitiba (Estilizada)",
+  "climas": ["sol", "chuva", "neblina"],
+  "marcos": [
+    { "id": "bacacheri", "nome": "Bacacheri (Casa do Fabricio)", "x": 220, "y": 240, "zona": "Bairro", "cor": "#22C55E" },
+    { "id": "aeroportinho", "nome": "Aeroportinho do Bacacheri", "x": 520, "y": 210, "zona": "Bacacheri", "cor": "#38BDF8" },
+    { "id": "estacao_tubo", "nome": "Estação-Tubo Central", "x": 920, "y": 540, "zona": "Avenida", "cor": "#94A3B8" },
+    { "id": "teatro_guaira", "nome": "Teatro Guaíra", "x": 1240, "y": 480, "zona": "Centro", "cor": "#F59E0B" },
+    { "id": "passeio_publico", "nome": "Passeio Público", "x": 1460, "y": 320, "zona": "Centro", "cor": "#16A34A" },
+    { "id": "praca_tiradentes", "nome": "Praça Tiradentes / Catedral", "x": 1360, "y": 760, "zona": "Centro", "cor": "#EAB308" },
+    { "id": "rua_xv", "nome": "Rua XV (Só Pedestres!)", "x": 1180, "y": 900, "zona": "Calçadão", "alertaGPS": "AÍ NÃO, LUIS!", "cor": "#F97316" },
+    { "id": "prudente", "nome": "Rua Prudente de Moraes (Yard / James)", "x": 860, "y": 1020, "zona": "Centro", "cor": "#A855F7" },
+    { "id": "emily_doces", "nome": "Emily Doces", "x": 1620, "y": 860, "zona": "Centro", "cor": "#EC4899" },
+    { "id": "bec_bar", "nome": "Bec Bar", "x": 640, "y": 840, "zona": "Centro", "cor": "#EF4444" }
+  ],
+  "falasGPS": [
+    "Recalculando... de novo... você é igual o Vitor no date.",
+    "Vire à direita. Não, a outra direita, Tico.",
+    "Radar à frente. Tenta não fazer cara de quem assou 47 fornadas.",
+    "Curitiba: 4 estações em 1 dia. Segura no drift!",
+    "Biarticulado na faixa. Ele não vai dar passagem."
+  ],
+  "obstaculos": ["biarticulado", "capivara", "radar", "buraco", "fila_dupla"]
+}

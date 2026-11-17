@@ -1,0 +1,184 @@
+{
+  "versao": 1,
+  "titulo": "Museu das Memórias do LuiggiBeats",
+  "areasGerais": [
+    { "id": "saguao", "nome": "Saguão Principal", "descricao": "O Subaru Legacy azul em tamanho real no centro do saguão." },
+    { "id": "palco_hero", "nome": "Palco LuiggiBeats", "descricao": "Toque todas as músicas no LuiggiBeats Hero e o Passinho Sad." },
+    { "id": "estudio_livre", "nome": "Estúdio FL Livre", "descricao": "Crie seus próprios beats com os amigos na call do Discord." },
+    { "id": "cozinha_livre", "nome": "Cozinha & Modo Infinito", "descricao": "Asse receitas temáticas ou entre no Modo Infinito de Cookies." },
+    { "id": "jukebox", "nome": "Jukebox Rádio LuiggiBeats", "descricao": "Ouça a discografia completa com capa, ano e curiosidades." },
+    { "id": "garagem", "nome": "Garagem & Direção Livre", "descricao": "Personalize o Subaru, dê rolês em Curitiba e peça revanche pra Emily." },
+    { "id": "fliperama", "nome": "Fliperama do Museu", "descricao": "Todos os minigames do jogo avulsos com recordes." },
+    { "id": "arena_x1", "nome": "Arena do X1", "descricao": "Modo luta livre (1P vs CPU ou 2P no mesmo teclado)." },
+    { "id": "galeria_fotos", "nome": "Galeria de Fotos Reais & Radares", "descricao": "As fotos reais de /assets e as multas do Subaru." },
+    { "id": "mapa_multiverso", "nome": "Mapa do Multiverso", "descricao": "Árvore de todas as escolhas convergindo para A Vida Real." },
+    { "id": "mural_conquistas", "nome": "Mural de Conquistas", "descricao": "Todas as conquistas e segredos desbloqueados." },
+    { "id": "sala_personagens", "nome": "Sala de Personagens", "descricao": "Fichas, retratos e acesso à Galeria de Comparação." },
+    { "id": "lojinha_cookies", "nome": "Lojinha de Cookies", "descricao": "Troque cookies coletados por trajes e itens pro Subaru." }
+  ],
+  "salasCapitulos": [
+    {
+      "capitulo": 0,
+      "nome": "Cozinha do Hiperfoco",
+      "objetos": [
+        { "nome": "A Primeira Fornada", "placa": "Assada às 3h42 da manhã. Técnica: distração no Discord. Doado pela bancada." },
+        { "nome": "Balança da Cozinha", "placa": "Sobreviveu a 47 fornadas e duas explosões de farinha." },
+        { "nome": "Relógio Hiperfoco", "placa": "Relógio de parede incapaz de marcar horas normais após as 22h." }
+      ]
+    },
+    {
+      "capitulo": 1,
+      "nome": "O Fundão",
+      "objetos": [
+        { "nome": "Retrato da Cara Destruída do Tiago", "placa": "Pergunta, Ensino Médio. Técnica mista: sinceridade e crueldade. Doação involuntária de Tiago Music." },
+        { "nome": "Felps-ômetro", "placa": "Instrumento de precisão calibrado para decibéis da Cecília." },
+        { "nome": "Bola de Basquete Autografada", "placa": "Dedicatória: 'Com carinho, Maria Clara (só amigos)'." },
+        { "nome": "A Carteira do Fundão", "placa": "Sede oficial dos nerds do fundo e berço da zoeira." }
+      ]
+    },
+    {
+      "capitulo": 2,
+      "nome": "Estúdio 2020",
+      "objetos": [
+        { "nome": "Fone de Ouvido do Luis", "placa": "Testemunhou os primeiros 808s estourados da quarentena." },
+        { "nome": "Post-it de Missões", "placa": "Contém instruções vitais sobre kicks, hi-hat rolls e o sample do Vitor." },
+        { "nome": "Foto Oficial do Vitor Witiuk", "placa": "Legenda curatorial: 'Musa inspiradora (involuntária).'" },
+        { "nome": "Máscara da Pandemia", "placa": "Peça de época, 2020. Usada entre uma call e outra." }
+      ]
+    },
+    {
+      "capitulo": 3,
+      "nome": "O Arquivo Confidencial",
+      "cofreTrancado": true,
+      "mensagensCofre": [
+        "Acesso negado.",
+        "Nem tenta.",
+        "O Fabricio também queria saber.",
+        "Esta informação vai para o túmulo.",
+        "Tenta de novo. Brincadeira, não adianta."
+      ],
+      "objetos": [
+        { "nome": "Cofre do Banheiro", "placa": "Arquivo confidencial lacrado por tempo indeterminado." },
+        { "nome": "Bilhete da Janelinha da Porta", "placa": "Escrito às pressas durante a aula de Cálculo. Diz apenas: 'felps?'." },
+        { "nome": "Celular com Autocorretor Traidor", "placa": "Transformou 'hoje não' em 'hoje sim' por pura maldade algorítmica." }
+      ]
+    },
+    {
+      "capitulo": 4,
+      "nome": "Subaru Azul",
+      "objetos": [
+        { "nome": "Placa Especial do Subaru", "placa": "Veículo de valor sentimental incalculável. Os bancos guardam segredos." },
+        { "nome": "Celular com 999+ Notificações", "placa": "Vibrou tanto que saiu andando pela mesa." },
+        { "nome": "Anjinho com Curativo", "placa": "Aposentado por invalidez após ser chutado do ombro esquerdo do Luis." }
+      ]
+    },
+    {
+      "capitulo": 5,
+      "nome": "Bec Bar",
+      "objetos": [
+        { "nome": "Contador 'Você Sabe o Que Faz'", "placa": "Dispositivo acústico ativado toda vez que o Fabricio hesitava." },
+        { "nome": "A Franja da Caliandra (em redoma)", "placa": "Item simbólico de alta periculosidade emocional." },
+        { "nome": "Mapa da Alemanha com Alfinetes", "placa": "Enquanto isso, no outro quarto, o Luis aprendia geografia." }
+      ]
+    },
+    {
+      "capitulo": 6,
+      "nome": "3 da Manhã",
+      "objetos": [
+        { "nome": "A Vela que o Luis Segurou", "placa": "Iluminou o romance alheio pelas ruas do Centro. Nunca recebeu um obrigado." },
+        { "nome": "Lightstick da Balada K-Pop", "placa": "Brilhou em neon rosa enquanto um cumprimento ficava no vácuo." },
+        { "nome": "Banco da Praça", "placa": "Aqui sentaram dois. Em pé, ficou um." },
+        { "nome": "Sacola Plástica Emoldurada", "placa": "A entidade mais perigosa de Curitiba às 3h da manhã." }
+      ]
+    },
+    {
+      "capitulo": 7,
+      "nome": "A Testemunha",
+      "objetos": [
+        { "nome": "O Gato numa Redoma de Vidro", "placa": "Testemunha ocular. Nunca prestou depoimento. Nunca esqueceu." },
+        { "nome": "Bandeja da Praça de Alimentação", "placa": "Equilibrada entre crianças correndo e um chão molhado." },
+        { "nome": "Print da Primeira Mensagem", "placa": "'Chegou bem? 🙂' — O início de uma era de almoços no shopping." }
+      ]
+    },
+    {
+      "capitulo": 8,
+      "nome": "Sad Baile",
+      "objetos": [
+        { "nome": "Letreiro Neon 'SAD'", "placa": "Com lágrima piscante. Estética e estado de espírito alinhados." },
+        { "nome": "Foto Autografada pelo 'Guilherme'", "placa": "Claramente assinada pela própria Pietra com canetinha roxa." },
+        { "nome": "Mural 'Onde Estão Agora?'", "placa": "Registro neutro e elegante de todos os personagens daquela noite." }
+      ]
+    },
+    {
+      "capitulo": 9,
+      "nome": "TNT",
+      "objetos": [
+        { "nome": "Xícara de Latte Art", "placa": "Um coração que, segundo os jurados, lembrava vagamente um rim." },
+        { "nome": "Bandeira Vermelha 'da França'", "placa": "Lembrança de um Tinder usado apenas para fins gastronômicos." },
+        { "nome": "Ingresso do Filme 'Nora'", "placa": "Contém 12 minutos de créditos sem nenhuma cena pós-créditos." },
+        { "nome": "Cartão-Postal da Praia", "placa": "Enviado diretamente do fim de uma ilusão." }
+      ]
+    },
+    {
+      "capitulo": 10,
+      "nome": "Tico & Teco",
+      "objetos": [
+        { "nome": "Neurônio Compartilhado num Pote", "placa": "Propriedade de Tico e Teco (guarda compartilhada)." },
+        { "nome": "Miniatura do Civic da Emily", "placa": "Branco, com neon e escapamento que estala na alma." },
+        { "nome": "Bandeira Quadriculada do Racha", "placa": "Disputada entre Praça Tiradentes e Rua Prudente de Moraes." },
+        { "nome": "Maquete do Emily Doces", "placa": "Onde o Luis ousou dizer que faria um cookie melhor." }
+      ]
+    },
+    {
+      "capitulo": 11,
+      "nome": "Sonhos",
+      "objetos": [
+        { "nome": "CNH de Giz de Cera do Fabricio", "placa": "Documento sem validade em território nacional e no plano dos sonhos." },
+        { "nome": "O Travesseiro Beijado", "placa": "Testemunhou um despertar confuso e um silêncio constrangedor no Discord." },
+        { "nome": "Capivara Voadora de Pelúcia", "placa": "Entrou por uma janela e saiu pela outra." }
+      ]
+    },
+    {
+      "capitulo": 12,
+      "nome": "Red Flags",
+      "objetos": [
+        { "nome": "Detector de Red Flags Quebrado", "placa": "Ainda soltando fumaça após tentar processar um perfil inteiro." },
+        { "nome": "Celular Trancado da Eloiza", "placa": "Exposto em vitrine blindada. Senha desconhecida." },
+        { "nome": "Quadro de Investigação do Instagram", "placa": "Com barbante vermelho ligando stories, likes e a estrela verde com cadeado." }
+      ]
+    },
+    {
+      "capitulo": 13,
+      "nome": "Treta no TNT",
+      "objetos": [
+        { "nome": "Banco Traseiro 'RESERVADO'", "placa": "Lugar onde a Yohana não sentou." },
+        { "nome": "Cinturão do X1", "placa": "Troféu imaginário de uma luta que na vida real foi só climão." },
+        { "nome": "Estátua de Cera do Cara Aleatório", "placa": "Balança a cabeça eternamente dizendo: 'É... verdade.'" }
+      ]
+    },
+    {
+      "capitulo": 14,
+      "nome": "Operação Ponto Cego",
+      "objetos": [
+        { "nome": "Óculos de Agente Secreto", "placa": "Equipamento tático da pista da James." },
+        { "nome": "Pôster 'OPERAÇÃO PONTO CEGO'", "placa": "Estrelando: Luis, Fabricio, Lara e Tutuluiza. Crítica: ★★★★☆." },
+        { "nome": "Janela 'Luis.exe Parou de Responder'", "placa": "Emoldurada em acrílico. Botão 'Aguardar' ainda piscando." }
+      ]
+    },
+    {
+      "capitulo": 15,
+      "nome": "O Final",
+      "objetos": [
+        { "nome": "Relógio / Página Final", "placa": "Exibe a única escolha que ainda não havia sido escrita." }
+      ]
+    }
+  ],
+  "lojinha": [
+    { "id": "traje_moletom", "tipo": "traje", "nome": "Moletom Clássico LuiggiBeats", "custo": 0, "descricao": "Traje padrão de produtor." },
+    { "id": "traje_avental", "tipo": "traje", "nome": "Avental Mestre dos Cookies", "custo": 6, "descricao": "Para assar com autoridade." },
+    { "id": "traje_agente", "tipo": "traje", "nome": "Terno + Óculos Ponto Cego", "custo": 12, "descricao": "Elegância de segurança de pista." },
+    { "id": "subaru_rally", "tipo": "subaru", "nome": "Adesivo Rally 555 Dourado", "custo": 8, "descricao": "Estilo clássico WRC no Subaru azul." },
+    { "id": "subaru_neon", "tipo": "subaru", "nome": "Neon Azul Sub-chassis", "custo": 10, "descricao": "Pra provocar o Civic da Emily." },
+    { "id": "subaru_capivara", "tipo": "subaru", "nome": "Adesivo Capivara Curitibana", "custo": 5, "descricao": "Respeito nas avenidas." }
+  ]
+}

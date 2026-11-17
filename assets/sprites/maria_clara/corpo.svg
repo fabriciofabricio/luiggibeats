@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 296" class="luiggi-rig-svg" data-char="maria_clara">
+      <g class="rig-root">
+        <ellipse cx="110" cy="285" rx="44" ry="8" fill="rgba(0,0,0,0.22)"/>
+        <g class="rig-hair-back">
+        <path d="M55 72 Q38 124 44 162 L65 148 L66 170 L154 170 L155 148 L176 162 Q182 124 165 72 Q110 22 55 72 Z"
+          fill="#1C191D" stroke="#18141C" stroke-width="2.4" stroke-linejoin="round"/>
+      </g>
+        <g class="rig-legs">
+        <g class="rig-leg-l">
+          <rect x="84" y="210" width="19" height="66" rx="7" fill="#7C44D6" stroke="#18141C" stroke-width="2.4"/>
+          <ellipse cx="92" cy="280" rx="13" ry="6.5" fill="#18181B" stroke="#18141C" stroke-width="2.4"/>
+        </g>
+        <g class="rig-leg-r">
+          <rect x="117" y="210" width="19" height="66" rx="7" fill="#7C44D6" stroke="#18141C" stroke-width="2.4"/>
+          <ellipse cx="128" cy="280" rx="13" ry="6.5" fill="#18181B" stroke="#18141C" stroke-width="2.4"/>
+        </g>
+      </g>
+        <path d="M98 124 L122 124 L124 144 Q110 150 96 144 Z" fill="#D5ABA0" stroke="#18141C" stroke-width="2.4"/>
+        <g class="rig-torso">
+        <path d="M78 142 Q110 132 142 142 L140 214 L80 214 Z" fill="#F2CFC0" stroke="#18141C" stroke-width="2.4"/>
+        <path d="M85 152 Q110 166 135 152 L139 214 L81 214 Z" fill="#141418" stroke="#18141C" stroke-width="2.4"/>
+        <path d="M98 141 Q110 146 122 141" fill="none" stroke="#D5ABA0" stroke-width="1.8"/>
+      
+          <rect x="85" y="138" width="7" height="16" fill="#141418" stroke="#18141C" stroke-width="2"/>
+          <rect x="128" y="138" width="7" height="16" fill="#141418" stroke="#18141C" stroke-width="2"/>
+        </g>
+        <g class="rig-arms">
+      <g class="rig-arm-l">
+        <rect x="68" y="143" width="12" height="56" rx="6" fill="#F2CFC0" stroke="#18141C" stroke-width="2.4"/>
+        <circle cx="74" cy="204" r="6" fill="#F2CFC0" stroke="#18141C" stroke-width="2.4"/>
+      </g>
+      <g class="rig-arm-r">
+        <rect x="140" y="143" width="12" height="56" rx="6" fill="#F2CFC0" stroke="#18141C" stroke-width="2.4"/>
+        <circle cx="146" cy="204" r="6" fill="#F2CFC0" stroke="#18141C" stroke-width="2.4"/>
+      </g>
+      
+    </g>
+        <g class="rig-head">
+        <circle cx="66" cy="86" r="7.5" fill="#D5ABA0" stroke="#18141C" stroke-width="2.4"/>
+        <circle cx="154" cy="86" r="7.5" fill="#D5ABA0" stroke="#18141C" stroke-width="2.4"/>
+        <!-- Rosto anime/webtoon afinado no queixo -->
+        <path d="M68 72 Q68 34 110 34 Q152 34 152 72 Q151 104 136 120 Q120 132 110 132 Q100 132 84 120 Q69 104 68 72 Z"
+          fill="#F2CFC0" stroke="#18141C" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M107 88 L111 96 L106 97" fill="none" stroke="#D5ABA0" stroke-width="2" stroke-linecap="round"/>
+        <ellipse cx="82" cy="96" rx="10" ry="4.5" fill="#F43F5E" opacity="0.22"/>
+        <ellipse cx="138" cy="96" rx="10" ry="4.5" fill="#F43F5E" opacity="0.22"/>
+        
+        <g class="rig-eyes">
+      <path d="M77 83 Q90 72 102 83 Q90 93 77 83 Z" fill="#FFFFFF" stroke="#18141C" stroke-width="1.8"/>
+      <path d="M118 83 Q130 72 143 83 Q130 93 118 83 Z" fill="#FFFFFF" stroke="#18141C" stroke-width="1.8"/>
+      <circle cx="90" cy="83" r="5.8" fill="#2F2323"/>
+      <circle cx="130" cy="83" r="5.8" fill="#2F2323"/>
+      <circle cx="90" cy="84" r="3.19" fill="#111"/>
+      <circle cx="130" cy="84" r="3.19" fill="#111"/>
+      <path d="M86 86 Q90 89 94 86" fill="none" stroke="#787070" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M126 86 Q130 89 134 86" fill="none" stroke="#787070" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="87" cy="80" r="2.2" fill="#FFF"/>
+      <circle cx="127" cy="80" r="2.2" fill="#FFF"/>
+      <path d="M75 79 Q90 71 103 80 L105 78 M145 79 Q130 71 117 80 L115 78" fill="none" stroke="#111" stroke-width="2.8" stroke-linecap="round"/>
+      
+    </g>
+        <g class="rig-brows">
+      <path d="M77 70 Q89 65 101 70" fill="none" stroke="#1C191D" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M119 70 Q131 65 143 70" fill="none" stroke="#1C191D" stroke-width="2.8" stroke-linecap="round"/>
+    </g>
+        <g class="rig-mouth"><path d="M101 109 Q110 114 119 109" fill="none" stroke="#18141C" stroke-width="2.2" stroke-linecap="round"/></g>
+      </g>
+        <g class="rig-hair-front">
+        <path d="M58 78 Q58 28 110 26 Q162 28 162 78 Q144 46 120 58 Q96 44 74 62 Z"
+          fill="#1C191D" stroke="#18141C" stroke-width="2.4" stroke-linejoin="round"/>
+      
+      <path d="M74 44 Q92 36 105 41 M116 41 Q128 36 146 44" fill="none" stroke="#555356" stroke-width="2.6" opacity="0.55" stroke-linecap="round"/>
+    </g>
+        <g class="rig-accessories"><circle cx="62" cy="96" r="5" fill="none" stroke="#E5E7EB" stroke-width="1.8"/>
+              <circle cx="158" cy="96" r="5" fill="none" stroke="#E5E7EB" stroke-width="1.8"/><rect x="97" y="128" width="26" height="5" rx="2" fill="#18181B" stroke="#18141C" stroke-width="1.5"/></g>
+      </g>
+    </svg>

@@ -1,0 +1,997 @@
+{
+  "versao": 1,
+  "geradoEm": "2026-11-17T01:38:31.910Z",
+  "resumo": {
+    "totalArquivos": 71,
+    "imagens": 71,
+    "audios": 0,
+    "personagensComFoto": 21,
+    "veiculosComFoto": 2,
+    "cenarios": 16,
+    "extrasForaSecao13": 9,
+    "semFotoSecao13": [
+      "tiago_music",
+      "gi_eta",
+      "gato_luiza",
+      "rebeca",
+      "pietra",
+      "julie",
+      "ruiva_misteriosa"
+    ]
+  },
+  "porPersonagem": {
+    "agatha": [
+      "assets/agatha/Screenshot 2026-11-17 011929.png"
+    ],
+    "caliandra": [
+      "assets/caliandra/Screenshot 2026-11-17 011338.png"
+    ],
+    "cecilia": [
+      "assets/cecilia/Screenshot 2026-11-17 014750.png"
+    ],
+    "eloiza": [
+      "assets/Eloiza/Screenshot 2026-11-17 011849.png"
+    ],
+    "emily": [
+      "assets/Emily Doces/Screenshot 2026-11-17 011301.png"
+    ],
+    "erion": [
+      "assets/Erion/Screenshot 2026-11-17 012048.png"
+    ],
+    "fabricio": [
+      "assets/Fabricio venturi/859801690_18335356696263250_8520438325630436275_n.jpg"
+    ],
+    "isabela_dominik": [
+      "assets/Isabela Biscaia/isabelaBiscaia1.jpg",
+      "assets/Isabela Biscaia/isabelaBiscaia2.jpg",
+      "assets/Isabela Biscaia/isabelaBiscaia3.jpg",
+      "assets/Isabela Biscaia/isabelaBiscaia4.jpg",
+      "assets/isabela dominik/Screenshot 2026-11-17 011108.png"
+    ],
+    "lara": [
+      "assets/Lara/Screenshot 2026-11-17 010824.png"
+    ],
+    "luis": [
+      "assets/Luis Felipe (personagem principal)/Screenshot 2026-11-17 014551.png"
+    ],
+    "luiza": [
+      "assets/Luiza (primeira segunda namorada)/Screenshot 2026-11-17 011751.png"
+    ],
+    "maria_clara": [
+      "assets/Maria Clara/mariaClara1.jpg",
+      "assets/Maria Clara/mariaClara2.jpg",
+      "assets/Maria Clara/mariaClara3.jpg"
+    ],
+    "marilis_docinho": [
+      "assets/marilisdocinho/Screenshot 2026-11-17 012115.png"
+    ],
+    "mateus_buse": [
+      "assets/Mateus Buse/mateusBuse1.jpg",
+      "assets/Mateus Buse/mateusBuse2.jpg",
+      "assets/Mateus Buse/mateusBuse3.jpg"
+    ],
+    "matheus_neuman": [
+      "assets/matheus nneuman/Screenshot 2026-11-17 014645.png"
+    ],
+    "rayssa": [
+      "assets/Rayssa/Screenshot 2026-11-17 011151.png"
+    ],
+    "sol": [
+      "assets/Sol/Screenshot 2026-11-17 011041.png"
+    ],
+    "tutuluiza": [
+      "assets/tutuluiza/Screenshot 2026-11-17 011827.png"
+    ],
+    "vitor_witiuk": [
+      "assets/Vitor Witiuk/vitorWitiuk1.jpg",
+      "assets/Vitor Witiuk/vitorWitiuk2.jpg",
+      "assets/Vitor Witiuk/vitorWitiuk3.jpg",
+      "assets/Vitor Witiuk/vitorWitiuk4.jpg"
+    ],
+    "yohana": [
+      "assets/Yohana/Screenshot 2026-11-17 010957.png"
+    ],
+    "yuri": [
+      "assets/yuri/Screenshot 2026-11-17 012008.png"
+    ]
+  },
+  "porVeiculo": {
+    "subaru_legacy": [
+      "assets/carro subaru legacy/Screenshot 2026-11-17 012558.png"
+    ],
+    "civic_emily": [
+      "assets/civic da emily doces/Screenshot 2026-11-17 014839.png"
+    ]
+  },
+  "cenarios": [
+    {
+      "caminho": "assets/Cenarios/becbar/dentro/Screenshot 2026-11-17 012720.png",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "becbardentro",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/becbar/fora/r97c-facade-Bec-Bar-2022-10.jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "becbarfora",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/emily doces/dentro/unnamed.webp",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "emilydocesdentro",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/emily doces/fora/Screenshot 2026-11-17 013241.png",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "emilydocesfora",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/james balada/dentro da james/images (1).jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "jamesbaladadentrodajames",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/james balada/images.jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "jamesbalada",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/local primeiro tnt/unnamed (1).webp",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "localprimeirotnt",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/sadbaile/jornalcomunicacao.ufpr.br-do-passinho-ao-soul-a-cultura-dos-bailes-black-em-curitiba-capa.webp",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "sadbaile",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/safe point para chilling/Screenshot 2026-11-17 012957.png",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "safepointparachilling",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/yard balada/Screenshot 2026-11-17 013033.png",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "yardbalada",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/colegio backgrounds/corredor_salas.jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "corredorsalas",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/colegio backgrounds/entrada_bom_jesus.webp",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "entradabomjesus",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/colegio backgrounds/patio_recreio.jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "patiorecreio",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/colegio backgrounds/patio_refeitorio.jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "patiorefeitorio",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/colegio backgrounds/quadra_futebol.webp",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "quadrafutebol",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/colegio backgrounds/sala_de_aula.jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "saladeaula",
+      "ambiguo": false,
+      "foraSecao13": true
+    }
+  ],
+  "musicas": [],
+  "spritesLegados": [
+    {
+      "caminho": "assets/personagens/amanda_becker.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "amandabecker",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/amanda_becker_yandere.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "amandabeckeryandere",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/amanda_souza.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "amandasouza",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/amanda_souza_feliz.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "amandasouzafeliz",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/gabriel_cardoso.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "gabrielcardoso",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/isabel.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "isabel",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/isabela_biscaia.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "isabela_dominik",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/personagens/maria_clara.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "maria_clara",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/personagens/maria_clara_feliz.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "maria_clara",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/personagens/mateus_buse.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "mateus_buse",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/personagens/mateus_tuon.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "mateustuon",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/vitor_witiuk.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "vitor_witiuk",
+      "ambiguo": false,
+      "foraSecao13": false
+    }
+  ],
+  "extras": [
+    {
+      "caminho": "assets/Amanda Becker/amandaBecker1.png",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "amandabecker",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Amanda Becker\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Amanda Souza/amandaSouza1.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "amandasouza",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Amanda Souza\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Amanda Souza/amandaSouza2.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "amandasouza",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Amanda Souza\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Amanda Souza/amandaSouza3.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "amandasouza",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Amanda Souza\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Amanda Souza/amandaSouza4.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "amandasouza",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Amanda Souza\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Amanda Souza/amandaSouza5.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "amandasouza",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Amanda Souza\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Gabriel Cardoso/gabrielCardoso1.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "gabrielcardoso",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Gabriel Cardoso\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Isabel/isabel1.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "isabel",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Isabel\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Mateus Tuon/mateusTuon1.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "mateustuon",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Mateus Tuon\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    }
+  ],
+  "arquivos": [
+    {
+      "caminho": "assets/agatha/Screenshot 2026-11-17 011929.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "agatha",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Amanda Becker/amandaBecker1.png",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "amandabecker",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Amanda Becker\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Amanda Souza/amandaSouza1.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "amandasouza",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Amanda Souza\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Amanda Souza/amandaSouza2.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "amandasouza",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Amanda Souza\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Amanda Souza/amandaSouza3.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "amandasouza",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Amanda Souza\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Amanda Souza/amandaSouza4.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "amandasouza",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Amanda Souza\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Amanda Souza/amandaSouza5.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "amandasouza",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Amanda Souza\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/caliandra/Screenshot 2026-11-17 011338.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "caliandra",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/carro subaru legacy/Screenshot 2026-11-17 012558.png",
+      "tipo": "imagem",
+      "categoria": "veiculo",
+      "associadoId": "subaru_legacy",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/cecilia/Screenshot 2026-11-17 014750.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "cecilia",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/becbar/dentro/Screenshot 2026-11-17 012720.png",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "becbardentro",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/becbar/fora/r97c-facade-Bec-Bar-2022-10.jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "becbarfora",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/emily doces/dentro/unnamed.webp",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "emilydocesdentro",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/emily doces/fora/Screenshot 2026-11-17 013241.png",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "emilydocesfora",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/james balada/dentro da james/images (1).jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "jamesbaladadentrodajames",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/james balada/images.jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "jamesbalada",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/local primeiro tnt/unnamed (1).webp",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "localprimeirotnt",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/sadbaile/jornalcomunicacao.ufpr.br-do-passinho-ao-soul-a-cultura-dos-bailes-black-em-curitiba-capa.webp",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "sadbaile",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/safe point para chilling/Screenshot 2026-11-17 012957.png",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "safepointparachilling",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Cenarios/yard balada/Screenshot 2026-11-17 013033.png",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "yardbalada",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/civic da emily doces/Screenshot 2026-11-17 014839.png",
+      "tipo": "imagem",
+      "categoria": "veiculo",
+      "associadoId": "civic_emily",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/colegio backgrounds/corredor_salas.jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "corredorsalas",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/colegio backgrounds/entrada_bom_jesus.webp",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "entradabomjesus",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/colegio backgrounds/patio_recreio.jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "patiorecreio",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/colegio backgrounds/patio_refeitorio.jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "patiorefeitorio",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/colegio backgrounds/quadra_futebol.webp",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "quadrafutebol",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/colegio backgrounds/sala_de_aula.jpg",
+      "tipo": "imagem",
+      "categoria": "cenario",
+      "associadoId": "saladeaula",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Eloiza/Screenshot 2026-11-17 011849.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "eloiza",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Emily Doces/Screenshot 2026-11-17 011301.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "emily",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Erion/Screenshot 2026-11-17 012048.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "erion",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Fabricio venturi/859801690_18335356696263250_8520438325630436275_n.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "fabricio",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Gabriel Cardoso/gabrielCardoso1.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "gabrielcardoso",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Gabriel Cardoso\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Isabel/isabel1.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "isabel",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Isabel\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/Isabela Biscaia/isabelaBiscaia1.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "isabela_dominik",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Isabela Biscaia/isabelaBiscaia2.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "isabela_dominik",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Isabela Biscaia/isabelaBiscaia3.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "isabela_dominik",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Isabela Biscaia/isabelaBiscaia4.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "isabela_dominik",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/isabela dominik/Screenshot 2026-11-17 011108.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "isabela_dominik",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Lara/Screenshot 2026-11-17 010824.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "lara",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Luis Felipe (personagem principal)/Screenshot 2026-11-17 014551.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "luis",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Luiza (primeira segunda namorada)/Screenshot 2026-11-17 011751.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "luiza",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Maria Clara/mariaClara1.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "maria_clara",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Maria Clara/mariaClara2.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "maria_clara",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Maria Clara/mariaClara3.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "maria_clara",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/marilisdocinho/Screenshot 2026-11-17 012115.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "marilis_docinho",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Mateus Buse/mateusBuse1.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "mateus_buse",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Mateus Buse/mateusBuse2.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "mateus_buse",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Mateus Buse/mateusBuse3.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "mateus_buse",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Mateus Tuon/mateusTuon1.jpg",
+      "tipo": "imagem",
+      "categoria": "extra_nao_identificado_secao13",
+      "associadoId": "mateustuon",
+      "ambiguo": true,
+      "notaAmbiguidade": "Arquivo/pasta \"Mateus Tuon\" não consta na lista da seção 13.",
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/matheus nneuman/Screenshot 2026-11-17 014645.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "matheus_neuman",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/personagens/amanda_becker.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "amandabecker",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/amanda_becker_yandere.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "amandabeckeryandere",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/amanda_souza.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "amandasouza",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/amanda_souza_feliz.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "amandasouzafeliz",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/gabriel_cardoso.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "gabrielcardoso",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/isabel.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "isabel",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/isabela_biscaia.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "isabela_dominik",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/personagens/maria_clara.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "maria_clara",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/personagens/maria_clara_feliz.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "maria_clara",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/personagens/mateus_buse.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "mateus_buse",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/personagens/mateus_tuon.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "mateustuon",
+      "ambiguo": false,
+      "foraSecao13": true
+    },
+    {
+      "caminho": "assets/personagens/vitor_witiuk.png",
+      "tipo": "imagem",
+      "categoria": "sprite_legado",
+      "associadoId": "vitor_witiuk",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Rayssa/Screenshot 2026-11-17 011151.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "rayssa",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Sol/Screenshot 2026-11-17 011041.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "sol",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/tutuluiza/Screenshot 2026-11-17 011827.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "tutuluiza",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Vitor Witiuk/vitorWitiuk1.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "vitor_witiuk",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Vitor Witiuk/vitorWitiuk2.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "vitor_witiuk",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Vitor Witiuk/vitorWitiuk3.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "vitor_witiuk",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Vitor Witiuk/vitorWitiuk4.jpg",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "vitor_witiuk",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/Yohana/Screenshot 2026-11-17 010957.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "yohana",
+      "ambiguo": false,
+      "foraSecao13": false
+    },
+    {
+      "caminho": "assets/yuri/Screenshot 2026-11-17 012008.png",
+      "tipo": "imagem",
+      "categoria": "personagem",
+      "associadoId": "yuri",
+      "ambiguo": false,
+      "foraSecao13": false
+    }
+  ]
+}

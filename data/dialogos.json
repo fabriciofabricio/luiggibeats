@@ -1,0 +1,1725 @@
+{
+  "versao": 1,
+  "creditos": [
+    "LUIGGIBEATS: O DESTINO JÁ FOI ESCRITO",
+    "Baseado na vida real de Luis Felipe (LuiggiBeats)",
+    "Participação Especial: Fabricio Venturi (Teco / Lé)",
+    "Comentarista Mutado: Mateus Buse",
+    "Participação de Curitiba: Matheus Neuman",
+    "Escola: Tiago Music, Maria Clara, Cecília, Vitor Witiuk, Tutuluiza",
+    "Noite de Curitiba: Caliandra, Luiza, Agatha, Rebeca, Pietra, Julie, Ruiva Misteriosa, Marilis Docinho",
+    "TNT & Emily Doces: Yohana, Yuri, Erion, Rayssa Doces, Emily Doces",
+    "Sonho & James: Sol, Lara, Isabela Dominik",
+    "Era Gótica: Eloiza",
+    "Estrela Ocular: O Gato da Luiza",
+    "Participação Não Identificada: O Cara Aleatório ('é... verdade')",
+    "Co-estrela de 4 Rodas: Subaru Legacy Azul & Civic da Emily",
+    "Trilha Sonora: LuiggiBeats (e o placeholder desafinado do Tiago)",
+    "Nenhuma escolha mudou o passado. Obrigado por jogar."
+  ],
+  "capitulos": [
+    {
+      "id": 0,
+      "codigo": "Prólogo",
+      "titulo": "Hiperfoco (O Dia de Ontem)",
+      "era": "Ontem · Cozinha do Luis",
+      "paleta": {
+        "bg": "#2B1810",
+        "accent": "#F59E0B",
+        "luz": "#FDBA74"
+      },
+      "cenarioTipo": "cozinha_hiperfoco",
+      "cenarioImagem": "assets/cenarios_gerados/cap_0.png",
+      "conquistaConclusao": "hiperfoco_ativado",
+      "cookiesEscondidos": [
+        {
+          "id": "c0_k1",
+          "nome": "Cookie atrás do micro-ondas",
+          "x": 160,
+          "y": 410
+        },
+        {
+          "id": "c0_k2",
+          "nome": "Cookie dentro do pote de farinha",
+          "x": 520,
+          "y": 380
+        },
+        {
+          "id": "c0_k3",
+          "nome": "Cookie apoiado no celular da call",
+          "x": 800,
+          "y": 430
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "fabricio",
+          "x": 740,
+          "y": 420,
+          "fala": "[No celular] Mano, quantas fornadas já foram hoje?!"
+        },
+        {
+          "id": "mateus_buse",
+          "x": 860,
+          "y": 420,
+          "fala": "[Mutado] ... (gesticulando análises técnicas sobre crocância)"
+        }
+      ],
+      "cliffhanger": "Pra entender como chegamos aqui... precisamos voltar ao fundão.",
+      "eventos": [
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "feliz",
+          "fala": "Antes de a gente lembrar de como tudo começou lá no colégio... deixa eu te contar como foi meu dia de ontem na cozinha."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Ontem em Curitiba. Cheiro forte de manteiga derretida e baunilha. A call do Discord aberta na bancada."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "feliz",
+          "fala": "Eu jurei pra mim mesmo: só mais uma fornadinha rápida de cookies ontem e eu ia dormir."
+        },
+        {
+          "tipo": "discord",
+          "quem": "fabricio",
+          "fala": "Você disse isso às 22h. Já são 2 da manhã, mano."
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "(tá mutado tentando falar)"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c0_quantos_cookies"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "47 fornadas depois... hora de colocar a mão na massa! (Tutorial: Fábrica de Cookies)"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "fabrica_cookies",
+          "modo": "tutorial"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "chocado",
+          "fala": "Espera... por que o forno tá brilhando tão forte?!"
+        },
+        {
+          "tipo": "discord",
+          "quem": "fabricio",
+          "fala": "Cada fornada assa uma memória antiga tua, Luiggi. Segura o tabuleiro!"
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "Pra entender como chegamos aqui... precisamos voltar ao fundão."
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "codigo": "Capítulo 1",
+      "titulo": "O Fundão",
+      "era": "Ensino Médio",
+      "paleta": {
+        "bg": "#1A2E22",
+        "accent": "#4ADE80",
+        "luz": "#FDE68A"
+      },
+      "cenarioTipo": "colegio",
+      "cenarioImagem": "assets/colegio backgrounds/sala_de_aula.jpg",
+      "conquistaConclusao": "fundao_forever",
+      "temFelpsOmeter": true,
+      "cookiesEscondidos": [
+        {
+          "id": "c1_k1",
+          "nome": "Cookie dentro do violão do Tiago",
+          "x": 190,
+          "y": 430
+        },
+        {
+          "id": "c1_k2",
+          "nome": "Cookie embaixo da carteira do fundão",
+          "x": 480,
+          "y": 445
+        },
+        {
+          "id": "c1_k3",
+          "nome": "Cookie na cesta de basquete",
+          "x": 820,
+          "y": 330
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "tiago_music",
+          "x": 220,
+          "y": 410,
+          "fala": "Tô compondo meu primeiro hit, mano!"
+        },
+        {
+          "id": "mateus_buse",
+          "x": 360,
+          "y": 410,
+          "fala": "Qual é a senha do armário? 4-2-0. Fácil."
+        },
+        {
+          "id": "vitor_witiuk",
+          "x": 500,
+          "y": 410,
+          "fala": "Cara, acho que aquela menina olhou pra mim!"
+        },
+        {
+          "id": "fabricio",
+          "x": 640,
+          "y": 395,
+          "fala": "E aí! Só passei aqui no fundo pra trocar ideia. [Presságio: Este NPC terá importância no futuro.]",
+          "pressagio": "fabricio_cap1"
+        },
+        {
+          "id": "tutuluiza",
+          "x": 760,
+          "y": 390,
+          "fala": "Acabei de ver um filme incrível... Ei, anota aí: essa cena ainda vai voltar! [Presságio: Esta NPC voltará com uma plot twist.]",
+          "pressagio": "tutuluiza_cap1"
+        },
+        {
+          "id": "cecilia",
+          "x": 880,
+          "y": 420,
+          "fala": "FELPS!! Oi Felps! Que cheiro bom de cookie, Felps!!"
+        }
+      ],
+      "cliffhanger": "2020. O mundo para. (Uma batida de 808 ecoa...)",
+      "eventos": [
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Luz dourada de fim de tarde na sala de aula. Bem-vindo ao Fundão: sede oficial dos nerds."
+        },
+        {
+          "tipo": "felps",
+          "fala": "FEEELPS!!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "tiago_music",
+          "expr": "feliz",
+          "fala": "Ei Luis, escuta minha primeira música! Eu mesmo cantei e gravei!"
+        },
+        {
+          "tipo": "sfx",
+          "som": "tiago_ruim"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c1_tiago_musica"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "envergonhado",
+          "fala": "Mano, me ajuda a puxar papo com aquela menina ali no corredor..."
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c1_vitor_assunto"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "puzzle_armario"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "maria_clara",
+          "expr": "feliz",
+          "fala": "Bora tirar um X1 de basquete na quadra antes de ir embora, Luis?"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "basquete_maria_clara"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c1_declarar_maria_clara"
+        },
+        {
+          "tipo": "discord",
+          "quem": "fabricio",
+          "fala": "E eu aparecendo aí no fundo sem nem saber que ia virar o melhor amigo desse cara kkkk"
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "2020. O mundo para."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "codigo": "Capítulo 2",
+      "titulo": "Nasce o LuiggiBeats",
+      "era": "Pandemia · 2020",
+      "paleta": {
+        "bg": "#15122B",
+        "accent": "#A855F7",
+        "luz": "#60A5FA"
+      },
+      "cenarioTipo": "quarto_2020",
+      "cenarioImagem": "assets/cenarios_gerados/cap_2.png",
+      "conquistaConclusao": "duo_dinamico",
+      "cookiesEscondidos": [
+        {
+          "id": "c2_k1",
+          "nome": "Cookie atrás do segundo monitor",
+          "x": 200,
+          "y": 380
+        },
+        {
+          "id": "c2_k2",
+          "nome": "Cookie ao lado da máscara PFF2",
+          "x": 540,
+          "y": 430
+        },
+        {
+          "id": "c2_k3",
+          "nome": "Cookie em cima do fone de ouvido",
+          "x": 810,
+          "y": 400
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "fabricio",
+          "x": 680,
+          "y": 410,
+          "fala": "Bora estourar esse 808 na call!"
+        },
+        {
+          "id": "vitor_witiuk",
+          "x": 280,
+          "y": 420,
+          "fala": "Pera... sobre o que vocês tão fazendo música?!"
+        }
+      ],
+      "cliffhanger": "Anos depois, num corredor de faculdade, uma voz ecoa: '...felps?'",
+      "eventos": [
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Quarto escuro, LED roxo e azul, álcool em gel na mesa e dois monitores ligados."
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c2_pandemia_fazer"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "fabricio",
+          "expr": "feliz",
+          "fala": "Mano, abre a DAW aí! A gente precisa transformar os dates desastrosos do Vitor em shittrap!"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c2_tema_musica"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "fl_estudio"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Beat exportado! Hora de estrear o Palco do LuiggiBeats Hero!"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "luiggibeats_hero",
+          "musicaIndex": 1
+        },
+        {
+          "tipo": "conquista",
+          "id": "nasce_uma_lenda"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "chocado",
+          "fala": "*ajoelhando na chuva* POR QUÊÊÊ?! VOCÊS FIZERAM UMA MÚSICA SOBRE EU ELOGIAR O TÊNIS DA MÃE?!"
+        },
+        {
+          "tipo": "discord",
+          "quem": "fabricio",
+          "fala": "E assim nasceu a dupla dinâmica. Melhor fase da quarentena kkkk"
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "Anos depois, num corredor de faculdade, uma voz conhecida ecoa: '...felps?'"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "codigo": "Capítulo 3",
+      "titulo": "O Arquivo Confidencial",
+      "era": "Faculdade",
+      "paleta": {
+        "bg": "#182430",
+        "accent": "#38BDF8",
+        "luz": "#E2E8F0"
+      },
+      "cenarioTipo": "faculdade",
+      "cenarioImagem": "assets/colegio backgrounds/corredor_salas.jpg",
+      "conquistaConclusao": "segredo_de_estado",
+      "cookiesEscondidos": [
+        {
+          "id": "c3_k1",
+          "nome": "Cookie embaixo da porta da sala",
+          "x": 220,
+          "y": 430
+        },
+        {
+          "id": "c3_k2",
+          "nome": "Cookie dentro do bebedouro",
+          "x": 510,
+          "y": 410
+        },
+        {
+          "id": "c3_k3",
+          "nome": "Cookie no armário de arquivo",
+          "x": 830,
+          "y": 395
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "cecilia",
+          "x": 760,
+          "y": 410,
+          "fala": "Oi Felps! Que coincidência a gente fazer a mesma faculdade!"
+        }
+      ],
+      "cliffhanger": "O ronco de um motor boxer. Um Subaru azul estaciona na frente da academia.",
+      "eventos": [
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Corredores frios, luz fluorescente. Cursos diferentes, mesma faculdade. O celular vibra: é a Cecília."
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c3_responder_cecilia"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "digitando_autocorretor"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Ele recusou. Mas 4 minutos depois... um rosto aparece na janelinha da porta da aula."
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "nao_olha_porta"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "cecilia",
+          "expr": "feliz",
+          "fala": "Felps! A aula acabou... vem ali no banheiro comigo rapidinho?"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c3_banheiro"
+        },
+        {
+          "tipo": "tela_preta",
+          "texto": "Luis Felipe nunca contou para ninguém se entrou no banheiro ou não."
+        },
+        {
+          "tipo": "discord",
+          "quem": "fabricio",
+          "fala": "CONTA LOGO MANO! Até hoje ele não fala nem pra mim!"
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "Arquivo confidencial nível NASA."
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "O ronco grave de um motor boxer ecoa. Um Subaru azul estaciona na frente de uma academia."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "codigo": "Capítulo 4",
+      "titulo": "Subaru Azul",
+      "era": "A Academia · 21 anos",
+      "paleta": {
+        "bg": "#1B212E",
+        "accent": "#2563EB",
+        "luz": "#93C5FD"
+      },
+      "cenarioTipo": "academia",
+      "cenarioImagem": "assets/cenarios_gerados/cap_4.png",
+      "conquistaConclusao": "notificacoes_desativadas",
+      "cookiesEscondidos": [
+        {
+          "id": "c4_k1",
+          "nome": "Cookie atrás da anilha de 20kg",
+          "x": 180,
+          "y": 430
+        },
+        {
+          "id": "c4_k2",
+          "nome": "Cookie no porta-luvas do Subaru",
+          "x": 540,
+          "y": 400
+        },
+        {
+          "id": "c4_k3",
+          "nome": "Cookie no bebedouro da academia",
+          "x": 820,
+          "y": 415
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "gi_eta",
+          "x": 620,
+          "y": 410,
+          "fala": "Oi bonitinho... quer ajuda no supino?"
+        },
+        {
+          "id": "amigo_academia",
+          "x": 340,
+          "y": 410,
+          "fala": "Fala Luis! A Gi Eta disse que vai treinar perna hoje."
+        }
+      ],
+      "cliffhanger": "Uma noite fria em Curitiba. Neon piscando: BEC BAR.",
+      "eventos": [
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "21 anos. Espelhos, ferro batendo e o Subaru Legacy azul brilhando lá fora."
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "treino_academia"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "gi_eta",
+          "expr": "feliz",
+          "fala": "Nossa, você treina bem hein... aliás, meu namorado e eu temos um relacionamento bem aberto, sabia?"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c4_gi_eta_flerte"
+        },
+        {
+          "tipo": "cena_especial",
+          "id": "subaru_balancando",
+          "texto": "CENSURADO — Os vidros do Subaru embaçam dramaticamente. O carro balança. (Discord: KKKKKKKKKKKK)"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Dia seguinte. Ela mandou 432 mensagens antes do meio-dia."
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "fuga_notificacoes"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c4_resolver_gi"
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "Uma noite fria em Curitiba. Neon piscando na rua: BEC BAR."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "codigo": "Capítulo 5",
+      "titulo": "Fabricio, Você Sabe o Que Faz",
+      "era": "Bec Bar · Curitiba",
+      "paleta": {
+        "bg": "#1F1228",
+        "accent": "#EC4899",
+        "luz": "#F472B6"
+      },
+      "cenarioTipo": "bec_bar",
+      "cenarioImagem": "assets/Cenarios/becbar/dentro/Screenshot 2026-11-17 012720.png",
+      "conquistaConclusao": "professor_geografia",
+      "cookiesEscondidos": [
+        {
+          "id": "c5_k1",
+          "nome": "Cookie no balcão do Bec Bar",
+          "x": 210,
+          "y": 410
+        },
+        {
+          "id": "c5_k2",
+          "nome": "Cookie dentro do mapa da Alemanha",
+          "x": 580,
+          "y": 390
+        },
+        {
+          "id": "c5_k3",
+          "nome": "Cookie atrás da planta da sala da Luiza",
+          "x": 850,
+          "y": 420
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "caliandra",
+          "x": 420,
+          "y": 410,
+          "fala": "FABRICIOOOOOO! Você sabe o que faz!"
+        },
+        {
+          "id": "luiza",
+          "x": 710,
+          "y": 410,
+          "fala": "Oi! Você já foi pra Alemanha?"
+        }
+      ],
+      "cliffhanger": "O Fabricio olha o celular e empalidece: 'mano... eu combinei com a Agatha.'",
+      "eventos": [
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Chuva fina em Curitiba. Neon no Bec Bar. Do nada, um grito corta a noite:"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "caliandra",
+          "expr": "feliz",
+          "fala": "FABRICIOOOOOO!!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "É a Caliandra, ex-ficante do Fabricio, de franja, acompanhada da amiga Luiza. Detalhe: o Fabricio já está ficando com a Agatha."
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "medidor_dilema"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c5_conselho_fabricio"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luiza",
+          "expr": "feliz",
+          "fala": "Enquanto eles conversam... prazer, sou a Luiza!"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c5_assunto_luiza"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "conversa_luiza"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Todos vão pro apartamento da Luiza. No outro quarto, Caliandra repete mais 5 vezes: 'Fabricio, você sabe o que faz.' Eles ficam."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Enquanto isso, na sala, o Luis aprendia geografia alemã. De repente, o celular do Fabricio vibra."
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "Fabricio empalidece: 'mano... eu combinei de encontrar a Agatha.'"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "codigo": "Capítulo 6",
+      "titulo": "Segurando Vela",
+      "era": "3h da Manhã · Centro de Curitiba",
+      "paleta": {
+        "bg": "#0B1224",
+        "accent": "#FBBF24",
+        "luz": "#FDE047"
+      },
+      "cenarioTipo": "centro_3h",
+      "cenarioImagem": "assets/cenarios_gerados/cap_6.png",
+      "conquistaConclusao": "sobrevivente_centro",
+      "cookiesEscondidos": [
+        {
+          "id": "c6_k1",
+          "nome": "Cookie atrás do lightstick K-Pop",
+          "x": 200,
+          "y": 420
+        },
+        {
+          "id": "c6_k2",
+          "nome": "Cookie embaixo do banco da praça",
+          "x": 520,
+          "y": 440
+        },
+        {
+          "id": "c6_k3",
+          "nome": "Cookie dentro do Subaru trancado",
+          "x": 850,
+          "y": 410
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "agatha",
+          "x": 460,
+          "y": 405,
+          "fala": "oi. (Nem olhou na sua cara)"
+        },
+        {
+          "id": "fabricio",
+          "x": 540,
+          "y": 405,
+          "fala": "*olha pra trás sem saber o que fazer*"
+        }
+      ],
+      "cliffhanger": "No Subaru, celular vibra: 'Luiza: chegou bem? 🙂'",
+      "eventos": [
+        {
+          "tipo": "escolha",
+          "escolhaId": "c6_sair_apartamento"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "caliandra",
+          "expr": "feliz",
+          "fala": "*da porta do prédio* FABRICIO, VOCÊ SABE O QUE FAZ!"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "direcao_madrugada"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c6_carro_pessoa_ruim"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Balada K-Pop. Neon rosa e lightsticks. A Agatha aparece — com um leve 'efeito filtro' de maquiagem que pisca na tela."
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c6_cumprimentar_agatha"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "segurando_vela"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c6_praca_agora"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "3h20 da manhã. Sozinho no Centro. Bateria da lanterna em 5%... Modo Sobrevivência ativado!"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c6_trocado_rua"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "sobrevivencia_centro"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "chocado",
+          "fala": "*entra no Subaru* CLACK! CLACK! CLACK! CLACK! CLACK! ...Ufa, vivo."
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "Celular vibra: 'Luiza: chegou bem? 🙂' — Narrador: 'Pelo menos alguém perguntou.'"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "codigo": "Capítulo 7",
+      "titulo": "O Gato Viu Tudo",
+      "era": "Shopping & Apartamento da Luiza",
+      "paleta": {
+        "bg": "#231E29",
+        "accent": "#FB7185",
+        "luz": "#FBCFE8"
+      },
+      "cenarioTipo": "shopping",
+      "cenarioImagem": "assets/cenarios_gerados/cap_7.png",
+      "conquistaConclusao": "a_testemunha",
+      "temGatoEscondido": true,
+      "cookiesEscondidos": [
+        {
+          "id": "c7_k1",
+          "nome": "Cookie na bandeja de batata frita",
+          "x": 240,
+          "y": 420
+        },
+        {
+          "id": "c7_k2",
+          "nome": "Cookie atrás do totem do shopping",
+          "x": 540,
+          "y": 380
+        },
+        {
+          "id": "c7_k3",
+          "nome": "Cookie embaixo do gato testemunha",
+          "x": 790,
+          "y": 430
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "luiza",
+          "x": 580,
+          "y": 410,
+          "fala": "Tô te esperando aqui na mesa da praça de alimentação!"
+        },
+        {
+          "id": "gato_luiza",
+          "x": 800,
+          "y": 440,
+          "fala": "... (ele está te observando)"
+        }
+      ],
+      "cliffhanger": "Fabricio no celular: 'mano, você tá na bad. hoje a gente vai no Sad Baile.'",
+      "eventos": [
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "A conversa com a Luiza engata. Hora de responder na velocidade certa!"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "conversa_mensagem"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c7_primeiro_encontro"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "praca_alimentacao"
+        },
+        {
+          "tipo": "cena_especial",
+          "id": "gato_testemunha",
+          "texto": "Na casa dela... corte para preto com um coração. Em seguida, O GATO DA LUIZA atravessa a tela, para, e ENCARA o jogador por 4 segundos. 'O gato viu tudo.'"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c7_relacionamento_aberto"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Chuva na janela. O relacionamento termina porque o Luis é romântico demais. O gato assiste da janela."
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "Fabricio: 'mano, você tá na bad. hoje a gente vai no Sad Baile. não aceito não como resposta.'"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "codigo": "Capítulo 8",
+      "titulo": "Sad Baile",
+      "era": "A Noite das Ruivas",
+      "paleta": {
+        "bg": "#110F24",
+        "accent": "#8B5CF6",
+        "luz": "#C084FC"
+      },
+      "cenarioTipo": "sad_baile",
+      "cenarioImagem": "assets/Cenarios/sadbaile/jornalcomunicacao.ufpr.br-do-passinho-ao-soul-a-cultura-dos-bailes-black-em-curitiba-capa.webp",
+      "conquistaConclusao": "ate_as_luzes_acenderem",
+      "temGatoEscondido": true,
+      "cookiesEscondidos": [
+        {
+          "id": "c8_k1",
+          "nome": "Cookie atrás do letreiro neon SAD",
+          "x": 190,
+          "y": 330
+        },
+        {
+          "id": "c8_k2",
+          "nome": "Cookie no balcão do barman surdo",
+          "x": 490,
+          "y": 415
+        },
+        {
+          "id": "c8_k3",
+          "nome": "Cookie no bolso do Fabricio",
+          "x": 820,
+          "y": 410
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "rebeca",
+          "x": 300,
+          "y": 415,
+          "fala": "E aí gato, bora dançar!"
+        },
+        {
+          "id": "pietra",
+          "x": 480,
+          "y": 410,
+          "fala": "Eu disse pro Guilherme ontem mesmo..."
+        },
+        {
+          "id": "julie",
+          "x": 640,
+          "y": 415,
+          "fala": "Tanto faz."
+        },
+        {
+          "id": "marilis_docinho",
+          "x": 780,
+          "y": 415,
+          "fala": "Oi amigo do Fabricio!"
+        }
+      ],
+      "cliffhanger": "Saindo de manhã cedo no frio. Um cartaz no poste: 'TNT: última quinta-feira do mês.'",
+      "eventos": [
+        {
+          "tipo": "escolha",
+          "escolhaId": "c8_look_noite"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "O Luis estava triste. O lugar se chamava Sad Baile. Fazia sentido."
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "grito_no_bar"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c8_fotos_paisagem"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "namedrop_pietra"
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "Cuidado conversando com a Julie, mano... ruiva GÓTICA... já vimos esse filme."
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "passinho_sad"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "esconde_esconde_baile"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c8_recusar_rebeca"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "onde_esta_ruiva"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c8_papo_ruiva"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "papo_fim_noite"
+        },
+        {
+          "tipo": "cena_especial",
+          "id": "cards_sad_baile",
+          "texto": "As luzes da balada acendem! Eles ainda estão lá. Cards finais: Rebeca ('Continua dançando'), Pietra ('Continua chamando famosos pelo primeiro nome'), Julie ('Ver capítulo 12'), Ruiva Misteriosa ('Uma noite. Uma lembrança'), e Marilis Docinho ('Ficou conhecida como Marilis Docinho' — Fabricio: NÃO COLOCA ISSO NO JOGO)."
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "Manhã fria em Curitiba. Um cartaz no poste: 'TNT: última quinta-feira do mês.'"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "codigo": "Capítulo 9",
+      "titulo": "TNT no Asterisco Café",
+      "era": "Asterisco Café & Cinema",
+      "paleta": {
+        "bg": "#2B1E17",
+        "accent": "#D97706",
+        "luz": "#FDE68A"
+      },
+      "cenarioTipo": "asterisco_cafe",
+      "cenarioImagem": "assets/Cenarios/local primeiro tnt/unnamed (1).webp",
+      "conquistaConclusao": "paciencia_cinefilo",
+      "temGatoEscondido": true,
+      "cookiesEscondidos": [
+        {
+          "id": "c9_k1",
+          "nome": "Cookie no moedor de café",
+          "x": 220,
+          "y": 405
+        },
+        {
+          "id": "c9_k2",
+          "nome": "Cookie atrás da bandeira da França",
+          "x": 540,
+          "y": 420
+        },
+        {
+          "id": "c9_k3",
+          "nome": "Cookie na poltrona do cinema",
+          "x": 810,
+          "y": 430
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "yohana",
+          "x": 450,
+          "y": 410,
+          "fala": "Eu amo viajar pra França..."
+        },
+        {
+          "id": "yuri",
+          "x": 620,
+          "y": 410,
+          "fala": "A Yohana é super tranquila!"
+        },
+        {
+          "id": "erion",
+          "x": 740,
+          "y": 410,
+          "fala": "Esse espresso tá no ponto."
+        },
+        {
+          "id": "rayssa",
+          "x": 860,
+          "y": 405,
+          "fala": "Oi! Você conhece aquele menino ali?"
+        }
+      ],
+      "cliffhanger": "Fabricio: 'mano. tô namorando a Rayssa. bora no Emily Doces amanhã?'",
+      "eventos": [
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Última quinta-feira do mês: campeonato de latte art no Asterisco Café!"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "latte_art"
+        },
+        {
+          "tipo": "conquista",
+          "id": "cupido_do_fabricio"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Ao fundo, Fabricio conhece a Rayssa com corações voando. Enquanto isso, Luis conhece a Yohana..."
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "detector_red_flags"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c9_red_flag_franca"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "No cinema assistindo 'Nora'. Silêncio constrangedor subindo. O filme acaba."
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c9_cinema_nora"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "creditos_infinitos"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c9_viagem_praia"
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "Mensagem do Fabricio: 'mano. tô namorando a Rayssa. bora no Emily Doces amanhã?'"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "codigo": "Capítulo 10",
+      "titulo": "Tico e Teco",
+      "era": "Bacacheri & Emily Doces",
+      "paleta": {
+        "bg": "#2E1A26",
+        "accent": "#EC4899",
+        "luz": "#FBCFE8"
+      },
+      "cenarioTipo": "emily_doces",
+      "cenarioImagem": "assets/Cenarios/emily doces/dentro/unnamed.webp",
+      "conquistaConclusao": "mecanico_boteco",
+      "temGatoEscondido": true,
+      "cookiesEscondidos": [
+        {
+          "id": "c10_k1",
+          "nome": "Cookie na vitrine da Emily Doces",
+          "x": 230,
+          "y": 400
+        },
+        {
+          "id": "c10_k2",
+          "nome": "Cookie no capô do Civic branco",
+          "x": 560,
+          "y": 420
+        },
+        {
+          "id": "c10_k3",
+          "nome": "Cookie no filtro de ar do Subaru",
+          "x": 830,
+          "y": 425
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "emily",
+          "x": 450,
+          "y": 410,
+          "fala": "E aí, Tico! Vai encarar meu Civic?"
+        },
+        {
+          "id": "rayssa",
+          "x": 620,
+          "y": 410,
+          "fala": "Lé e Cré chegaram!"
+        },
+        {
+          "id": "fabricio",
+          "x": 740,
+          "y": 410,
+          "fala": "Eu sou o Teco ou o Cré?!"
+        }
+      ],
+      "cliffhanger": "O Luis deita e fecha os olhos. A tela começa a ficar cor-de-rosa...",
+      "eventos": [
+        {
+          "tipo": "minigame",
+          "minigameId": "direcao_bacacheri"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c10_fabricio_yohana"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "emily",
+          "expr": "feliz",
+          "fala": "Olha aí o Tico e o Teco! O Lé e o Cré chegaram!"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c10_quem_e_tico"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "latte_art_rayssa"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "feliz",
+          "fala": "Hmm... doce bom, mas eu faria um cookie melhor! [Presságio: Esta frase terá consequências.]"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "garagem_emily"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "emily",
+          "expr": "feliz",
+          "fala": "Bora ver se esse Subaru anda mesmo, Tico?! Centro vazio agora!"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "racha_subaru_civic"
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "O Luis chega em casa, deita na cama e fecha os olhos. A tela fica cor-de-rosa..."
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "codigo": "Capítulo 11",
+      "titulo": "Sonho Lúcido",
+      "era": "Plano dos Sonhos",
+      "paleta": {
+        "bg": "#3B1647",
+        "accent": "#F472B6",
+        "luz": "#E879F9"
+      },
+      "cenarioTipo": "sonho",
+      "cenarioImagem": "assets/cenarios_gerados/cap_11.png",
+      "conquistaConclusao": "como_assim_a_sol",
+      "temGatoEscondido": true,
+      "cookiesEscondidos": [
+        {
+          "id": "c11_k1",
+          "nome": "Cookie flutuando numa nuvem rosa",
+          "x": 200,
+          "y": 290
+        },
+        {
+          "id": "c11_k2",
+          "nome": "Cookie dentro da CNH de giz de cera",
+          "x": 520,
+          "y": 420
+        },
+        {
+          "id": "c11_k3",
+          "nome": "Cookie na asa da capivara voadora",
+          "x": 820,
+          "y": 310
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "fabricio",
+          "x": 450,
+          "y": 410,
+          "fala": "Relaxa, minha CNH de giz de cera é vitalícia!"
+        },
+        {
+          "id": "sol",
+          "x": 650,
+          "y": 410,
+          "fala": "Lá vem lombada no meio das nuvens!"
+        }
+      ],
+      "cliffhanger": "Na academia, dois olhos brilham no escuro observando o Luis.",
+      "eventos": [
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Isso é um sonho. Nada aqui aconteceu. (Ainda bem.) Capivaras voam pelo céu pastel de Curitiba."
+        },
+        {
+          "tipo": "conquista",
+          "id": "sonho_lucido"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c11_sem_carteira"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "beijo_no_drift"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "chocado",
+          "fala": "*acorda abraçado no travesseiro fazendo biquinho* Que sonho bizarro..."
+        },
+        {
+          "tipo": "discord",
+          "quem": "luis",
+          "fala": "mano sonhei que você tava dirigindo meu Subaru"
+        },
+        {
+          "tipo": "discord",
+          "quem": "fabricio",
+          "fala": "eu nem tenho carta"
+        },
+        {
+          "tipo": "discord",
+          "quem": "luis",
+          "fala": "eu sei. e tinha a Sol no banco de trás"
+        },
+        {
+          "tipo": "discord",
+          "quem": "fabricio",
+          "fala": "... como assim a Sol"
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "KKKKKKKKKKKKKKKKKK"
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "Mais tarde, na academia, dois olhos brilham no escuro observando o Luis..."
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "codigo": "Capítulo 12",
+      "titulo": "A Rainha das Red Flags",
+      "era": "Era Gótica · Eloiza",
+      "paleta": {
+        "bg": "#140C1C",
+        "accent": "#DC2626",
+        "luz": "#A855F7"
+      },
+      "cenarioTipo": "gotico_academia",
+      "cenarioImagem": "assets/cenarios_gerados/cap_12.png",
+      "conquistaConclusao": "detector_quebrado",
+      "temGatoEscondido": true,
+      "cookiesEscondidos": [
+        {
+          "id": "c12_k1",
+          "nome": "Cookie atrás do espelho gótico",
+          "x": 190,
+          "y": 400
+        },
+        {
+          "id": "c12_k2",
+          "nome": "Cookie embaixo do celular trancado",
+          "x": 540,
+          "y": 430
+        },
+        {
+          "id": "c12_k3",
+          "nome": "Cookie atrás da cortina (esconderijo)",
+          "x": 830,
+          "y": 405
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "eloiza",
+          "x": 580,
+          "y": 410,
+          "fala": "Você sempre foi tão cavalheiro comigo..."
+        }
+      ],
+      "cliffhanger": "Dia de TNT. O Subaru tem 5 lugares. 'Isso vai ser um problema.'",
+      "eventos": [
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "GÓTICA. A Julie avisou no capítulo 8!!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "eloiza",
+          "expr": "feliz",
+          "fala": "Eu achei tão fofo que você ficava esperando meu Uber chegar na academia..."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "[ERRO 404: Memória não encontrada. O Luis nunca fez isso na vida.]"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c12_cavalheiro_uber"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "treino_dupla"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "detetive_instagram"
+        },
+        {
+          "tipo": "cena_especial",
+          "id": "esconder_mae_eloiza",
+          "texto": "A mãe da Eloiza chega em casa! Ela nunca contou que namoram! Luis pula atrás do sofá em 5 segundos!"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c12_descobriu_stories"
+        },
+        {
+          "tipo": "cena_especial",
+          "id": "loop_eloiza",
+          "texto": "Eloiza: 'Vou parar com isso.' → 'Vou parar com isso.' → 'Vou parar com isso.' (Ela disse que ia parar... mas nunca parou.)"
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "Dia de TNT. O Subaru tem 5 lugares. Narrador: 'Isso vai ser um problema.'"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "codigo": "Capítulo 13",
+      "titulo": "Treta no TNT",
+      "era": "Subaru & Galpão Underground",
+      "paleta": {
+        "bg": "#1A080C",
+        "accent": "#EF4444",
+        "luz": "#F87171"
+      },
+      "cenarioTipo": "underground",
+      "cenarioImagem": "assets/cenarios_gerados/cap_13.png",
+      "conquistaConclusao": "red_flag_battle",
+      "temGatoEscondido": true,
+      "cookiesEscondidos": [
+        {
+          "id": "c13_k1",
+          "nome": "Cookie no banco 'RESERVADO'",
+          "x": 210,
+          "y": 420
+        },
+        {
+          "id": "c13_k2",
+          "nome": "Cookie perto da caixa de som",
+          "x": 520,
+          "y": 405
+        },
+        {
+          "id": "c13_k3",
+          "nome": "Cookie no bolso do Cara Aleatório",
+          "x": 820,
+          "y": 415
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "eloiza",
+          "x": 380,
+          "y": 410,
+          "fala": "Ela não entra nesse carro."
+        },
+        {
+          "id": "yohana",
+          "x": 580,
+          "y": 410,
+          "fala": "Vocês me deixaram sozinha lá!"
+        },
+        {
+          "id": "cara_aleatorio",
+          "x": 670,
+          "y": 410,
+          "fala": "É... verdade. Complicado, né."
+        },
+        {
+          "id": "matheus_neuman",
+          "x": 820,
+          "y": 410,
+          "fala": "Mano, que climão histórico."
+        }
+      ],
+      "cliffhanger": "Semanas depois. Primeiro 'tempo' com a Eloiza. (Sim, teve mais de um.)",
+      "eventos": [
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "No Subaru: Luis, Eloiza, Fabricio e Matheus Neuman. O combinado era dar carona pra Yohana pro TNT."
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c13_carona_yohana"
+        },
+        {
+          "tipo": "conquista",
+          "id": "climao"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Mais tarde, no galpão underground. Luz vermelha, grave pesado. A Yohana chama Luis e Fabricio lá fora..."
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c13_yohana_chorando"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Na cabeça do Luis, isso só podia acabar de um jeito: THE RED FLAG BATTLE!"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "x1_eloiza_yohana"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "MAS NA VIDA REAL... ninguém venceu. Luis perdeu a paz, Fabricio perdeu o rolê, e o Cara Aleatório continua concordando até hoje."
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "Semanas depois. Primeiro 'tempo' com a Eloiza. (Sim, teve mais de um.)"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "codigo": "Capítulo 14",
+      "titulo": "Operação Ponto Cego",
+      "era": "Rua Prudente de Moraes · Yard & James",
+      "paleta": {
+        "bg": "#150F2E",
+        "accent": "#06B6D4",
+        "luz": "#F472B6"
+      },
+      "cenarioTipo": "yard_james",
+      "cenarioImagem": "assets/Cenarios/yard balada/Screenshot 2026-11-17 013033.png",
+      "conquistaConclusao": "luis_exe_parou",
+      "temGatoEscondido": true,
+      "cookiesEscondidos": [
+        {
+          "id": "c14_k1",
+          "nome": "Cookie na calçada da Prudente de Moraes",
+          "x": 180,
+          "y": 430
+        },
+        {
+          "id": "c14_k2",
+          "nome": "Cookie atrás do bar da Yard",
+          "x": 520,
+          "y": 400
+        },
+        {
+          "id": "c14_k3",
+          "nome": "Cookie na cabine do DJ da James",
+          "x": 850,
+          "y": 370
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "tutuluiza",
+          "x": 420,
+          "y": 410,
+          "fala": "Cena digna de segundo ato!"
+        },
+        {
+          "id": "lara",
+          "x": 620,
+          "y": 410,
+          "fala": "Vem cá dançar, Fabricio!"
+        },
+        {
+          "id": "isabela_dominik",
+          "x": 760,
+          "y": 410,
+          "fala": "Amo essa música! *dança empolgada*"
+        }
+      ],
+      "cliffhanger": "Hoje. Um tempo. De novo. (Mais ou menos.)",
+      "eventos": [
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Rua Prudente de Moraes. Na frente da Yard, um reencontro cinematográfico com a Tutuluiza, agora influencer de filmes."
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c14_entrar_yard"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "lembra_quando"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c14_fabricio_afim"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "fabricio",
+          "expr": "envergonhado",
+          "fala": "Na James: mano, eu quero ficar com a Lara, mas não quero na frente da Tutuluiza pra não deixar ela desconfortável!"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c14_operacao_ponto_cego"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "operacao_ponto_cego"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "tutuluiza",
+          "expr": "feliz",
+          "fala": "*a música muda para romântica* Sabe, Luis... eu sempre te achei muito interessante, desde a escola."
+        },
+        {
+          "tipo": "conquista",
+          "id": "plot_twist"
+        },
+        {
+          "tipo": "discord",
+          "quem": "fabricio",
+          "fala": "PLOT TWIST!! EU PROTEGI OS SENTIMENTOS DE QUEM QUERIA MEU AMIGO O TEMPO TODO KKKKKK"
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c14_plot_twist_flerte"
+        },
+        {
+          "tipo": "cena_especial",
+          "id": "momento_honesto",
+          "texto": "Depois do primeiro tempo... eles voltaram. (Claro.) — À noite, sozinho no Subaru com uma música calma no rádio, o Luis só respira fundo em silêncio."
+        },
+        {
+          "tipo": "cliffhanger",
+          "texto": "Hoje. Um tempo. De novo. (Mais ou menos.)"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "codigo": "Capítulo 15 (Final)",
+      "titulo": "A Escolha Que Ainda Não Foi Escrita",
+      "era": "Presente · Cozinha do Luis",
+      "paleta": {
+        "bg": "#1F1410",
+        "accent": "#F59E0B",
+        "luz": "#FDE68A"
+      },
+      "cenarioTipo": "cozinha_hiperfoco",
+      "cenarioImagem": "assets/cenarios_gerados/cap_15.png",
+      "conquistaConclusao": "continua",
+      "temGatoEscondido": true,
+      "cookiesEscondidos": [
+        {
+          "id": "c15_k1",
+          "nome": "Cookie da última assadeira",
+          "x": 220,
+          "y": 410
+        },
+        {
+          "id": "c15_k2",
+          "nome": "Cookie atrás do vidro do forno",
+          "x": 540,
+          "y": 405
+        },
+        {
+          "id": "c15_k3",
+          "nome": "Cookie na bancada do Discord",
+          "x": 810,
+          "y": 420
+        }
+      ],
+      "npcsMapa": [
+        {
+          "id": "eloiza",
+          "x": 380,
+          "y": 410,
+          "fala": "Oi, cheguei! Trouxe nada não, só vim te ver..."
+        },
+        {
+          "id": "fabricio",
+          "x": 760,
+          "y": 410,
+          "fala": "[Discord] E aí, mano... bora fechar essa história?"
+        }
+      ],
+      "cliffhanger": "A história do LuiggiBeats ainda está sendo escrita.",
+      "eventos": [
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "De volta ao presente. Eles estão 'dando um tempo'... mas ela ainda vem todo dia e ele responde toda mensagem."
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c15_responder_eloiza"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "fabrica_cookies",
+          "modo": "final"
+        },
+        {
+          "tipo": "minigame",
+          "minigameId": "soundboard_discord"
+        },
+        {
+          "tipo": "cena_especial",
+          "id": "virada_final",
+          "texto": "O som do forno desliga. O Discord silencia. Os cookies esfriam na bancada."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Durante o jogo inteiro, nenhuma escolha mudou nada. Porque tudo isso já aconteceu."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Mas essa próxima... ainda não aconteceu. Essa é a única escolha deste jogo que ainda não foi escrita."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Quantas vezes você ouviu 'vou parar com isso'? Quantos 'tempos' vocês já deram? Você se sente em paz quando o celular dela vibra?"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Por que você ainda não sabe o que ela posta? Por que a mãe dela ainda não sabe que você existe? Se fosse o Fabricio vivendo isso, o que você diria pra ele?"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Você está esperando ela mudar... ou esperando você ter coragem?"
+        },
+        {
+          "tipo": "conquista",
+          "id": "luis_voce_sabe"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "caliandra",
+          "expr": "neutro",
+          "fala": "Luis... você sabe o que faz."
+        },
+        {
+          "tipo": "escolha",
+          "escolhaId": "c15_escolha_final"
+        }
+      ]
+    }
+  ]
+}

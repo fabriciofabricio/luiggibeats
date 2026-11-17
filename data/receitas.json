@@ -1,0 +1,79 @@
+{
+  "versao": 1,
+  "receitas": [
+    {
+      "id": "classico",
+      "nome": "Cookie Clássico do Hiperfoco",
+      "corMassa": "#D99B52",
+      "corGotas": "#4A2C1D",
+      "desbloqueiaNoCapitulo": 0,
+      "descricao": "O clássico das 3 da manhã em call no Discord. Crocância periférica 8, centro macio 9,5."
+    },
+    {
+      "id": "cookie_felps",
+      "nome": "Cookie FELPS",
+      "corMassa": "#DF9F57",
+      "corGotas": "#3B2214",
+      "decoracao": "FELPS!",
+      "desbloqueiaNoCapitulo": 1,
+      "descricao": "Com 'FELPS' escrito em chocolate. A Cecília tentaria comer a tela."
+    },
+    {
+      "id": "cookie_subaru",
+      "nome": "Cookie Subaru",
+      "corMassa": "#2563EB",
+      "corGotas": "#FACC15",
+      "desbloqueiaNoCapitulo": 4,
+      "descricao": "Massa azul rally com gotas douradas iguais às rodas 10 raios do Legacy."
+    },
+    {
+      "id": "cookie_gato",
+      "nome": "Cookie do Gato",
+      "corMassa": "#1F2026",
+      "corGotas": "#FACC15",
+      "formato": "gato",
+      "desbloqueiaNoCapitulo": 7,
+      "descricao": "Em formato de gato com olhos amarelos que encaram sua alma antes de cada mordida."
+    },
+    {
+      "id": "cookie_pos_creditos",
+      "nome": "Cookie Pós-Créditos",
+      "corMassa": "#C68B4B",
+      "corGotas": "#7C2D12",
+      "recheioSecreto": true,
+      "desbloqueiaNoCapitulo": 9,
+      "descricao": "O recheio surpresa só aparece se você esperar 10 segundos depois de assar. A Yohana aprova."
+    },
+    {
+      "id": "cookie_tico_teco",
+      "nome": "Cookie Tico e Teco",
+      "corMassa": "#EAB676",
+      "corMassa2": "#4A2C1D",
+      "desbloqueiaNoCapitulo": 10,
+      "descricao": "Metade baunilha, metade chocolate. Dividem o mesmo neurônio de açúcar."
+    },
+    {
+      "id": "cookie_gotico",
+      "nome": "Cookie Gótico",
+      "corMassa": "#18181B",
+      "corGotas": "#991B1B",
+      "desbloqueiaNoCapitulo": 12,
+      "descricao": "Cacau 100% preto com gotas vermelhas. Não mostra o celular pra ninguém."
+    },
+    {
+      "id": "cookie_red_flag",
+      "nome": "Cookie Red Flag",
+      "corMassa": "#B91C1C",
+      "corGotas": "#FFFFFF",
+      "bandeirinha": true,
+      "desbloqueiaNoCapitulo": 13,
+      "descricao": "Vem com uma bandeirinha vermelha espetada em cima. Você come mesmo sabendo que vai dar ruim."
+    }
+  ],
+  "upgradesInfinito": [
+    { "id": "forno_subaru", "nome": "Forno Subaru Turbo", "custoBase": 25, "cps": 2, "descricao": "Ronco boxer que assa 2 cookies por segundo." },
+    { "id": "gato_confeiteiro", "nome": "Gato Confeiteiro", "custoBase": 120, "cps": 8, "descricao": "Amassa a massa encarando fixamente." },
+    { "id": "batedeira_808", "nome": "Batedeira 808", "custoBase": 500, "cps": 25, "descricao": "Mistura gotas de chocolate na frequência do grave." },
+    { "id": "neuronio_tico_teco", "nome": "Neurônio Compartilhado do Tico e Teco", "custoBase": 1800, "cps": 85, "descricao": "Luis e Fabricio assam juntos usando um único pensamento." }
+  ]
+}

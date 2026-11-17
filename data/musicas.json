@@ -1,0 +1,71 @@
+{
+  "nota": "Nenhum arquivo MP3 encontrado em /assets até o momento. Coloque os MP3s em /assets e rode `node ferramentas/gerar_manifest.js`.",
+  "mp3sEncontrados": 0,
+  "faixas": [
+    {
+      "id": "tiago_primeira_musica_placeholder",
+      "arquivo": null,
+      "titulo": "Primeira Música do Tiago (Placeholder Desafinado)",
+      "artista": "Tiago Music",
+      "ano": 2019,
+      "descricao": "Nenhum MP3 com \"tiago\" foi encontrado em /assets. Áudio propositalmente desafinado sintetizado via Web Audio.",
+      "desbloqueiaNoCapitulo": 1,
+      "bpm": 112,
+      "ehMusicaDoTiago": true,
+      "sintetizadaFallback": true,
+      "aConfirmar": true
+    },
+    {
+      "id": "vitor_no_date_shittrap",
+      "arquivo": null,
+      "titulo": "Vitor no Date (Shittrap 2020)",
+      "artista": "LuiggiBeats feat. Fabricio",
+      "ano": 2020,
+      "descricao": "Faixa placeholder sintetizada até os MP3s reais do LuiggiBeats serem adicionados em /assets.",
+      "desbloqueiaNoCapitulo": 2,
+      "bpm": 140,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": true,
+      "aConfirmar": true
+    },
+    {
+      "id": "subaru_madrugada_beat",
+      "arquivo": null,
+      "titulo": "Subaru 3h da Manhã",
+      "artista": "LuiggiBeats",
+      "ano": 2022,
+      "descricao": "Beat placeholder atmosférico para as cenas noturnas em Curitiba.",
+      "desbloqueiaNoCapitulo": 6,
+      "bpm": 128,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": true,
+      "aConfirmar": true
+    },
+    {
+      "id": "sad_baile_type_beat",
+      "arquivo": null,
+      "titulo": "Sad Baile (Choro no Grave)",
+      "artista": "LuiggiBeats",
+      "ano": 2023,
+      "descricao": "Beat placeholder melancólico do capítulo 8.",
+      "desbloqueiaNoCapitulo": 8,
+      "bpm": 132,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": true,
+      "aConfirmar": true
+    },
+    {
+      "id": "red_flag_queen_anthem",
+      "arquivo": null,
+      "titulo": "Melhores Amigos Bloqueados",
+      "artista": "LuiggiBeats",
+      "ano": 2024,
+      "descricao": "Beat placeholder gótico/trap da era Eloiza.",
+      "desbloqueiaNoCapitulo": 12,
+      "bpm": 145,
+      "ehMusicaDoTiago": false,
+      "sintetizadaFallback": true,
+      "aConfirmar": true
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "musicaId": "vitor_no_date_shittrap",
+  "bpm": 140,
+  "notas": [
+    { "tempoMs": 857, "trilha": 0, "duracaoMs": 0 },
+    { "tempoMs": 1285, "trilha": 1, "duracaoMs": 0 },
+    { "tempoMs": 1714, "trilha": 2, "duracaoMs": 0 },
+    { "tempoMs": 2142, "trilha": 3, "duracaoMs": 0 },
+    { "tempoMs": 2571, "trilha": 0, "duracaoMs": 420 },
+    { "tempoMs": 3428, "trilha": 2, "duracaoMs": 0 },
+    { "tempoMs": 3857, "trilha": 1, "duracaoMs": 0 },
+    { "tempoMs": 4285, "trilha": 3, "duracaoMs": 380 }
+  ]
+}

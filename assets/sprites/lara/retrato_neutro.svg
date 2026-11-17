@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="26 14 168 178" class="luiggi-rig-svg" data-char="lara">
+      <g class="rig-root">
+        
+        <g class="rig-hair-back">
+        <path d="M56 76 Q42 142 46 218 Q110 232 174 218 Q178 142 164 76 Q110 20 56 76 Z"
+          fill="#1C1718" stroke="#18141C" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M64 118 Q58 168 62 212 M156 118 Q162 168 158 212" fill="none" stroke="#151112" stroke-width="2.2" opacity="0.65"/>
+      </g>
+        <g class="rig-legs"></g>
+        <path d="M98 124 L122 124 L124 144 Q110 150 96 144 Z" fill="#CE9D84" stroke="#18141C" stroke-width="2.4"/>
+        <g class="rig-torso">
+        <path d="M78 142 Q110 132 142 142 L140 214 L80 214 Z" fill="#ECC0A9" stroke="#18141C" stroke-width="2.4"/>
+        <path d="M85 152 Q110 166 135 152 L139 214 L81 214 Z" fill="#18181B" stroke="#18141C" stroke-width="2.4"/>
+        <path d="M98 141 Q110 146 122 141" fill="none" stroke="#CE9D84" stroke-width="1.8"/>
+      </g>
+        <g class="rig-arms">
+      <g class="rig-arm-l">
+        <rect x="68" y="143" width="12" height="56" rx="6" fill="#ECC0A9" stroke="#18141C" stroke-width="2.4"/>
+        <circle cx="74" cy="204" r="6" fill="#ECC0A9" stroke="#18141C" stroke-width="2.4"/>
+      </g>
+      <g class="rig-arm-r">
+        <rect x="140" y="143" width="12" height="56" rx="6" fill="#ECC0A9" stroke="#18141C" stroke-width="2.4"/>
+        <circle cx="146" cy="204" r="6" fill="#ECC0A9" stroke="#18141C" stroke-width="2.4"/>
+      </g>
+      
+    </g>
+        <g class="rig-head">
+        <circle cx="66" cy="86" r="7.5" fill="#CE9D84" stroke="#18141C" stroke-width="2.4"/>
+        <circle cx="154" cy="86" r="7.5" fill="#CE9D84" stroke="#18141C" stroke-width="2.4"/>
+        <!-- Rosto anime/webtoon afinado no queixo -->
+        <path d="M68 72 Q68 34 110 34 Q152 34 152 72 Q151 104 136 120 Q120 132 110 132 Q100 132 84 120 Q69 104 68 72 Z"
+          fill="#ECC0A9" stroke="#18141C" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M107 88 L111 96 L106 97" fill="none" stroke="#CE9D84" stroke-width="2" stroke-linecap="round"/>
+        <ellipse cx="82" cy="96" rx="10" ry="4.5" fill="#F43F5E" opacity="0.22"/>
+        <ellipse cx="138" cy="96" rx="10" ry="4.5" fill="#F43F5E" opacity="0.22"/>
+        
+        <g class="rig-eyes">
+      <path d="M77 83 Q90 72 102 83 Q90 93 77 83 Z" fill="#FFFFFF" stroke="#18141C" stroke-width="1.8"/>
+      <path d="M118 83 Q130 72 143 83 Q130 93 118 83 Z" fill="#FFFFFF" stroke="#18141C" stroke-width="1.8"/>
+      <circle cx="90" cy="83" r="5.8" fill="#3D2820"/>
+      <circle cx="130" cy="83" r="5.8" fill="#3D2820"/>
+      <circle cx="90" cy="84" r="3.19" fill="#111"/>
+      <circle cx="130" cy="84" r="3.19" fill="#111"/>
+      <path d="M86 86 Q90 89 94 86" fill="none" stroke="#81736e" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M126 86 Q130 89 134 86" fill="none" stroke="#81736e" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="87" cy="80" r="2.2" fill="#FFF"/>
+      <circle cx="127" cy="80" r="2.2" fill="#FFF"/>
+      <path d="M77 79 Q90 73 102 80 M118 80 Q130 73 143 79" fill="none" stroke="#18141C" stroke-width="2.4" stroke-linecap="round"/>
+      
+    </g>
+        <g class="rig-brows">
+      <path d="M77 70 Q89 65 101 70" fill="none" stroke="#1C1718" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M119 70 Q131 65 143 70" fill="none" stroke="#1C1718" stroke-width="2.8" stroke-linecap="round"/>
+    </g>
+        <g class="rig-mouth"><path d="M99 109 Q110 114 121 109 Q110 105 99 109 Z" fill="#CE625F" stroke="#18141C" stroke-width="1.8"/></g>
+      </g>
+        <g class="rig-hair-front">
+        <path d="M56 84 Q56 26 110 24 Q164 26 164 84 Q152 52 126 68 Q114 44 110 42 Q106 44 94 68 Q68 52 56 84 Z"
+          fill="#1C1718" stroke="#18141C" stroke-width="2.4" stroke-linejoin="round"/>
+      
+      <path d="M74 44 Q92 36 105 41 M116 41 Q128 36 146 44" fill="none" stroke="#555152" stroke-width="2.6" opacity="0.55" stroke-linecap="round"/>
+    </g>
+        <g class="rig-accessories"></g>
+      </g>
+    </svg>
