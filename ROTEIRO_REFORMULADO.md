@@ -71,7 +71,7 @@ A lista completa está em `TROCAS`, dentro de `ferramentas/reformular_roteiro.js
 | Cap. 14: "PLOT TWIST!!" | Discord | Comentário do Fabricio (ele estava na James) |
 | Final "Próximo Capítulo" | Discord | **Discord** (Luis em casa) |
 
-As mensagens do **Mateus Buse** continuam no Discord (é a piada dele: sempre mutado na call). Mensagens de Discord e WhatsApp aparecem como mensagens, com o selo do app, e **não** colocam a pessoa dentro da cena.
+As mensagens do **Mateus Buse** continuam no Discord (é a piada dele: sempre mutado na call). Ele está na call **ouvindo o Luis contar a história**, então comenta em todos os capítulos como quem reage no presente. No Cap. 1 ele aparece **em pessoa** no fundão (na escola ainda não existia botão de mutar), zoando o Vitor e o Luis; no final ele desmuta pela primeira vez. As falas novas estão em `ferramentas/mais_mateus.py` (idempotente). Mensagens de Discord e WhatsApp aparecem como mensagens, com o selo do app, e **não** colocam a pessoa dentro da cena.
 
 ---
 

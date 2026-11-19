@@ -1891,3 +1891,36 @@ body.lc-escondido .lc-mini { opacity: 0; pointer-events: none; transform: transl
 .lc-toast.show { opacity: 1; transform: translate(-50%, 0); }
 /* O menu principal abre do lado esquerdo: desloca o mini player para não cobrir o título */
 #main-menu-overlay:not(.hidden) ~ .lc-mini { top: auto; bottom: 16px; }
+
+/* ==================== INTERJEIÇÃO (ex.: Mateus & Fabricio rindo dos Tic Tacs) ==================== */
+.vn-interjeicao {
+  position: absolute; z-index: 40; left: 50%; top: 84px;
+  transform: translate(-50%, -12px) scale(0.96); opacity: 0; pointer-events: none;
+  display: flex; align-items: center; gap: 12px; max-width: min(560px, calc(100% - 32px));
+  padding: 10px 16px 10px 10px; border-radius: 16px;
+  background: linear-gradient(180deg, rgba(14, 18, 36, 0.95), rgba(8, 10, 22, 0.97));
+  border: 1px solid rgba(250, 204, 21, 0.45); box-shadow: 0 14px 40px rgba(0,0,0,0.65);
+  transition: opacity 0.22s ease, transform 0.22s ease; cursor: pointer;
+}
+.vn-interjeicao.ativo { opacity: 1; transform: translate(-50%, 0) scale(1); pointer-events: auto; }
+.vn-interjeicao.so-texto { padding: 10px 16px; border-color: rgba(96, 165, 250, 0.45); }
+.vi-rostos { display: flex; }
+.vi-rosto { width: 56px; height: 56px; border-radius: 12px; overflow: hidden; background: #0b1020; border: 2px solid #1e293b; display: flex; align-items: flex-end; justify-content: center; }
+.vi-rosto + .vi-rosto { margin-left: -14px; }
+.vi-rosto .vn-sprite-wrap, .vi-rosto svg { width: 100%; height: 100%; }
+.vi-rosto .vn-sprite-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.vi-rosto .vn-emote { display: none; }
+.vi-nome { font-weight: 800; color: #fbbf24; font-size: 0.85rem; }
+.vi-nome small { color: #94a3b8; font-weight: 600; margin-left: 4px; }
+.vi-texto { color: #f8fafc; font-size: 1.05rem; line-height: 1.4; min-height: 1.4em; word-break: break-word; }
+
+/* ==================== MOMENTO RESENHA ==================== */
+.rs-povs .mini-btn.ativo { border-color: #fbbf24; color: #fff; background: rgba(251, 191, 36, 0.18); }
+.rs-musica { align-items: stretch; min-width: 190px; }
+.rs-faixa { font-size: 0.8rem; color: #93c5fd; max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rs-musica .btn-row { display: flex; gap: 6px; justify-content: center; }
+@media (max-width: 760px) { .rs-povs { flex-wrap: wrap; justify-content: flex-end; } .rs-musica { min-width: 0; } }
+/* Dentro do Subaru (Safepoint / Momento Resenha) o mini player desce para não cobrir o título */
+#safepoint-overlay:not(.hidden) ~ .lc-mini { top: 84px; bottom: auto; }
+/* No Momento Resenha os controles de música já ficam no painel do carro */
+body.resenha-aberta .lc-mini { display: none; }

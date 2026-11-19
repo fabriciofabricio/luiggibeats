@@ -4,7 +4,7 @@
     "LUIGGIBEATS: O DESTINO JÁ FOI ESCRITO",
     "Baseado na vida real de Luis Felipe (LuiggiBeats)",
     "Participação Especial: Fabricio Venturi (Teco / Lé)",
-    "Comentarista Mutado: Mateus Buse",
+    "Comentarista Mutado e Colega do Fundão: Mateus Buse",
     "Participação de Curitiba: Matheus Neuman",
     "Escola: Tiago Music, Maria Clara, Cecília, Vitor Witiuk, Tutuluiza",
     "Noite de Curitiba: Caliandra, Luiza, Agatha, Rebeca, Pietra, Julie, Ruiva Misteriosa, Marilis Docinho",
@@ -115,6 +115,11 @@
           "modo": "tutorial"
         },
         {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "(continua mutado, digitando) análise técnica pela câmera: crocância periférica 8, centro macio 9,5."
+        },
+        {
           "tipo": "dialogo",
           "quem": "luis",
           "expr": "chocado",
@@ -124,6 +129,11 @@
           "tipo": "discord",
           "quem": "fabricio",
           "fala": "Cada fornada assa uma memória antiga tua, Luiggi. Segura o tabuleiro!"
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "pera. se vai ter história do fundão eu fico na call. eu tava lá. eu lembro de TUDO."
         },
         {
           "tipo": "cliffhanger",
@@ -218,8 +228,56 @@
           "fala": "Luz dourada de fim de tarde na sala de aula. Bem-vindo ao Fundão: sede oficial dos nerds."
         },
         {
+          "tipo": "dialogo",
+          "quem": "mateus_buse",
+          "expr": "feliz",
+          "fala": "Luis, guardei teu lugar no fundão. Taxa de um cookie, como sempre."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "neutro",
+          "fala": "Mateus, você já comeu três cookies meus hoje."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "mateus_buse",
+          "expr": "neutro",
+          "fala": "Juros compostos, mano. Estudei no intervalo."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "expr": "feliz",
+          "fala": "Detalhe: na escola o Mateus ainda falava. O botão de mutar só entrou na vida dele em 2020."
+        },
+        {
           "tipo": "felps",
           "fala": "FEEELPS!!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "chocado",
+          "fala": "Por que a Cecília só grita FELPS? Ninguém nunca gritou VITOR nesse colégio."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "mateus_buse",
+          "expr": "neutro",
+          "fala": "Pra alguém gritar teu nome, Vitor, primeiro alguém precisa saber teu nome."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "bravo",
+          "fala": "POR QUÊÊÊ?!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "envergonhado",
+          "fala": "Relaxa, Vitor. Ela te chama de 'o amigo do Felps'. Já é alguma coisa."
         },
         {
           "tipo": "dialogo",
@@ -237,13 +295,79 @@
         },
         {
           "tipo": "dialogo",
+          "quem": "mateus_buse",
+          "expr": "neutro",
+          "fala": "Análise técnica da música do Tiago: afinação 2, coragem 10. O microfone pediu transferência de escola."
+        },
+        {
+          "tipo": "dialogo",
           "quem": "vitor_witiuk",
           "expr": "envergonhado",
           "fala": "Mano, me ajuda a puxar papo com aquela menina ali no corredor..."
         },
         {
+          "tipo": "dialogo",
+          "quem": "mateus_buse",
+          "expr": "feliz",
+          "fala": "Vitor, eu fiz as contas: tua chance com ela é de 3%. E isso contando que ela tropece e caia em cima de você."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "envergonhado",
+          "fala": "3% é bastante, né? ...Luis, 3% é bastante?"
+        },
+        {
           "tipo": "escolha",
           "escolhaId": "c1_vitor_assunto"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "mateus_buse",
+          "expr": "neutro",
+          "fala": "Corrigindo: a chance era 3%. Agora é zero. Um feito científico."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "chocado",
+          "fala": "Mas ela olhou pra mim!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "neutro",
+          "fala": "Ela olhou pro grilo, Vitor."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "chocado",
+          "fala": "Esqueci a senha do meu armário de novo..."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "feliz",
+          "fala": "Pede pro Mateus! Ele sabe a senha de todo mundo da sala."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "mateus_buse",
+          "expr": "neutro",
+          "fala": "Sei. Inclusive a tua, Vitor. E sei da cartinha pra menina do corredor que tá aí dentro faz 4 meses."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "envergonhado",
+          "fala": "...Luis, abre logo esse armário, por favor."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "mateus_buse",
+          "expr": "feliz",
+          "fala": "Vai, tenta. Se em 2 segundos não abrir, eu abro."
         },
         {
           "tipo": "minigame",
@@ -261,8 +385,32 @@
           "fala": "Bora tirar um X1 de basquete na quadra antes de ir embora, Luis?"
         },
         {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "feliz",
+          "fala": "Vai lá, Luis! Eu e o Mateus vamos ficar na arquibancada dando apoio moral!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "mateus_buse",
+          "expr": "neutro",
+          "fala": "Eu vou calcular o ângulo de cada arremesso que você errar. Apoio técnico."
+        },
+        {
           "tipo": "minigame",
           "minigameId": "basquete_maria_clara"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "feliz",
+          "fala": "Agora é a hora! Se declara! Usa a minha técnica do clima!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "mateus_buse",
+          "expr": "neutro",
+          "fala": "Luis, não usa nenhuma técnica do Vitor. Foi provado cientificamente que não funciona. Hoje mesmo."
         },
         {
           "tipo": "escolha",
@@ -270,9 +418,38 @@
         },
         {
           "tipo": "dialogo",
+          "quem": "mateus_buse",
+          "expr": "neutro",
+          "fala": "Eu já sabia. Ela passou o recreio inteiro falando da menina da arquibancada."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "chocado",
+          "fala": "E você não me avisou?!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "mateus_buse",
+          "expr": "feliz",
+          "fala": "Você não perguntou. E o Vitor apostou um cookie que ia dar certo."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "envergonhado",
+          "fala": "...te devo um cookie, Mateus."
+        },
+        {
+          "tipo": "dialogo",
           "quem": "narrador",
           "fala": "E eu aparecendo aí no fundo sem nem saber que ia virar o melhor amigo desse cara kkkk",
           "expr": "feliz"
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "(mutado, digitando no chat) confirmo tudo. e o Vitor até hoje não pagou o cookie."
         },
         {
           "tipo": "cliffhanger",
@@ -350,6 +527,21 @@
           "fala": "Mano, abre a DAW aí! A gente precisa transformar os dates desastrosos do Vitor em shittrap!"
         },
         {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "(fala por 40 segundos com o microfone mutado)"
+        },
+        {
+          "tipo": "discord",
+          "quem": "fabricio",
+          "fala": "Mateus. Mutado. De novo."
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "(digitando) eu disse que o 808 tem que entrar no compasso 9. vocês perderam minha melhor ideia."
+        },
+        {
           "tipo": "escolha",
           "escolhaId": "c2_tema_musica"
         },
@@ -380,12 +572,29 @@
           "tipo": "dialogo",
           "quem": "vitor_witiuk",
           "expr": "chocado",
-          "fala": "*ajoelhando na chuva* POR QUÊÊÊ?! VOCÊS FIZERAM UMA MÚSICA SOBRE EU ELOGIAR O TÊNIS DA MÃE?!"
+          "fala": "*ajoelhando na chuva* POR QUÊÊÊ?! PAREM DE FAZER BULLYING COM A Amanda Becker SÓ PORQUE ELA É UM BOTIJÃO!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "chocado",
+          "fala": "Tá, eu sei que ela é meio gordinha... mas ela é TÍMIDA, mano! TÍMIDA!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "vitor_witiuk",
+          "expr": "envergonhado",
+          "fala": "E as tímidas são as que mais aprontam. O Pereira sabe disso!"
         },
         {
           "tipo": "cena",
           "cenario": "quarto_estudio",
           "legenda": "De volta ao quarto"
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "o Vitor me ligou chorando depois. falei que a música era top 1 na casa dele. não ajudou."
         },
         {
           "tipo": "dialogo",
@@ -464,6 +673,11 @@
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "Ele recusou. Mas 4 minutos depois... um rosto aparece na janelinha da porta da aula."
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "eu reconheço essa franja desde o fundão. se prepara pro FELPS."
         },
         {
           "tipo": "minigame",
@@ -597,6 +811,11 @@
           "fala": "Dia seguinte. Ela mandou 432 mensagens antes do meio-dia."
         },
         {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "432 mensagens até o meio-dia dá uma a cada 100 segundos. eu fiz a conta. ela não dormiu."
+        },
+        {
           "tipo": "minigame",
           "minigameId": "fuga_notificacoes"
         },
@@ -681,6 +900,11 @@
           "fala": "É a Caliandra, minha ex-ficante, de franja, acompanhada da amiga Luiza. Detalhe: eu já tava ficando com a Agatha."
         },
         {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "pausa. o Fabricio tava com a Agatha E encontrou a ex no bar? isso já é capítulo de série."
+        },
+        {
           "tipo": "minigame",
           "minigameId": "medidor_dilema"
         },
@@ -716,6 +940,11 @@
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "Enquanto isso, na sala, o Luis aprendia geografia alemã. De repente, o meu celular vibra."
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "geografia alemã. anotado."
         },
         {
           "tipo": "cliffhanger",
@@ -857,6 +1086,11 @@
           "fala": "*entra no Subaru* CLACK! CLACK! CLACK! CLACK! CLACK! ...Ufa, vivo."
         },
         {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "5 travas em 1 segundo. recorde mundial de medo."
+        },
+        {
           "tipo": "cliffhanger",
           "texto": "Celular vibra: 'Luiza: chegou bem? 🙂' — Fabricio: 'Pelo menos alguém perguntou.'"
         }
@@ -950,6 +1184,11 @@
           "texto": "Na casa dela... corte para preto com um coração. Em seguida, O GATO DA LUIZA atravessa a tela, para, e ENCARA o jogador por 4 segundos. 'O gato viu tudo.'"
         },
         {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "o gato é a única testemunha confiável dessa história inteira."
+        },
+        {
           "tipo": "escolha",
           "escolhaId": "c7_relacionamento_aberto"
         },
@@ -1039,6 +1278,11 @@
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "O Luis estava triste. O lugar se chamava Sad Baile. Fazia sentido."
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "Luis na bad indo no Sad Baile. nota 10 de coerência."
         },
         {
           "tipo": "minigame",
@@ -1178,12 +1422,52 @@
           "fala": "Ao fundo, eu conheço a Rayssa com corações voando. Enquanto isso, o Luis conhece a Yohana..."
         },
         {
+          "tipo": "cena",
+          "cenario": "cafe",
+          "legenda": "Mesa do TNT · Asterisco Café",
+          "elenco": {
+            "luis": "L",
+            "yohana": "R",
+            "yuri": "TL",
+            "erion": "TR"
+          }
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "yuri",
+          "expr": "feliz",
+          "fala": "Luis, essa é a Yohana! Ela é super tranquila, você vai ver."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "erion",
+          "expr": "feliz",
+          "fala": "Bora tomar um café especial enquanto isso? Esse espresso tá no ponto."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "yohana",
+          "expr": "feliz",
+          "fala": "Gente, eu já contei da minha viagem pra França?"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Os quatro na mesma mesa: o Yuri, o Erion, o Luis e a Yohana. Lá vem história."
+        },
+        {
           "tipo": "minigame",
           "minigameId": "detector_red_flags"
         },
         {
           "tipo": "escolha",
           "escolhaId": "c9_red_flag_franca"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "yuri",
+          "expr": "neutro",
+          "fala": "É complicado mesmo..."
         },
         {
           "tipo": "cena",
@@ -1194,6 +1478,11 @@
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "No cinema assistindo 'Nora'. Silêncio constrangedor subindo. O filme acaba."
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "eu fui ver 'Nora' depois por causa dessa história. o filme é bom. o silêncio de vocês não."
         },
         {
           "tipo": "escolha",
@@ -1299,6 +1588,11 @@
           "quem": "emily",
           "expr": "feliz",
           "fala": "Olha aí o Tico e o Teco! O Lé e o Cré chegaram!"
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "Tico e Teco. finalmente alguém resumiu essa amizade em duas palavras."
         },
         {
           "tipo": "escolha",
@@ -1522,6 +1816,11 @@
           "fala": "[ERRO 404: Memória não encontrada. O Luis nunca fez isso na vida.]"
         },
         {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "nunca. conheço o Luis desde o fundão, ele não espera nem o micro-ondas apitar."
+        },
+        {
           "tipo": "escolha",
           "escolhaId": "c12_cavalheiro_uber"
         },
@@ -1674,6 +1973,11 @@
           "fala": "MAS NA VIDA REAL... ninguém venceu. O Luis perdeu a paz, eu perdi o rolê, e o Cara Aleatório continua concordando até hoje."
         },
         {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "eu ouvindo isso aqui na call: ainda bem que eu não fui."
+        },
+        {
           "tipo": "cliffhanger",
           "texto": "Semanas depois. Primeiro 'tempo' com a Eloiza. (Sim, teve mais de um.)"
         }
@@ -1767,6 +2071,23 @@
           "escolhaId": "c14_fabricio_afim"
         },
         {
+          "tipo": "cena",
+          "cenario": "balada",
+          "legenda": "James"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "isabela_dominik",
+          "expr": "feliz",
+          "fala": "Opa, licença gente! Essa música é muito boa! *passa dançando entre o Luis e o Fabricio*"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "lara",
+          "expr": "feliz",
+          "fala": "Vem cá dançar, Fabricio!"
+        },
+        {
           "tipo": "dialogo",
           "quem": "fabricio",
           "expr": "envergonhado",
@@ -1779,6 +2100,176 @@
         {
           "tipo": "minigame",
           "minigameId": "operacao_ponto_cego"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "isabela_dominik",
+          "expr": "feliz",
+          "fala": "*continua dançando, sem fazer ideia de que foi o escudo da operação inteira* Gente, essa música é muito boa!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "lara",
+          "expr": "feliz",
+          "fala": "Missão cumprida? Então vem, Fabricio, bora pra pista!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "expr": "feliz",
+          "fala": "Pausa na missão. Antes de continuar, tem uma história que a gente sempre relembra e que merece MENÇÃO HONROSA. Bônus!"
+        },
+        {
+          "tipo": "cena",
+          "cenario": "festa_piscina",
+          "legenda": "BÔNUS · Aniversário da Sol",
+          "elenco": {
+            "luis": "L",
+            "fabricio": "R",
+            "matheus_neuman": "C",
+            "sol": "TL"
+          }
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Aniversário da Sol. A festa era do lado de fora de uma casa com uma piscina bem no meio. Eu, o Luis e o Matheus Neuman."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "sol",
+          "expr": "feliz",
+          "fala": "Gente, bora cantar parabéns!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Parabéns cantado, bolo cortado. Só tinha um detalhe: o bolo tinha corante. MUITO corante. Era tudo verde."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Todo mundo que tentou comer ficou com a boca inteira verde. E o verde não saía. Ficava no dente, no copo, no guardanapo, em tudo."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "matheus_neuman",
+          "expr": "feliz",
+          "fala": "Luis, para tudo. Esse verde aí do lado da sua boca parece gozo de alien."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "fabricio",
+          "expr": "feliz",
+          "fala": "KKKKKKKKKKKKKKKKKKKK"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "feliz",
+          "fala": "KKKKKKK gozo de alien, mano!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "Era só a gente conversando, então tava tudo bem. O problema é que o Luis achou a piada boa demais pra ficar só entre nós três."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "feliz",
+          "fala": "Pera. Vou fazer essa com o Yuri."
+        },
+        {
+          "tipo": "cena",
+          "cenario": "festa_piscina",
+          "legenda": "Do outro lado da piscina",
+          "elenco": {
+            "luis": "L",
+            "yuri": "R",
+            "fabricio": "TL",
+            "matheus_neuman": "TR"
+          }
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "fala": "A gente vai atrás dele. O Yuri tá ali, de boa, com a boca verde de bolo."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "feliz",
+          "fala": "Yuri, gozaram na sua boca."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "neutro",
+          "fala": "......"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "neutro",
+          "fala": "......"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "envergonhado",
+          "fala": "......"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "envergonhado",
+          "fala": "......"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "chocado",
+          "fala": "......"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "luis",
+          "expr": "envergonhado",
+          "fala": "...o alien."
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "fabricio",
+          "expr": "feliz",
+          "fala": "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "matheus_neuman",
+          "expr": "feliz",
+          "fala": "KKKKKKKKKKKK O ALIEN, LUIS?! DEPOIS DE TUDO ISSO?!"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "yuri",
+          "expr": "neutro",
+          "fala": "...quê?"
+        },
+        {
+          "tipo": "dialogo",
+          "quem": "narrador",
+          "expr": "feliz",
+          "fala": "O Yuri não entendeu nada. Até hoje. Fim da menção honrosa."
+        },
+        {
+          "tipo": "conquista",
+          "id": "mencao_honrosa"
+        },
+        {
+          "tipo": "cena",
+          "cenario": "balada",
+          "legenda": "De volta à James"
         },
         {
           "tipo": "dialogo",
@@ -1795,6 +2286,11 @@
           "quem": "narrador",
           "fala": "PLOT TWIST!! EU PROTEGI OS SENTIMENTOS DE QUEM QUERIA MEU AMIGO O TEMPO TODO KKKKKK",
           "expr": "feliz"
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "a Tutuluiza avisou lá no fundão: 'essa cena ainda vai voltar'. eu anotei."
         },
         {
           "tipo": "escolha",
@@ -1927,6 +2423,11 @@
           "tipo": "dialogo",
           "quem": "narrador",
           "fala": "Você está esperando ela mudar... ou esperando você ter coragem?"
+        },
+        {
+          "tipo": "discord",
+          "quem": "mateus_buse",
+          "fala": "(desmuta pela primeira vez no jogo inteiro) Luis... qualquer escolha que você fizer, a gente tá aqui na call DÃÃRR."
         },
         {
           "tipo": "conquista",

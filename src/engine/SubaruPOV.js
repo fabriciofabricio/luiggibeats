@@ -1,11 +1,16 @@
 /**
  * src/engine/SubaruPOV.js
- * Safepoint em 3D: POV do Luis no banco do motorista do Subaru Legacy azul, com o Fabricio
- * no banco do passageiro e Curitiba à noite pelo para-brisa.
+ * O Subaru Legacy azul por dentro.
  *
- * Interações (clique no objeto 3D ou nos atalhos do painel):
- *   volante (ronco do boxer), rádio (troca o estilo), porta-luvas (cookies), retrovisor (banco de trás),
- *   Fabricio (reage). As falas são as mesmas do roteiro original.
+ * - Safepoint: POV do Luis no banco do motorista entre os capítulos, com o Fabricio no passageiro
+ *   e o Mateus Buse SEMPRE no banco de trás (atrás do passageiro). O mouse mexe o olhar: nas bordas
+ *   dá pra virar a cabeça pros lados e pra trás pra ver o Mateus.
+ * - Momento Resenha (menu): ficar no carro ouvindo música com o Fabricio e o Mateus, trocando o POV
+ *   entre Luis (motorista), Fabricio (passageiro) e Mateus (banco de trás).
+ * - Interações (clique no objeto 3D ou nos atalhos): volante (boxer), buzina, rádio, porta-luvas (cookie),
+ *   retrovisor e o compartimento entre os bancos da frente, que só tem caixinhas de Tic Tac branco:
+ *   abrir sempre faz o Mateus e o Fabricio rirem juntos ("kkkkkkkkkk").
+ * - criarControleCarro() também é usado pelas cenas de história dentro do carro (StoryStage3D).
  * Também contém a cena final "Voltando para casa" (Subaru 3D dirigindo ao amanhecer).
  */
 (function (root) {
@@ -37,7 +42,7 @@
       titulo: 'Safepoint · Pós-Capítulo 1',
       falas: [
         { quem: 'fabricio', expr: 'feliz', fala: 'KKKKK mano, você destruiu o sonho musical do Tiago com quatro palavras: "Por que você fez isso?"' },
-        { quem: 'luis', expr: 'envergonhado', fala: 'E o Vitor elogiando o tênis da garota falando da mãe dele... e a Maria Clara só querendo saber de mangá e das meninas da arquibancada.' },
+        { quem: 'luis', expr: 'envergonhado', fala: 'E o Vitor ajoelhado na chuva pra pararem de zoar a Amanda Becker... e a Maria Clara só querendo saber de mangá e das meninas da arquibancada.' },
         { quem: 'fabricio', expr: 'feliz', fala: 'Aí o mundo parou em 2020 e foi aí que a gente realmente ficou irmão na call do Discord! Lembra do nosso primeiro shittrap?' }
       ],
       proximoLabel: '🎧 Puxar Assunto: Cap. 2 — Nasce o LuiggiBeats'
@@ -162,6 +167,40 @@
   const ESTILOS_RADIO = ['lofi', 'trap', 'sad', 'sonho', 'gotico'];
   const NOMES_RADIO = { lofi: 'LO-FI 4AM', trap: 'SHITTRAP FM', sad: 'SAD BAILE', sonho: 'SONHO LÚCIDO', gotico: 'ERA GÓTICA' };
 
+  /**
+   * Lugares no Subaru (frente = -z). O Mateus Buse SEMPRE vai no banco de trás, atrás do passageiro.
+   * olho: posição da câmera em primeira pessoa; carta: onde o personagem fica sentado.
+   */
+  const LUGARES = {
+    luis: { olho: [-0.38, 1.2, 0.18], carta: [-0.47, 0.52, -0.02], altura: 0.98, nome: 'Luis', papel: 'banco do motorista', icone: '🧢' },
+    fabricio: { olho: [0.42, 1.2, 0.18], carta: [0.5, 0.52, -0.02], altura: 0.98, nome: 'Fabricio', papel: 'banco do passageiro', icone: '🎧' },
+    mateus_buse: { olho: [0.36, 1.27, 1.2], carta: [0.4, 0.32, 1.12], altura: 1.02, nome: 'Mateus Buse', papel: 'banco de trás, atrás do passageiro', icone: '🔇' }
+  };
+  // Até onde dá pra virar a cabeça em cada banco (yaw positivo = direita)
+  const OLHAR = {
+    luis: { base: 0.3, yawMin: -1.7, yawMax: 2.75 },
+    fabricio: { base: -0.2, yawMin: -3.7, yawMax: 1.7 },
+    mateus_buse: { base: -0.22, yawMin: -1.9, yawMax: 1.5 }
+  };
+  const PONTOS_OLHAR = {
+    console: [0, 0.5, 0.15],
+    mateus_buse: [0.4, 0.95, 1.12],
+    fabricio: [0.5, 1.0, -0.02],
+    luis: [-0.47, 1.0, -0.02]
+  };
+  const NOMES_ACAO = {
+    volante: '🛞 Volante · acelerar o boxer',
+    buzina: '📣 Buzina',
+    radio: '📻 Rádio LuiggiBeats',
+    portaluvas: '🍪 Porta-luvas',
+    tictac: '🍬 Compartimento entre os bancos',
+    retrovisor: '🪞 Retrovisor',
+    fabricio: '🎧 Fabricio',
+    luis: '🧢 Luis',
+    mateus_buse: '🔇 Mateus Buse · banco de trás'
+  };
+  const FALAS_MATEUS = ['🔇 (microfone mutado)', 'kkkkkkkkkk', '*aponta pro compartimento dos Tic Tacs*', '*ri em silêncio no banco de trás*', '🔇 ...'];
+
   // ------------------------------------------------------------------
   // INTERIOR DO SUBARU (frente = -z)
   // ------------------------------------------------------------------
@@ -206,6 +245,7 @@
     const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, 0.04, 24), [M.std('#0b1220', 0.4), M.basic('#ffffff', { map: hubTex }), M.std('#0b1220', 0.4)]);
     hub.rotation.x = Math.PI / 2;
     hub.position.z = 0.01;
+    hub.userData.acao = 'buzina';
     volante.add(hub);
     const coluna = cyl(0.03, 0.04, 0.3, plastico, 0, 0, -0.16, 10);
     coluna.rotation.x = Math.PI / 2;
@@ -214,13 +254,57 @@
     g.add(volante);
 
     // Console central + rádio
-    g.add(box(0.36, 0.5, 0.5, plastico, 0, 0.62, -0.62));
+    const consoleCentral = box(0.36, 0.5, 0.5, plastico, 0, 0.62, -0.62);
+    consoleCentral.userData.acao = 'radio';
+    g.add(consoleCentral);
     const radioTex = L().makeCanvasTex(256, 128, () => { });
     const radio = plane(0.24, 0.12, M.basic('#ffffff', { map: radioTex }), 0, 0.83, -0.505);
     radio.material.color.multiplyScalar(1.4);
     radio.userData.acao = 'radio';
     g.add(radio);
-    g.add(box(0.36, 0.12, 0.9, couro, 0, 0.52, -0.05));
+    g.add(box(0.36, 0.12, 0.42, couro, 0, 0.52, -0.29));
+
+    // Compartimento entre o banco do motorista e o do passageiro: abre e só tem Tic Tac branco
+    const comp = new THREE.Group();
+    comp.position.set(0, 0, 0.17);
+    comp.userData.acao = 'tictac';
+    const fundoComp = M.std('#07080b', 0.9);
+    comp.add(box(0.36, 0.1, 0.5, couro, 0, 0.41, 0));
+    comp.add(box(0.33, 0.02, 0.47, fundoComp, 0, 0.47, 0, { cast: false }));
+    [-1, 1].forEach((s) => {
+      comp.add(box(0.02, 0.12, 0.5, couro, s * 0.17, 0.53, 0));
+      comp.add(box(0.36, 0.12, 0.02, couro, 0, 0.53, s * 0.24));
+    });
+    const rotulo = textures.text('tic tac', { w: 256, h: 150, size: 74, color: '#15803d', bg: '#ffffff', radius: 26 });
+    const plasticoTT = M.std('#f8fafc', 0.3, 0, { transparent: true, opacity: 0.93 });
+    const tampaTT = M.std('#ffffff', 0.5);
+    const geoTT = new THREE.BoxGeometry(0.068, 0.017, 0.04);
+    const matsTT = [plasticoTT, plasticoTT, M.basic('#ffffff', { map: rotulo }), plasticoTT, plasticoTT, plasticoTT];
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 4; c++) {
+        const tt = new THREE.Mesh(geoTT, matsTT);
+        tt.position.set(-0.12 + c * 0.08 + (Math.random() - 0.5) * 0.008, 0.489, -0.2 + r * 0.056 + (Math.random() - 0.5) * 0.008);
+        tt.rotation.y = (Math.random() - 0.5) * 0.25;
+        comp.add(tt);
+        const tampinha = box(0.012, 0.018, 0.038, tampaTT, 0.034, 0, 0, { cast: false });
+        tt.add(tampinha);
+        if (Math.random() < 0.35) {
+          const cima = tt.clone();
+          cima.position.y += 0.018;
+          cima.rotation.y += (Math.random() - 0.5) * 0.6;
+          comp.add(cima);
+        }
+      }
+    }
+    g.add(comp);
+    // Tampa (dobradiça na parte de trás, abre pra cima)
+    const consoleTampa = new THREE.Group();
+    consoleTampa.position.set(0, 0.61, 0.42);
+    consoleTampa.userData.acao = 'tictac';
+    const tampaComp = box(0.37, 0.04, 0.5, couro, 0, 0, -0.25);
+    tampaComp.userData.acao = 'tictac';
+    consoleTampa.add(tampaComp);
+    g.add(consoleTampa);
     const cambio = cyl(0.015, 0.015, 0.16, M.std('#9ca3af', 0.3, 0.9), 0, 0.64, -0.2, 8);
     g.add(cambio);
     g.add(L().sphere(0.035, M.std('#111', 0.3), 0, 0.73, -0.2, 10));
@@ -276,6 +360,21 @@
       g.add(box(0.06, 0.05, 0.05, plastico, s * 0.95, 1.2, 0.35));
     });
 
+    // Traseira: colunas, moldura e vidro traseiro (olhando pra trás dá pra ver que é um carro)
+    g.add(box(1.9, 0.08, 0.1, plastico, 0, 1.47, 1.56));
+    g.add(box(1.9, 0.12, 0.1, plastico, 0, 0.86, 1.6));
+    [-1, 1].forEach((s) => {
+      g.add(barra([s * 0.86, 0.9, 1.62], [s * 0.8, 1.48, 1.5], 0.16, plastico));
+      g.add(barra([s * 0.93, 0.98, 0.72], [s * 0.88, 1.48, 0.62], 0.06, plastico));
+    });
+    const vidroTras = plane(1.6, 0.6, new THREE.MeshPhysicalMaterial({ color: 0x8fa4c8, transparent: true, opacity: 0.12, roughness: 0.05, clearcoat: 1, depthWrite: false }), 0, 1.18, 1.57);
+    vidroTras.rotation.x = 0.35;
+    vidroTras.userData.noOutline = true;
+    g.add(vidroTras);
+    const luzTras = new THREE.PointLight('#ffd9a8', 1.1, 2.4, 1.4);
+    luzTras.position.set(0.2, 1.42, 1.0);
+    g.add(luzTras);
+
     // Para-brisa (vidro com leve reflexo)
     const vidro = plane(1.8, 0.62, new THREE.MeshPhysicalMaterial({ color: 0x9fb4d8, transparent: true, opacity: 0.08, roughness: 0.05, metalness: 0.0, clearcoat: 1, depthWrite: false }), 0, 1.22, -0.98);
     vidro.rotation.x = -0.65;
@@ -323,7 +422,7 @@
     h.position.set(-0.38, 0.99, -0.6);
     g.add(h);
 
-    return { group: g, volante, gauges, radioTex, portaLuvas, cookieMini, retro, rt, camRetro };
+    return { group: g, volante, gauges, radioTex, portaLuvas, cookieMini, consoleTampa, retro, rt, camRetro };
   }
 
   function desenharGauges(tex, rpm, vel) {
@@ -401,6 +500,334 @@
   }
 
   // ------------------------------------------------------------------
+  // CONTROLE DO CARRO (compartilhado: Safepoint, Momento Resenha e cenas de história)
+  // ------------------------------------------------------------------
+  /** Lista dos objetos clicáveis (e visíveis) do interior. */
+  function clicaveisDo(interior) {
+    const lista = [];
+    const visivel = (o) => {
+      for (let p = o; p; p = p.parent) if (!p.visible) return false;
+      return true;
+    };
+    // Objetos escondidos (ex.: retrovisor nas cenas de história, onde fica a câmera) não podem roubar o clique
+    interior.group.traverse((o) => o.userData.acao && visivel(o) && lista.push(o));
+    return lista;
+  }
+
+  /** Descobre a ação de um objeto atingido (sobe pelos pais; cartas de personagem viram o id). */
+  function acaoDoObjeto(obj, cartas = {}) {
+    let o = obj;
+    while (o) {
+      if (o.userData?.acao) return o.userData.acao;
+      for (const id in cartas) if (cartas[id] && o === cartas[id].group) return id;
+      o = o.parent;
+    }
+    return null;
+  }
+
+  /**
+   * Estado e reações do Subaru. interagir(acao) anima, toca o som e devolve
+   * { texto, interjeicao?, olhar? } para cada tela mostrar do seu jeito.
+   */
+  function criarControleCarro(interior, o = {}) {
+    const U = () => L().U;
+    const st = { rpm: 850, rpmAlvo: 850, radio: 0, portaAberta: false, consoleAberto: false, gaugeT: 0, radioT: 0, mateusIdx: 0 };
+
+    function trocarRadio(passo = 1) {
+      if (root.LuiggiCloud?.ativo) {
+        if (passo < 0 && root.LuiggiCloud.anterior) root.LuiggiCloud.anterior();
+        else root.LuiggiCloud.proxima();
+        const f = root.LuiggiCloud.faixa;
+        return f ? `📻 Tocando agora: "${f.titulo}" — ${f.artista}` : '📻 Rádio LuiggiBeats';
+      }
+      st.radio = (st.radio + passo + ESTILOS_RADIO.length) % ESTILOS_RADIO.length;
+      root.LuiggiAudio.tocarEstiloSintetizado(ESTILOS_RADIO[st.radio], 122);
+      return `📻 ${NOMES_RADIO[ESTILOS_RADIO[st.radio]]}`;
+    }
+
+    function interagir(acao) {
+      const A = root.LuiggiAudio;
+      if (acao === 'tictac') {
+        st.consoleAberto = !st.consoleAberto;
+        A.playSFX(st.consoleAberto ? 'tranca' : 'blip');
+        if (!st.consoleAberto) return { texto: 'Compartimento fechado. Os Tic Tacs continuam lá dentro. Sempre estarão.' };
+        root.LuiggiSave?.incrementarContador('ticTacs', 1);
+        root.LuiggiAchievements?.desbloquear('so_tic_tac');
+        return {
+          texto: 'Você abre o compartimento entre os bancos da frente: só caixinhas de Tic Tac branco. Várias. Mais nada.',
+          interjeicao: { ids: ['mateus_buse', 'fabricio'], texto: 'kkkkkkkkkk', som: 'risada' },
+          olhar: 'console'
+        };
+      }
+      if (acao === 'volante') {
+        A.playSFX('boxer');
+        st.rpmAlvo = 6200;
+        interior.volante.rotation.z = 0.25;
+        o.stage?.shake?.(0.012, 3);
+        return { texto: '*VRUMM VRUMMM!* O boxer ronca lindo até com o Subaru parado.' };
+      }
+      if (acao === 'buzina') {
+        A.playSFX('buzina');
+        o.stage?.shake?.(0.006, 4);
+        return { texto: '*BII BIIII!* Alguém lá fora levou um susto.' };
+      }
+      if (acao === 'radio') return { texto: trocarRadio(1), radio: true };
+      if (acao === 'portaluvas') {
+        A.playSFX('forno');
+        st.portaAberta = !st.portaAberta;
+        interior.cookieMini.visible = st.portaAberta;
+        return { texto: st.portaAberta ? 'Porta-luvas aberto: um cookie de emergência. Fabricio: "Me dá um aí, Tico!"' : 'Porta-luvas fechado. O cheiro de baunilha fica.' };
+      }
+      if (acao === 'mateus_buse') {
+        A.playSFX('blip');
+        const fala = FALAS_MATEUS[st.mateusIdx++ % FALAS_MATEUS.length];
+        return { texto: `Mateus Buse, no banco de trás: ${fala}`, interjeicao: { ids: ['mateus_buse'], texto: fala } };
+      }
+      if (acao === 'fabricio') {
+        A.playSFX('blip');
+        return { texto: 'Fabricio: "Que foi, Tico? Bora resenha!"' };
+      }
+      if (acao === 'luis') {
+        A.playSFX('blip');
+        return { texto: 'Luis: "Relaxa que eu tô no volante. Mesmo parado."' };
+      }
+      return null;
+    }
+
+    function update(dt, t) {
+      st.rpmAlvo = U().damp(st.rpmAlvo, 850, 1.2, dt);
+      st.rpm = U().damp(st.rpm, st.rpmAlvo, 6, dt) + Math.sin(t * 30) * 12;
+      interior.volante.rotation.z = U().damp(interior.volante.rotation.z, 0, 4, dt);
+      interior.portaLuvas.rotation.x = U().damp(interior.portaLuvas.rotation.x, st.portaAberta ? 1.1 : 0, 6, dt);
+      interior.consoleTampa.rotation.x = U().damp(interior.consoleTampa.rotation.x, st.consoleAberto ? 1.95 : 0, 7, dt);
+      st.gaugeT += dt;
+      if (st.gaugeT > 0.05) {
+        st.gaugeT = 0;
+        desenharGauges(interior.gauges, st.rpm, 0);
+      }
+      st.radioT += dt;
+      if (st.radioT > 0.08) {
+        st.radioT = 0;
+        desenharRadio(interior.radioTex, ESTILOS_RADIO[st.radio], t);
+      }
+    }
+
+    return { interagir, update, trocarRadio, st };
+  }
+
+  // ------------------------------------------------------------------
+  // CARRO EM PRIMEIRA PESSOA (Safepoint e Momento Resenha)
+  // Mouse mexe o olhar: dá pra olhar pros lados e virar pra trás pra ver o Mateus.
+  // ------------------------------------------------------------------
+  function montarCarro3D(view, o = {}) {
+    if (!L()?.hasThree()) return null;
+    const THREE = root.THREE;
+    const U = L().U;
+    const stage = L().createStage(view, { radius: '0', fov: 68, near: 0.02, far: 400, fillIntensity: 0.6, fillColor: '#9fb4ff' });
+    if (!stage) return null;
+    const env = root.Luiggi3DEnv.build('safepoint', { semSubaru: true, raio: 9, arco: Math.PI * 0.62 });
+    env.group.position.z = 2.5;
+    stage.scene.add(env.group);
+    root.Luiggi3DEnv.aplicar(stage, env);
+    stage.setGrade(env.foto ? { vignette: 0.7, bloom: 0.5, threshold: 1.4 } : { vignette: 0.85, bloom: 1.1 });
+    const interior = construirInterior();
+    stage.scene.add(interior.group);
+
+    const map = root.LuiggiData.cache.personagemMap;
+    const cartas = {};
+    Object.entries(LUGARES).forEach(([id, l]) => {
+      const ch = map.get(id);
+      if (!ch) return;
+      const c = L().createCharacterCard(ch, { altura: l.altura, tint: env.foto ? '#ffffff' : '#dfe6ff', emotes: false });
+      c.group.position.set(...l.carta);
+      stage.scene.add(c.group);
+      cartas[id] = c;
+    });
+
+    const controle = criarControleCarro(interior, { stage });
+    const picker = L().createPicker(stage);
+    const fixos = clicaveisDo(interior);
+    const alvos = () => fixos.concat(Object.values(cartas).filter((c) => c.group.visible).map((c) => c.group));
+
+    let pov = o.pov || 'luis';
+    const cam = { yaw: OLHAR[pov].base, pitch: -0.1, mx: 0, my: 0, foco: null, focoNome: null };
+    const alvoPos = new THREE.Vector3();
+    const dir = new THREE.Vector3();
+    stage.camera.position.set(...LUGARES[pov].olho);
+
+    const limitar = (yaw) => Math.max(OLHAR[pov].yawMin, Math.min(OLHAR[pov].yawMax, yaw));
+    // Virar 200° pra esquerda e 160° pra direita apontam pro mesmo lugar: usa o que cabe no banco
+    const yawEquivalente = (yaw) => {
+      let melhor = limitar(yaw);
+      let erro = Infinity;
+      [yaw, yaw - Math.PI * 2, yaw + Math.PI * 2].forEach((y) => {
+        const e = Math.abs(limitar(y) - y);
+        if (e < erro) {
+          erro = e;
+          melhor = limitar(y);
+        }
+      });
+      return melhor;
+    };
+
+    function aplicarPOV(id) {
+      if (!LUGARES[id]) return;
+      pov = id;
+      Object.entries(cartas).forEach(([cid, c]) => (c.group.visible = cid !== id));
+      cam.foco = null;
+      cam.focoNome = null;
+      cam.yaw = OLHAR[id].base;
+      stage.camera.position.set(...LUGARES[id].olho);
+    }
+
+    /** Vira a cabeça para um ponto ('console', 'mateus_buse', 'fabricio', 'luis') ou volta pra frente ('frente'). */
+    function mirarEm(nome) {
+      const p = PONTOS_OLHAR[nome];
+      if (!p || nome === pov) {
+        cam.foco = null;
+        cam.focoNome = null;
+        return;
+      }
+      const d = new THREE.Vector3(...p).sub(stage.camera.position);
+      cam.foco = { yaw: yawEquivalente(Math.atan2(d.x, -d.z)), pitch: Math.atan2(d.y, Math.hypot(d.x, d.z)), mx: cam.mx, my: cam.my };
+      cam.focoNome = nome;
+    }
+
+    function onMove(e) {
+      const r = view.getBoundingClientRect();
+      cam.mx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - 0.5) * 2));
+      cam.my = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - 0.5) * 2));
+      if (cam.foco && Math.hypot(cam.mx - cam.foco.mx, cam.my - cam.foco.my) > 0.35) {
+        cam.foco = null;
+        cam.focoNome = null;
+      }
+      const a = acaoDoObjeto(picker.pick(e, alvos())?.object, cartas);
+      view.style.cursor = a ? 'pointer' : '';
+      if (o.tip) {
+        if (a) {
+          o.tip.textContent = NOMES_ACAO[a] || a;
+          o.tip.style.left = `${e.clientX - r.left + 14}px`;
+          o.tip.style.top = `${e.clientY - r.top + 14}px`;
+          o.tip.classList.remove('hidden');
+        } else o.tip.classList.add('hidden');
+      }
+    }
+    function onDown(e) {
+      const a = acaoDoObjeto(picker.pick(e, alvos())?.object, cartas);
+      if (a && o.onAcao) o.onAcao(a);
+    }
+    view.addEventListener('pointermove', onMove);
+    view.addEventListener('pointerdown', onDown);
+
+    aplicarPOV(pov);
+    desenharGauges(interior.gauges, 850, 0);
+    let quadro = 0;
+    stage.start((dt, t) => {
+      env.update(dt, t);
+      Object.values(cartas).forEach((c) => c.update(dt, stage.camera));
+      controle.update(dt, t);
+
+      // Olhar: mouse no centro = frente; nas bordas vira a cabeça (até pra trás)
+      const lim = OLHAR[pov];
+      let yawAlvo;
+      let pitchAlvo;
+      if (cam.foco) {
+        yawAlvo = cam.foco.yaw;
+        pitchAlvo = cam.foco.pitch;
+      } else {
+        const c = Math.sign(cam.mx) * Math.pow(Math.abs(cam.mx), 1.5);
+        yawAlvo = lim.base + (c >= 0 ? c * (lim.yawMax - lim.base) : -c * (lim.yawMin - lim.base));
+        pitchAlvo = Math.max(-0.85, Math.min(0.45, -0.1 - cam.my * 0.6));
+      }
+      cam.yaw = U.damp(cam.yaw, limitar(yawAlvo), 4, dt);
+      cam.pitch = U.damp(cam.pitch, pitchAlvo, 4, dt);
+
+      // Ao virar pro meio do carro, o corpo inclina (dá pra ver o banco de trás sem bater no encosto)
+      const olho = LUGARES[pov].olho;
+      const centro = olho[0] > 0 ? -1 : 1;
+      const k = Math.sign(cam.yaw) === centro ? Math.min(1, Math.max(0, (Math.abs(cam.yaw) - 1.0) / 1.5)) : 0;
+      const tremor = controle.st.rpm > 2500 ? (Math.random() - 0.5) * 0.004 : 0;
+      alvoPos.set(olho[0] + centro * 0.3 * k, olho[1] + 0.12 * k + Math.sin(t * 1.6) * 0.003 + tremor, olho[2] + 0.05 * k);
+      U.dampVec3(stage.camera.position, alvoPos, 6, dt);
+      dir.set(Math.sin(cam.yaw) * Math.cos(cam.pitch), Math.sin(cam.pitch), -Math.cos(cam.yaw) * Math.cos(cam.pitch));
+      stage.camera.lookAt(stage.camera.position.x + dir.x, stage.camera.position.y + dir.y, stage.camera.position.z + dir.z);
+
+      // Retrovisor (renderiza a cada 2 quadros)
+      if (++quadro % 2 === 0) {
+        interior.retro.visible = false;
+        stage.renderTo(interior.rt, stage.scene, interior.camRetro);
+        interior.retro.visible = true;
+      }
+      if (o.onFrame) o.onFrame(dt, t);
+    });
+
+    return {
+      stage,
+      interior,
+      cartas,
+      controle,
+      aplicarPOV,
+      mirarEm,
+      get pov() {
+        return pov;
+      },
+      get focoNome() {
+        return cam.focoNome;
+      },
+      dispose() {
+        view.removeEventListener('pointermove', onMove);
+        view.removeEventListener('pointerdown', onDown);
+        interior.rt.dispose();
+        stage.dispose();
+      }
+    };
+  }
+
+  /** Aplica o resultado de uma interação na tela em primeira pessoa (texto, interjeição, olhar). */
+  function aplicarReacao(carro, r, falar, host) {
+    if (!r) return;
+    if (r.texto && falar) falar(r.texto);
+    if (r.interjeicao) root.LuiggiDialogue?.mostrarInterjeicao?.({ ...r.interjeicao, host });
+    if (r.olhar && carro) carro.mirarEm(r.olhar);
+  }
+
+  const CHIPS_CARRO = `
+    <button class="chip-btn" data-acao="volante">🛞 Acelerar</button>
+    <button class="chip-btn" data-acao="buzina">📣 Buzina</button>
+    <button class="chip-btn" data-acao="radio">📻 <span class="radio-lbl">Rádio</span></button>
+    <button class="chip-btn" data-acao="portaluvas">🍪 Porta-luvas</button>
+    <button class="chip-btn" data-acao="tictac">🍬 Compartimento</button>
+    <button class="chip-btn" data-acao="retrovisor">🪞 Retrovisor</button>
+    <button class="chip-btn" data-acao="olhar_tras">👀 Olhar pro Mateus</button>`;
+
+  /** Ações que dependem da tela (retrovisor e virar pra trás); o resto vai pro controle do carro. */
+  function acaoDeTela(carro, acao, falar) {
+    if (acao === 'retrovisor') {
+      root.LuiggiAudio.playSFX('blip');
+      const gato = (root.LuiggiSave?.state?.gatosVistos || []).length > 0;
+      falar(gato ? 'No retrovisor: o Mateus Buse lá atrás... e o gato da Luiza do lado dele, te encarando.' : 'No retrovisor: o Mateus Buse no banco de trás, quietinho, olhando pro compartimento dos Tic Tacs.');
+      if (carro) {
+        carro.mirarEm('frente');
+        carro.stage.pulseGrade('vignette', 1.2, 1.2, 0.85);
+      }
+      return true;
+    }
+    if (acao === 'olhar_tras') {
+      if (!carro) return true;
+      if (carro.focoNome === 'mateus_buse' || carro.pov === 'mateus_buse') {
+        carro.mirarEm('frente');
+        falar(carro.pov === 'mateus_buse' ? 'Você É o Mateus. Já tá no banco de trás.' : 'De volta pra frente.');
+      } else {
+        carro.mirarEm('mateus_buse');
+        carro.cartas.mateus_buse?.setExpression('feliz');
+        falar('Você vira pra trás: o Mateus Buse tá no banco de trás, atrás do passageiro. Como sempre.');
+      }
+      return true;
+    }
+    return false;
+  }
+
+  // ------------------------------------------------------------------
   // CENA DO SAFEPOINT
   // ------------------------------------------------------------------
   function abrirSubaruSafepoint(chave = 'intro') {
@@ -415,10 +842,10 @@
       root.LuiggiAudio.tocarEstiloSintetizado('lofi', 98);
       ov.classList.remove('hidden');
       ov.innerHTML = `
-        <div class="sp3d-shell">
+        <div class="sp3d-shell" id="sp3d-shell">
           <div class="sp3d-view" id="sp3d-view"></div>
           <div class="sp3d-topbar">
-            <div class="sp3d-local"><span class="sp3d-pin">📍</span> ${info.titulo}<small>Banco do motorista · POV Luis</small></div>
+            <div class="sp3d-local"><span class="sp3d-pin">📍</span> ${info.titulo}<small>Banco do motorista · POV Luis · 🖱️ mexa o mouse pra olhar em volta</small></div>
             <div class="btn-row">
               <button class="mini-btn" id="pov-museum">🏛️ Museu</button>
               <button class="mini-btn" id="pov-hero">🎸 Hero</button>
@@ -432,161 +859,32 @@
             <div class="sp3d-body">
               <div class="sp3d-speaker" id="pov-speaker"></div>
               <div class="sp3d-text" id="pov-text"></div>
-              <div class="sp3d-gadgets">
-                <button class="chip-btn" data-acao="volante">🛞 Acelerar</button>
-                <button class="chip-btn" data-acao="radio">📻 <span id="pov-radio-lbl">Rádio</span></button>
-                <button class="chip-btn" data-acao="portaluvas">🍪 Porta-luvas</button>
-                <button class="chip-btn" data-acao="retrovisor">🪞 Retrovisor</button>
-              </div>
+              <div class="sp3d-gadgets">${CHIPS_CARRO}</div>
             </div>
             <div class="sp3d-actions" id="pov-actions"></div>
           </div>
         </div>`;
 
-      const view = document.getElementById('sp3d-view');
+      const shell = document.getElementById('sp3d-shell');
       const txtEl = document.getElementById('pov-text');
       const spkEl = document.getElementById('pov-speaker');
       const portraitEl = document.getElementById('sp3d-portrait');
       const actionsEl = document.getElementById('pov-actions');
-      const tip = document.getElementById('sp3d-tip');
-
-      // ---------- 3D ----------
-      let stage = null;
-      let interior = null;
-      let card = null;
-      let env = null;
-      const st3 = { rpm: 850, rpmAlvo: 850, radio: 0, portaAberta: false, lookX: 0, lookY: 0, focoFab: false, gaugeT: 0, radioT: 0, mirrorT: 0 };
-      if (L()?.hasThree()) {
-        stage = L().createStage(view, { radius: '0', fov: 68, near: 0.02, far: 400, fillIntensity: 0.6, fillColor: '#9fb4ff' });
-      }
-      if (stage) {
-        const THREE = root.THREE;
-        env = root.Luiggi3DEnv.build('safepoint', { semSubaru: true, raio: 9, arco: Math.PI * 0.62 });
-        env.group.position.z = 2.5;
-        stage.scene.add(env.group);
-        root.Luiggi3DEnv.aplicar(stage, env);
-        stage.setGrade(env.foto ? { vignette: 0.7, bloom: 0.5, threshold: 1.4 } : { vignette: 0.85, bloom: 1.1 });
-        interior = construirInterior();
-        stage.scene.add(interior.group);
-        card = L().createCharacterCard(fabricio, { altura: 0.98, tint: env.foto ? '#ffffff' : '#dfe6ff', emotes: false });
-        card.group.position.set(0.5, 0.52, -0.02);
-        stage.scene.add(card.group);
-        stage.camera.position.set(-0.38, 1.2, 0.18);
-        const look = new THREE.Vector3(0.1, 1.05, -1);
-        const lookAlvo = new THREE.Vector3();
-        const picker = L().createPicker(stage);
-        const clicaveis = [interior.volante, interior.retro, interior.portaLuvas, card.group];
-        interior.group.traverse((o) => o.userData.acao === 'radio' && clicaveis.push(o));
-
-        const acaoDe = (hit) => {
-          let o = hit?.object;
-          while (o) {
-            if (o.userData.acao) return o.userData.acao;
-            if (o === card.group) return 'fabricio';
-            o = o.parent;
-          }
-          return null;
-        };
-        const NOMES = { volante: '🛞 Volante — acelerar o boxer', radio: '📻 Rádio LuiggiBeats', portaluvas: '🍪 Porta-luvas (47 fornadas)', retrovisor: '🪞 Retrovisor', fabricio: '🎧 Fabricio' };
-        view.addEventListener('pointermove', (e) => {
-          const r = view.getBoundingClientRect();
-          st3.lookX = ((e.clientX - r.left) / r.width - 0.5) * 2;
-          st3.lookY = ((e.clientY - r.top) / r.height - 0.5) * 2;
-          const a = acaoDe(picker.pick(e, clicaveis));
-          view.style.cursor = a ? 'pointer' : '';
-          if (a) {
-            tip.textContent = NOMES[a];
-            tip.style.left = `${e.clientX - r.left + 14}px`;
-            tip.style.top = `${e.clientY - r.top + 14}px`;
-            tip.classList.remove('hidden');
-          } else tip.classList.add('hidden');
-        });
-        view.addEventListener('pointerdown', (e) => {
-          const a = acaoDe(picker.pick(e, clicaveis));
-          if (a) interagir(a);
-        });
-
-        desenharGauges(interior.gauges, 850, 0);
-        stage.start((dt, t) => {
-          env.update(dt, t);
-          card.update(dt, stage.camera);
-          // Olhar: segue o mouse e vira para o Fabricio quando ele fala
-          if (st3.focoFab) lookAlvo.set(0.42 + st3.lookX * 0.25, 1.12 - st3.lookY * 0.12, -0.42);
-          else lookAlvo.set(0.12 + st3.lookX * 0.45, 1.06 - st3.lookY * 0.22, -1);
-          L().U.dampVec3(look, lookAlvo, 3.2, dt);
-          stage.camera.position.y = 1.2 + Math.sin(t * 1.6) * 0.003 + (st3.rpm > 2500 ? (Math.random() - 0.5) * 0.004 : 0);
-          stage.camera.lookAt(look);
-          // Motor
-          st3.rpmAlvo = L().U.damp(st3.rpmAlvo, 850, 1.2, dt);
-          st3.rpm = L().U.damp(st3.rpm, st3.rpmAlvo, 6, dt) + Math.sin(t * 30) * 12;
-          interior.volante.rotation.z = L().U.damp(interior.volante.rotation.z, 0, 4, dt);
-          st3.gaugeT += dt;
-          if (st3.gaugeT > 0.05) {
-            st3.gaugeT = 0;
-            desenharGauges(interior.gauges, st3.rpm, 0);
-          }
-          st3.radioT += dt;
-          if (st3.radioT > 0.08) {
-            st3.radioT = 0;
-            desenharRadio(interior.radioTex, ESTILOS_RADIO[st3.radio], t);
-          }
-          // Porta-luvas
-          interior.portaLuvas.rotation.x = L().U.damp(interior.portaLuvas.rotation.x, st3.portaAberta ? 1.1 : 0, 6, dt);
-          // Retrovisor (renderiza a cada 2 quadros)
-          st3.mirrorT++;
-          if (st3.mirrorT % 2 === 0) {
-            interior.retro.visible = false;
-            stage.renderTo(interior.rt, stage.scene, interior.camRetro);
-            interior.retro.visible = true;
-          }
-        });
-      }
 
       function falar(texto) {
+        clearInterval(typer);
         txtEl.textContent = texto;
       }
 
+      const carro = montarCarro3D(document.getElementById('sp3d-view'), { pov: 'luis', tip: document.getElementById('sp3d-tip'), onAcao: interagir });
+
       function interagir(acao) {
-        if (acao === 'volante') {
-          root.LuiggiAudio.playSFX('boxer');
-          st3.rpmAlvo = 6200;
-          if (interior) interior.volante.rotation.z = 0.25;
-          if (stage) stage.shake(0.012, 3);
-          falar('*VRUMM VRUMMM!* Fabricio: "Motor boxer roncando lindo até parado no Safepoint!"');
-          if (card) card.setExpression('feliz');
-        } else if (acao === 'retrovisor') {
-          root.LuiggiAudio.playSFX('blip');
-          falar(
-            save.state.gatosVistos.length > 0
-              ? 'Você olha no retrovisor... o gato da Luiza tá no banco de trás te encarando.'
-              : 'Luis olha no retrovisor: "Olheiras de quem só dorme depois das 4h da manhã..."'
-          );
-          if (stage) {
-            st3.focoFab = false;
-            stage.pulseGrade('vignette', 1.2, 1.2, 0.85);
-          }
-        } else if (acao === 'radio') {
-          if (root.LuiggiCloud?.ativo) {
-            root.LuiggiCloud.proxima();
-            const f = root.LuiggiCloud.faixa;
-            document.getElementById('pov-radio-lbl').textContent = f ? `${f.titulo} · ${f.artista}` : 'Rádio';
-            falar(f ? `📻 Tocando agora: "${f.titulo}" — ${f.artista}` : 'Rádio LuiggiBeats');
-          } else {
-            st3.radio = (st3.radio + 1) % ESTILOS_RADIO.length;
-            root.LuiggiAudio.tocarEstiloSintetizado(ESTILOS_RADIO[st3.radio], 122);
-            document.getElementById('pov-radio-lbl').textContent = NOMES_RADIO[ESTILOS_RADIO[st3.radio]];
-          }
-        } else if (acao === 'portaluvas') {
-          root.LuiggiAudio.playSFX('forno');
-          st3.portaAberta = !st3.portaAberta;
-          if (interior) interior.cookieMini.visible = st3.portaAberta;
-          falar('Luis pega um cookie do porta-luvas. Fabricio: "Me dá um aí, Tico!"');
-          if (card) card.setExpression('feliz');
-        } else if (acao === 'fabricio') {
-          root.LuiggiAudio.playSFX('blip');
-          st3.focoFab = true;
-          if (card) card.setExpression('feliz');
-        }
+        if (acaoDeTela(carro, acao, falar)) return;
+        const r = carro ? carro.controle.interagir(acao) : null;
+        aplicarReacao(carro, r, falar, shell);
+        if (r?.radio) ov.querySelectorAll('.radio-lbl').forEach((el) => (el.textContent = r.texto.replace(/^📻\s*(Tocando agora:\s*)?/, '')));
+        if (carro && carro.cartas[acao]) carro.cartas[acao].setExpression('feliz');
+        if (!carro && acao === 'tictac') root.LuiggiDialogue?.mostrarInterjeicao?.({ ids: ['mateus_buse', 'fabricio'], texto: 'kkkkkkkkkk', som: 'risada', host: shell });
       }
 
       ov.querySelectorAll('[data-acao]').forEach((b) => b.addEventListener('click', () => interagir(b.dataset.acao)));
@@ -598,14 +896,15 @@
         const cur = info.falas[falaIdx];
         const fabFala = cur.quem === 'fabricio';
         spkEl.textContent = fabFala ? '🎧 Fabricio Venturi · passageiro' : '🧢 Luis Felipe · você, no volante';
-        st3.focoFab = fabFala;
-        if (card) {
-          card.setSpeaking(fabFala);
-          card.setExpression(fabFala ? cur.expr : 'neutro');
-          card.setDim(!fabFala);
+        const cardFab = carro?.cartas.fabricio;
+        if (cardFab) {
+          cardFab.setSpeaking(fabFala);
+          cardFab.setExpression(fabFala ? cur.expr : 'neutro');
+          cardFab.setDim(!fabFala);
         }
+        if (carro) carro.mirarEm(fabFala ? 'fabricio' : 'frente');
         portraitEl.innerHTML = root.LuiggiRig.renderVisualNovelSprite(fabFala ? fabricio : luis, { expressao: cur.expr, speaking: true });
-        if (cur.expr === 'chocado' || cur.expr === 'bravo') stage?.shake(0.02, 5);
+        if (cur.expr === 'chocado' || cur.expr === 'bravo') carro?.stage.shake(0.02, 5);
         clearInterval(typer);
         txtEl.textContent = '';
         let i = 0;
@@ -652,10 +951,7 @@
       function limpar() {
         window.removeEventListener('keydown', onKey);
         clearInterval(typer);
-        if (stage) {
-          interior?.rt.dispose();
-          stage.dispose();
-        }
+        carro?.dispose();
         ov.classList.add('hidden');
         ov.innerHTML = '';
       }
@@ -677,6 +973,177 @@
       });
 
       mostrarFala();
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // MOMENTO RESENHA: só ficar no Subaru ouvindo música com o Fabricio e o Mateus.
+  // Dá pra trocar o POV entre Luis (motorista), Fabricio (passageiro) e Mateus (banco de trás).
+  // ------------------------------------------------------------------
+  const POV_TEXTO = {
+    luis: 'POV Luis: banco do motorista. O volante é seu, o cheiro de baunilha também.',
+    fabricio: 'POV Fabricio: banco do passageiro. Visão privilegiada do Luis cantando a letra errada.',
+    mateus_buse: 'POV Mateus Buse: banco de trás, atrás do passageiro. Microfone mutado, vista direta pro compartimento dos Tic Tacs.'
+  };
+  const RESENHA_AMBIENTE = [
+    { quem: 'fabricio', fala: 'Aumenta essa aí, Tico!' },
+    { quem: 'luis', fala: 'Essa batida é LuiggiBeats raiz.' },
+    { quem: 'fabricio', fala: 'Bora ficar só mais cinco minutos aqui no Safepoint.' },
+    { quem: 'mateus_buse', fala: '🔇 kkkkkk' },
+    { quem: 'luis', fala: 'Alguém quer um Tic Tac? ...Pergunta retórica.' },
+    { quem: 'fabricio', fala: 'Tico e Teco e o comentarista mutado. Formação clássica.' }
+  ];
+
+  function abrirMomentoResenha() {
+    return new Promise((resolve) => {
+      const ov = document.getElementById('safepoint-overlay');
+      const map = root.LuiggiData.cache.personagemMap;
+      const cloud = () => (root.LuiggiCloud?.ativo ? root.LuiggiCloud : null);
+
+      root.LuiggiAudio.tocarEstiloSintetizado('lofi', 98);
+      document.body.classList.add('resenha-aberta');
+      let tocandoSintetizado = !cloud();
+      ov.classList.remove('hidden');
+      ov.innerHTML = `
+        <div class="sp3d-shell resenha-shell" id="rs-shell">
+          <div class="sp3d-view" id="rs-view"></div>
+          <div class="sp3d-topbar">
+            <div class="sp3d-local"><span>🎶 Momento Resenha</span><small id="rs-pov-lbl"></small></div>
+            <div class="btn-row rs-povs">
+              ${Object.entries(LUGARES).map(([id, l]) => `<button class="mini-btn" data-pov="${id}">${l.icone} ${l.nome}</button>`).join('')}
+              <button class="mini-btn" id="rs-sair">🏠 Menu</button>
+            </div>
+          </div>
+          <div class="sp3d-tooltip hidden" id="rs-tip"></div>
+          <div class="sp3d-dialog">
+            <div class="sp3d-portrait" id="rs-portrait"></div>
+            <div class="sp3d-body">
+              <div class="sp3d-speaker" id="rs-speaker"></div>
+              <div class="sp3d-text" id="rs-text"></div>
+              <div class="sp3d-gadgets">${CHIPS_CARRO}</div>
+            </div>
+            <div class="sp3d-actions rs-musica">
+              <div class="rs-faixa" id="rs-faixa">📻 Rádio</div>
+              <div class="btn-row">
+                <button class="mg-btn" id="rs-prev" title="Anterior">⏮</button>
+                <button class="mg-btn primary" id="rs-play" title="Tocar / pausar">⏯</button>
+                <button class="mg-btn" id="rs-next" title="Próxima">⏭</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+
+      const shell = document.getElementById('rs-shell');
+      const txtEl = document.getElementById('rs-text');
+      const spkEl = document.getElementById('rs-speaker');
+      const portraitEl = document.getElementById('rs-portrait');
+      const faixaEl = document.getElementById('rs-faixa');
+      let ultimaInteracao = performance.now();
+
+      function falar(texto, quem = null) {
+        txtEl.textContent = texto;
+        if (quem) {
+          const p = map.get(quem);
+          spkEl.textContent = `${LUGARES[quem]?.icone || ''} ${p?.nome || quem}`;
+          if (p) portraitEl.innerHTML = root.LuiggiRig.renderVisualNovelSprite(p, { expressao: 'feliz', speaking: true });
+        }
+      }
+
+      const carro = montarCarro3D(document.getElementById('rs-view'), { pov: 'luis', tip: document.getElementById('rs-tip'), onAcao: interagir });
+
+      function interagir(acao) {
+        ultimaInteracao = performance.now();
+        if (acaoDeTela(carro, acao, falar)) return;
+        const r = carro ? carro.controle.interagir(acao) : null;
+        aplicarReacao(carro, r, falar, shell);
+        if (!carro && acao === 'tictac') root.LuiggiDialogue?.mostrarInterjeicao?.({ ids: ['mateus_buse', 'fabricio'], texto: 'kkkkkkkkkk', som: 'risada', host: shell });
+        if (r?.radio) tocandoSintetizado = !cloud();
+        if (carro && carro.cartas[acao]) carro.cartas[acao].setExpression('feliz');
+        atualizarFaixa();
+      }
+
+      function trocarPOV(id) {
+        carro?.aplicarPOV(id);
+        ov.querySelectorAll('[data-pov]').forEach((b) => b.classList.toggle('ativo', b.dataset.pov === id));
+        document.getElementById('rs-pov-lbl').textContent = `${LUGARES[id].icone} ${LUGARES[id].nome} · ${LUGARES[id].papel} · 🖱️ mexa o mouse pra olhar em volta`;
+        const p = map.get(id);
+        spkEl.textContent = `${LUGARES[id].icone} Você é ${p?.nome || LUGARES[id].nome}`;
+        if (p) portraitEl.innerHTML = root.LuiggiRig.renderVisualNovelSprite(p, { expressao: 'feliz', speaking: false });
+        txtEl.textContent = POV_TEXTO[id];
+        root.LuiggiAudio.playSFX('blip');
+      }
+
+      function atualizarFaixa() {
+        const c = cloud();
+        if (c) {
+          const f = c.faixa;
+          faixaEl.textContent = `${c.tocando ? '▶' : '⏸'} ${f ? `${f.titulo} · ${f.artista}` : 'LuiggiCloud'}`;
+        } else {
+          faixaEl.textContent = `${tocandoSintetizado ? '▶' : '⏸'} ${NOMES_RADIO[ESTILOS_RADIO[carro ? carro.controle.st.radio : 0]]}`;
+        }
+      }
+
+      document.getElementById('rs-prev').addEventListener('click', () => {
+        if (carro) carro.controle.trocarRadio(-1);
+        tocandoSintetizado = !cloud();
+        atualizarFaixa();
+      });
+      document.getElementById('rs-next').addEventListener('click', () => {
+        if (carro) carro.controle.trocarRadio(1);
+        tocandoSintetizado = !cloud();
+        atualizarFaixa();
+      });
+      document.getElementById('rs-play').addEventListener('click', () => {
+        const c = cloud();
+        if (c) {
+          if (c.tocando) c.pause();
+          else c.play();
+        } else if (tocandoSintetizado) {
+          root.LuiggiAudio.pararMusica();
+          tocandoSintetizado = false;
+        } else {
+          root.LuiggiAudio.tocarEstiloSintetizado(ESTILOS_RADIO[carro ? carro.controle.st.radio : 0], 98);
+          tocandoSintetizado = true;
+        }
+        setTimeout(atualizarFaixa, 120);
+      });
+
+      ov.querySelectorAll('[data-acao]').forEach((b) => b.addEventListener('click', () => interagir(b.dataset.acao)));
+      ov.querySelectorAll('[data-pov]').forEach((b) => b.addEventListener('click', () => trocarPOV(b.dataset.pov)));
+
+      // Resenha de fundo: de vez em quando alguém comenta alguma coisa
+      let ambIdx = Math.floor(Math.random() * RESENHA_AMBIENTE.length);
+      const relogio = setInterval(() => {
+        atualizarFaixa();
+        if (performance.now() - ultimaInteracao < 40000) return;
+        ultimaInteracao = performance.now();
+        const linha = RESENHA_AMBIENTE[ambIdx++ % RESENHA_AMBIENTE.length];
+        if (carro && carro.pov === linha.quem) return;
+        falar(linha.fala, linha.quem);
+        carro?.cartas[linha.quem]?.setExpression('feliz');
+      }, 1000);
+
+      function sair() {
+        document.body.classList.remove('resenha-aberta');
+        clearInterval(relogio);
+        window.removeEventListener('keydown', onKey);
+        carro?.dispose();
+        ov.classList.add('hidden');
+        ov.innerHTML = '';
+        root.LuiggiAudio.pararMusica();
+        resolve();
+      }
+      function onKey(e) {
+        if (e.key === 'Escape') sair();
+        if (e.key === '1') trocarPOV('luis');
+        if (e.key === '2') trocarPOV('fabricio');
+        if (e.key === '3') trocarPOV('mateus_buse');
+      }
+      window.addEventListener('keydown', onKey);
+      document.getElementById('rs-sair').addEventListener('click', sair);
+
+      trocarPOV('luis');
+      atualizarFaixa();
     });
   }
 
@@ -748,5 +1215,5 @@
     return stage;
   }
 
-  root.LuiggiSubaruPOV = { abrirSubaruSafepoint, cenaVoltaPraCasa, construirInterior };
+  root.LuiggiSubaruPOV = { abrirSubaruSafepoint, abrirMomentoResenha, cenaVoltaPraCasa, construirInterior, criarControleCarro, clicaveisDo, acaoDoObjeto, NOMES_ACAO, LUGARES };
 })(window);

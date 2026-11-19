@@ -688,6 +688,7 @@
     aplicarModo,
     tocarFaixa,
     proxima: () => proxima(false),
+    anterior: () => anterior(),
     play,
     pause,
     abrirPainel,

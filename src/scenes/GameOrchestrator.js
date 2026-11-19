@@ -415,6 +415,7 @@
         : ''
       }
               <button class="mg-btn ${temSave ? '' : 'primary span-2'}" id="mm-new">🚙 Novo Jogo (Começar no Subaru · Safepoint)</button>
+              <button class="mg-btn ${temSave ? '' : 'span-2'}" id="mm-resenha">🎶 Momento Resenha</button>
               <button class="mg-btn" id="mm-caps">📖 Capítulos</button>
               <button class="mg-btn" id="mm-museum">🏛️ Museu das Memórias</button>
               <button class="mg-btn" id="mm-cfg">⚙️ Configurações</button>
@@ -460,6 +461,13 @@
       await root.LuiggiSubaruPOV.abrirSubaruSafepoint('intro');
       root.LuiggiStory3D?.retomar();
       iniciarCapitulo(0);
+    });
+    document.getElementById('mm-resenha').addEventListener('click', async () => {
+      esconderMenuPrincipal();
+      root.LuiggiStory3D?.pausar();
+      await root.LuiggiSubaruPOV.abrirMomentoResenha();
+      root.LuiggiStory3D?.retomar();
+      mostrarMenuPrincipal();
     });
     document.getElementById('mm-museum').addEventListener('click', () => root.LuiggiMuseum.abrirMuseu('saguao'));
     document.getElementById('mm-caps').addEventListener('click', abrirSeletorCapitulos);

@@ -1204,7 +1204,8 @@
 
     return {
       group: g,
-      slots: { L: [-1.45, 0, 0.45], R: [1.45, 0, 0.45], C: [0, 0, 0.45] },
+      // TL/TR: dois lugares a mais na mesa (Yuri e Erion na conversa com o Luis e a Yohana)
+      slots: { L: [-1.45, 0, 0.45], R: [1.45, 0, 0.45], C: [0, 0, 0.45], TL: [-0.55, 0, -0.55], TR: [0.55, 0, -0.55] },
       cam: { pos: [0, 1.8, 6.2], look: [0, 1.6, 0] },
       oculta: 1.1,
       bg: 0x1a120d,
@@ -1704,7 +1705,7 @@
     const { M, plane, textures, box, halo } = L();
     const g = new THREE.Group();
     const dia = !!o.dia;
-    const { carro } = interiorSubaru(g);
+    const { carro, pov } = interiorSubaru(g);
     // Rua passando pelas janelas
     const rua = plane(16, 400, M.std('#ffffff', 0.6, 0.1, { map: textures.asphalt(2, 60) }), 0, -0.25, -150);
     rua.rotation.x = -Math.PI / 2;
@@ -1735,6 +1736,7 @@
     return {
       group: g,
       ancora: carro,
+      pov, // interior interativo (compartimento dos Tic Tacs, volante, porta-luvas...)
       assentos: ASSENTOS_SUBARU,
       slots: { L: ASSENTOS_SUBARU.L, R: ASSENTOS_SUBARU.R, C: ASSENTOS_SUBARU.TC },
       alturaCarta: 1.05,
@@ -1801,6 +1803,7 @@
     return {
       group: g,
       ancora: carro,
+      pov,
       assentos: ASSENTOS_SUBARU,
       slots: { L: ASSENTOS_SUBARU.L, R: ASSENTOS_SUBARU.TR, C: ASSENTOS_SUBARU.TL },
       alturaCarta: 1.05,
@@ -1858,6 +1861,152 @@
       sub.position.y = Math.abs(Math.sin(t * 7)) * 0.03;
     };
     return env;
+  };
+
+  // ---------- ANIVERSÁRIO DA SOL · QUINTAL COM PISCINA (Cap. 14, bônus) ----------
+  BUILDERS.festa_piscina = () => {
+    const THREE = T();
+    const { box, cyl, plane, sphere, M, textures, halo, makeCanvasTex } = L();
+    const g = new THREE.Group();
+    ceu(g, ['#05071a', '#0d1433', '#1b2350']);
+    estrelas(g, 380, 100, '#ffffff', 0.15);
+
+    // Gramado + deck de madeira em volta da piscina
+    const grama = plane(40, 40, M.std('#1f4d2b', 0.95), 0, 0, -6);
+    grama.rotation.x = -Math.PI / 2;
+    g.add(grama);
+    const deck = plane(10, 8.6, M.std('#ffffff', 0.7, 0, { map: textures.wood('#7a5134', 4, 3) }), 0, 0.01, -2.6);
+    deck.rotation.x = -Math.PI / 2;
+    g.add(deck);
+
+    // Piscina no meio: borda de pedra + água iluminada com ondinhas animadas
+    const pedra = M.std('#d6d3d1', 0.8);
+    const px = 0;
+    const pz = -3.2;
+    const pw = 5.2;
+    const pd = 2.8;
+    g.add(box(pw + 0.5, 0.08, 0.25, pedra, px, 0.04, pz - pd / 2 - 0.12));
+    g.add(box(pw + 0.5, 0.08, 0.25, pedra, px, 0.04, pz + pd / 2 + 0.12));
+    g.add(box(0.25, 0.08, pd, pedra, px - pw / 2 - 0.12, 0.04, pz));
+    g.add(box(0.25, 0.08, pd, pedra, px + pw / 2 + 0.12, 0.04, pz));
+    const aguaTex = makeCanvasTex(256, 256, (ctx, w, h) => {
+      ctx.fillStyle = '#0ea5e9';
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(224,247,255,0.55)';
+      ctx.lineWidth = 3;
+      for (let i = 0; i < 14; i++) {
+        ctx.beginPath();
+        const y0 = Math.random() * h;
+        for (let x = 0; x <= w; x += 8) ctx.lineTo(x, y0 + Math.sin(x * 0.06 + i) * 6);
+        ctx.stroke();
+      }
+    });
+    aguaTex.wrapS = aguaTex.wrapT = THREE.RepeatWrapping;
+    aguaTex.repeat.set(2, 1.2);
+    const agua = plane(pw, pd, M.glow('#7dd3fc', 1.25, { map: aguaTex }), px, 0.03, pz);
+    agua.rotation.x = -Math.PI / 2;
+    agua.userData.noOutline = true;
+    g.add(agua);
+    const luzPiscina = luz('#38bdf8', 9, 7, 1.3);
+    luzPiscina.position.set(px, 0.5, pz);
+    g.add(luzPiscina);
+    // Boia de rosquinha boiando
+    const boia = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.12, 10, 24), M.toon('#f472b6'));
+    boia.rotation.x = -Math.PI / 2;
+    boia.position.set(px + 1.4, 0.08, pz + 0.3);
+    g.add(boia);
+
+    // Casa ao fundo com janelas acesas e porta de vidro
+    const fachada = box(14, 4.2, 0.4, M.std('#e7dccb', 0.9), 0, 2.1, -7.4);
+    g.add(fachada);
+    g.add(box(14.6, 0.25, 1.2, M.std('#57534e', 0.7), 0, 4.3, -7.1));
+    [-4.6, 4.6].forEach((x) => {
+      const j = plane(1.6, 1.2, M.glow('#fde68a', 1.4), x, 2.3, -7.18);
+      j.userData.noOutline = true;
+      g.add(j);
+      const h = halo('#fcd34d', 1.6, 0.6);
+      h.position.set(x, 2.3, -7.0);
+      g.add(h);
+    });
+    const porta = plane(2.4, 2.4, M.glow('#fef3c7', 1.1), 0, 1.2, -7.18);
+    porta.userData.noOutline = true;
+    g.add(porta);
+    const luzCasa = luz('#ffd59a', 8, 9, 1.4);
+    luzCasa.position.set(0, 2, -6.2);
+    g.add(luzCasa);
+
+    // Varal de luzinhas cruzando o quintal
+    const luzinhas = [];
+    [-5.6, -1.2].forEach((zv) => {
+      for (let i = 0; i < 16; i++) {
+        const x = -5.5 + i * 0.73;
+        const y = 3.3 - Math.sin((i / 15) * Math.PI) * 0.5;
+        const cor = ['#fde68a', '#f9a8d4', '#a5f3fc', '#bbf7d0'][i % 4];
+        const b = sphere(0.045, M.glow(cor, 3.2), x, y, zv, 6);
+        g.add(b);
+        const h = halo(cor, 0.4, 0.8);
+        h.position.set(x, y, zv);
+        g.add(h);
+        luzinhas.push(b);
+      }
+    });
+
+    // Mesa do bolo (à esquerda) com o famoso bolo VERDE
+    const toalha = M.std('#fafafa', 0.9);
+    g.add(box(1.6, 0.06, 0.8, toalha, -3.4, 0.78, -0.4));
+    [[-0.7, -0.32], [0.7, -0.32], [-0.7, 0.32], [0.7, 0.32]].forEach(([dx, dz]) => g.add(box(0.05, 0.76, 0.05, M.std('#44403c', 0.6), -3.4 + dx, 0.38, -0.4 + dz)));
+    const verde = M.std('#22c55e', 0.45, 0, { emissive: '#16a34a', emissiveIntensity: 0.35 });
+    g.add(cyl(0.38, 0.4, 0.26, verde, -3.4, 0.94, -0.4, 28));
+    g.add(cyl(0.27, 0.29, 0.2, verde, -3.4, 1.17, -0.4, 28));
+    // Gotas de cobertura escorrendo
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * Math.PI * 2;
+      const gota = sphere(0.05, verde, -3.4 + Math.cos(a) * 0.39, 0.86, -0.4 + Math.sin(a) * 0.39, 6);
+      gota.scale.set(1, 1.8, 1);
+      g.add(gota);
+    }
+    const chamas = [];
+    [-0.12, 0, 0.12].forEach((dx) => {
+      g.add(cyl(0.012, 0.012, 0.14, M.std('#f472b6', 0.5), -3.4 + dx, 1.34, -0.4, 6));
+      const ch = sphere(0.025, M.glow('#fbbf24', 4), -3.4 + dx, 1.43, -0.4, 6);
+      g.add(ch);
+      chamas.push(ch);
+    });
+    const hBolo = halo('#fbbf24', 0.8, 0.9);
+    hBolo.position.set(-3.4, 1.45, -0.4);
+    g.add(hBolo);
+    // Pratinhos sujos de verde
+    [[-3.95, -0.25], [-2.85, -0.55]].forEach(([x, z]) => {
+      g.add(cyl(0.12, 0.12, 0.015, M.std('#ffffff', 0.6), x, 0.82, z, 16));
+      g.add(cyl(0.05, 0.05, 0.02, verde, x, 0.83, z, 10));
+    });
+
+    // Cadeiras de piscina e cerca viva nas laterais
+    [3.6, 4.6].forEach((x) => {
+      const esp = box(0.6, 0.08, 1.6, M.std('#f8fafc', 0.6), x, 0.35, -2.6);
+      esp.rotation.x = -0.08;
+      g.add(esp);
+    });
+    [-1, 1].forEach((s) => g.add(box(0.6, 1.4, 12, M.toon('#14532d'), s * 6.8, 0.7, -2)));
+
+    return {
+      group: g,
+      slots: { L: [-1.5, 0, 1.0], R: [1.5, 0, 1.0], C: [0, 0, 1.2], TL: [-0.75, 0, 0.15], TR: [0.75, 0, 0.15] },
+      cam: { pos: [0, 1.9, 7.4], look: [0, 1.35, -1.5] },
+      bg: 0x05071a,
+      fog: [0x0b1028, 0.025],
+      luz: { sky: '#6b7bd6', ground: '#10241a', hemi: 0.5, key: '#ffd8a8', keyI: 0.6, keyPos: [-5, 10, 6] },
+      grade: { tint: [1.0, 1.0, 1.04], saturation: 1.12, bloom: 1.0, vignette: 0.6 },
+      update(dt, t) {
+        aguaTex.offset.x = (t * 0.03) % 1;
+        aguaTex.offset.y = Math.sin(t * 0.4) * 0.05;
+        boia.position.y = 0.08 + Math.sin(t * 1.6) * 0.02;
+        boia.rotation.z = t * 0.15;
+        luzPiscina.intensity = 9 + Math.sin(t * 1.3) * 1.2;
+        chamas.forEach((c, i) => c.scale.setScalar(1 + Math.sin(t * 13 + i * 2) * 0.25));
+        luzinhas.forEach((b, i) => (b.visible = Math.sin(t * 1.5 + i * 0.9) > -0.85));
+      }
+    };
   };
 
   // ------------------------------------------------------------------

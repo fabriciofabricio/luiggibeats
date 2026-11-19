@@ -144,6 +144,11 @@
             {
               "quem": "narrador",
               "fala": "Ele explica frentes frias por 3 minutos seguidos. A garota foi embora no minuto 1."
+            },
+            {
+              "quem": "mateus_buse",
+              "expr": "neutro",
+              "fala": "Pelo menos os dados de umidade estavam corretos."
             }
           ]
         },
@@ -154,11 +159,11 @@
             {
               "quem": "vitor_witiuk",
               "expr": "feliz",
-              "fala": "Que tênis massa! Minha mãe tem um igualzinho pra ir no mercado."
+              "fala": "Teu cabelo é igualzinho ao do meu cachorro! ...É elogio, ele é lindo."
             },
             {
               "quem": "narrador",
-              "fala": "Comparar o estilo dela com o da mãe dele foi uma escolha ousada."
+              "fala": "Comparar ela com o cachorro dele foi uma escolha ousada."
             }
           ]
         },
@@ -327,7 +332,7 @@
             {
               "quem": "fabricio",
               "expr": "feliz",
-              "fala": "Perfeito pra cantar sobre o Vitor elogiando o tênis da menina!",
+              "fala": "Perfeito pra uma balada triste sobre a Amanda Becker ser um botijão!",
               "canal": "discord"
             }
           ]
@@ -371,7 +376,8 @@
               "quem": "narrador",
               "fala": "Autocorretor: 'Não posso... mas quero'. Luis apaga em pânico."
             }
-          ]
+          ],
+          "real": true
         },
         {
           "texto": "Hoje não vai dar.",
@@ -382,7 +388,8 @@
               "expr": "chocado",
               "fala": "Autocorretor mudou pra 'Hoje sim!'?? PARA CELULAR!"
             }
-          ]
+          ],
+          "real": true
         },
         {
           "texto": "Fingir que não viu.",
@@ -616,7 +623,8 @@
               "expr": "feliz",
               "fala": "VOCÊ NÃO SABE COMO FOI A MINHA VIAGEM PRA ALEMANHA!"
             }
-          ]
+          ],
+          "real": true
         }
       ]
     },
@@ -810,7 +818,8 @@
               "expr": "chocado",
               "fala": "Foi mal, tô sem nada! *acelera o passo*"
             }
-          ]
+          ],
+          "real": true
         },
         {
           "texto": "Dar uma moeda.",
@@ -873,7 +882,8 @@
               "expr": "feliz",
               "fala": "Adoro a praça de alimentação!"
             }
-          ]
+          ],
+          "real": true
         }
       ]
     },
@@ -1046,7 +1056,8 @@
               "expr": "feliz",
               "fala": "Tranquilo, a gente pode ser amigo depois! *volta pra pista rindo*"
             }
-          ]
+          ],
+          "real": true
         }
       ]
     },
@@ -1421,7 +1432,8 @@
               "expr": "neutro",
               "fala": "Vou parar com isso."
             }
-          ]
+          ],
+          "real": true
         }
       ]
     },
@@ -1534,7 +1546,8 @@
               "quem": "narrador",
               "fala": "Eu já tava lá dentro na fila do bar."
             }
-          ]
+          ],
+          "real": true
         },
         {
           "texto": "Só se você me disser se Nora tem pós-créditos.",
@@ -1699,7 +1712,8 @@
               "expr": "envergonhado",
               "fala": "'oi sumida kkk'... Droga, respondi em 0,4 segundos."
             }
-          ]
+          ],
+          "real": true
         },
         {
           "texto": "Ignorar",

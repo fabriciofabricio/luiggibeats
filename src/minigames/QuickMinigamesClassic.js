@@ -1009,7 +1009,7 @@
           <div class="mg-modal" style="max-width:560px;">
             <div class="mg-header"><h3>🚩 Detector de Red Flags</h3><span id="rf-hud">Flags: 0/6</span></div>
             <div class="mg-body" style="text-align:center;">
-              <p id="rf-quote" style="font-style:italic;color:#fca5a5;">"${falas[0]}"</p>
+              <p id="rf-quote" style="font-style:italic;color:#fca5a5;">Yohana: "${falas[0]}"</p>
               <div id="rf-pad" style="height:200px;position:relative;background:radial-gradient(#2c1118,#0b0c14);border-radius:10px;border:1px solid #7f1d1d;"></div>
             </div>
           </div>`;
@@ -1026,7 +1026,9 @@
             if (save) save.incrementarContador('redFlags', 1);
             if (root.LuiggiAudio) root.LuiggiAudio.playSFX('blip');
             document.getElementById('rf-hud').textContent = `Flags: ${clicks}/6`;
-            document.getElementById('rf-quote').textContent = `"${falas[clicks % falas.length]}"`;
+            // Yuri e Erion também estão na mesa e reagem às histórias
+            const reacao = { 3: 'Yuri: "É complicado mesmo..."', 5: 'Erion: "Alguém mais quer um café especial? Eu pago... pelo jeito."' }[clicks];
+            document.getElementById('rf-quote').textContent = reacao || `Yohana: "${falas[clicks % falas.length]}"`;
             if (clicks >= 6) {
               clearInterval(sp);
               fechar(host, id, 600, resolve);

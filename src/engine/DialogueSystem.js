@@ -208,6 +208,46 @@
     });
   }
 
+  /**
+   * Interjeição rápida por cima da cena, sem interromper o diálogo em andamento.
+   * Ex.: Mateus e Fabricio juntos rindo quando alguém abre o compartimento dos Tic Tacs.
+   * ids: personagens que falam juntos (podem ser vários); host: onde mostrar (padrão: palco).
+   */
+  let interjeicaoTimer = null;
+  let interjeicaoTyper = null;
+  function mostrarInterjeicao({ ids = [], texto = '', host = null, duracao = 2800, som = null } = {}) {
+    const alvo = host || document.querySelector('.stage-frame') || document.body;
+    let box = alvo.querySelector(':scope > .vn-interjeicao');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'vn-interjeicao';
+      box.addEventListener('click', (e) => {
+        e.stopPropagation();
+        box.classList.remove('ativo');
+      });
+      alvo.appendChild(box);
+    }
+    const map = root.LuiggiData?.cache?.personagemMap;
+    const pessoas = ids.map((id) => map?.get(id)).filter(Boolean);
+    const nomes = pessoas.length > 1 ? pessoas.map((p) => p.nome.split(' ')[0]).join(' & ') : pessoas[0]?.nome || '';
+    box.innerHTML = `
+      ${pessoas.length ? `<div class="vi-rostos">${pessoas.map((p) => `<div class="vi-rosto">${root.LuiggiRig?.renderVisualNovelSprite(p, { expressao: 'feliz', speaking: true }) || ''}</div>`).join('')}</div>` : ''}
+      <div class="vi-corpo">${nomes ? `<div class="vi-nome">${nomes}${pessoas.length > 1 ? ' <small>juntos</small>' : ''}</div>` : ''}<div class="vi-texto"></div></div>`;
+    box.classList.toggle('so-texto', !pessoas.length);
+    void box.offsetWidth;
+    box.classList.add('ativo');
+    if (som && root.LuiggiAudio) root.LuiggiAudio.playSFX(som);
+    const txt = box.querySelector('.vi-texto');
+    clearInterval(interjeicaoTyper);
+    let i = 0;
+    interjeicaoTyper = setInterval(() => {
+      if (i >= texto.length) return clearInterval(interjeicaoTyper);
+      txt.textContent += texto[i++];
+    }, 22);
+    clearTimeout(interjeicaoTimer);
+    interjeicaoTimer = setTimeout(() => box.classList.remove('ativo'), duracao);
+  }
+
   /** Comentário do Fabricio (substitui telas pretas / narrador). */
   function mostrarAdendo(texto, capId = 0, expr = 'neutro') {
     return mostrarDialogo({ quem: 'narrador', expr, fala: texto, capId, canal: 'adendo' });
@@ -282,7 +322,11 @@
           await mostrarDialogo({ quem: linha.quem, expr: linha.expr || 'neutro', fala: linha.fala, capId, canal: linha.canal || null });
         }
 
-        await executarConvergencia(escolha.convergencia, escolha.eventoReal, capId);
+        // O Fabricio só comenta quando a escolha foge do que aconteceu de verdade.
+        // Opções marcadas com "real": true (ou escolhas "forced", em que todo botão vira a fala real)
+        // já são a realidade, então não precisam de adendo.
+        const escolhaFoiReal = opt.real === true || escolha.convergencia === 'forced';
+        if (!escolhaFoiReal) await executarConvergencia(escolha.convergencia, escolha.eventoReal, capId);
         resolve(opt);
       }
 
@@ -418,6 +462,7 @@
     tremorTela,
     mostrarDialogo,
     mostrarAdendo,
+    mostrarInterjeicao,
     executarConvergencia,
     mostrarEscolha,
     mostrarTelaPreta,

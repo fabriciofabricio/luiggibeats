@@ -187,7 +187,14 @@
     const { stage, THREE } = kit;
     const save = root.LuiggiSave;
     const yohana = kit.carta('yohana', [0, 0, 0.45], { altura: 2.5 });
+    // Yuri e Erion estavam na mesa ouvindo as histórias junto com o Luis
+    const yuri = kit.carta('yuri', [-1.5, 0, 0.1], { altura: 2.35 });
+    const erion = kit.carta('erion', [1.5, 0, 0.1], { altura: 2.35 });
     yohana.setSpeaking(true);
+    const reacoes = {
+      3: { carta: yuri, nome: 'Yuri', fala: 'É complicado mesmo...', x: 8 },
+      5: { carta: erion, nome: 'Erion', fala: 'Alguém mais quer um café especial? Eu pago... pelo jeito.', x: 62 }
+    };
     stage.camera.position.set(0, 1.9, 5.2);
     stage.camera.lookAt(0, 1.7, 0);
     const falas = ['Fui pra França e baixei Tinder só pra pagarem jantar pra mim!', 'Adoro quando o date paga tudo sem perguntar.', 'Não respondo mensagem quando tô na praia com meu ex.'];
@@ -222,7 +229,10 @@
       if (save) save.incrementarContador('redFlags', 1);
       kit.sfx('blip');
       kit.hud(kit.pill(`🚩 Flags: ${clicks}/6`));
-      bolha(kit, 'Yohana', `"${falas[clicks % falas.length]}"`, 36, 6);
+      const reacao = reacoes[clicks];
+      [yohana, yuri, erion].forEach((c) => c?.setSpeaking(reacao ? c === reacao.carta : c === yohana));
+      if (reacao) bolha(kit, reacao.nome, `"${reacao.fala}"`, reacao.x, 6);
+      else bolha(kit, 'Yohana', `"${falas[clicks % falas.length]}"`, 36, 6);
       yohana.setExpression(clicks % 2 ? 'feliz' : 'neutro');
       if (clicks >= 6) kit.timeout(() => kit.fim(600, { max: 600, texto: 'Detector de Red Flags: 100% de precisão. 0% de ação.' }), 500);
     });
@@ -352,6 +362,7 @@
     const fab = carta('fabricio', 'L');
     const luis = carta('luis', 'TL');
     const sol = carta('sol', 'TC');
+    carta('mateus_buse', 'TR'); // o Mateus sempre vai no banco de trás, atrás do passageiro
     const baseLuis = luis.group.position.clone();
     const baseSol = sol.group.position.clone();
     const coracoes = kit.particulas({ count: 80, size: 0.08, shape: 'heart', colors: ['#f472b6', '#fb7185'], intensity: 2, gravity: -0.4, life: [0.8, 1.4] });

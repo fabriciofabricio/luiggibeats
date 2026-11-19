@@ -33,6 +33,12 @@
   let falante = null;
   let fade = 0;
   let fadeAlvo = 0;
+  // Subaru interativo nas cenas de história
+  let carroCtl = null;
+  let clicaveisCarro = [];
+  let bloquearClique = false;
+  let tipCarro = null;
+  let dicaCarroMostrada = false;
 
   const camAlvo = { pos: null, look: null };
   const camAtual = { look: null };
@@ -49,6 +55,12 @@
     picker = L().createPicker(stage);
     stage.domElement.addEventListener('pointerdown', onClick);
     stage.domElement.addEventListener('pointermove', onHover);
+    // Clique que interagiu com o carro não avança o diálogo
+    stage.domElement.addEventListener('click', (e) => {
+      if (!bloquearClique) return;
+      bloquearClique = false;
+      e.stopPropagation();
+    });
     stage.start(update);
     ativo = true;
     montarMenu();
@@ -80,6 +92,10 @@
     limparCenario();
     env = E().build(nome, opts);
     stage.scene.add(env.group);
+    if (env.pov && root.LuiggiSubaruPOV?.criarControleCarro) {
+      carroCtl = root.LuiggiSubaruPOV.criarControleCarro(env.pov, { stage });
+      clicaveisCarro = root.LuiggiSubaruPOV.clicaveisDo(env.pov);
+    }
     E().aplicar(stage, env);
     stage.camera.fov = env.fov || 42;
     stage.camera.updateProjectionMatrix();
@@ -96,6 +112,9 @@
     slots.R = null;
     elencoFixo = null;
     gato = null;
+    carroCtl = null;
+    clicaveisCarro = [];
+    if (tipCarro) tipCarro.classList.add('hidden');
     if (env) {
       stage.scene.remove(env.group);
       L().disposeObject(env.group);
@@ -149,6 +168,7 @@
           elencoFixo = { ...elenco };
           Object.entries(elencoFixo).forEach(([id, seat]) => posicionar(id, seat));
         }
+        if (env.pov) garantirMateusNoBancoDeTras();
         if (capAtual?.temGatoEscondido) colocarGato(capAtual.id);
         fadeAlvo = 0;
         setTimeout(resolve, 380);
@@ -189,10 +209,21 @@
   }
 
   function onClick(e) {
-    if (!gato) return;
-    const hit = picker.pick(e, [gato]);
-    if (!hit) return;
+    bloquearClique = false;
+    if (gato && picker.pick(e, [gato])) {
+      e.stopPropagation();
+      bloquearClique = true;
+      pegarGato();
+      return;
+    }
+    const a = acaoCarro(e);
+    if (!a) return;
     e.stopPropagation();
+    bloquearClique = true;
+    reagirCarro(a);
+  }
+
+  function pegarGato() {
     const capId = gato.userData.capId;
     const save = root.LuiggiSave;
     if (!save.state.gatosVistos.includes(capId)) {
@@ -216,9 +247,70 @@
     if (gatoCallback) gatoCallback(capId);
   }
 
+  // ---------- Subaru interativo (cenas dentro do carro) ----------
+  function cartaMateus() {
+    return cartas.get('mateus_buse')?.card || null;
+  }
+
+  function acaoCarro(e) {
+    if (!carroCtl || !env?.pov) return null;
+    const m = cartaMateus();
+    const alvos = m ? clicaveisCarro.concat([m.group]) : clicaveisCarro;
+    const hit = picker.pick(e, alvos);
+    return hit ? root.LuiggiSubaruPOV.acaoDoObjeto(hit.object, m ? { mateus_buse: m } : {}) : null;
+  }
+
+  function reagirCarro(acao) {
+    const r = carroCtl.interagir(acao);
+    if (!r) return;
+    const D = root.LuiggiDialogue;
+    if (r.interjeicao) D?.mostrarInterjeicao?.(r.interjeicao);
+    else if (r.texto) D?.mostrarInterjeicao?.({ texto: r.texto, duracao: 2600 });
+    if (acao === 'mateus_buse') cartaMateus()?.setExpression('feliz');
+  }
+
+  /** O Mateus Buse sempre vai no banco de trás, atrás do passageiro (assento TR). */
+  function garantirMateusNoBancoDeTras() {
+    elencoFixo = elencoFixo || {};
+    if (elencoFixo.mateus_buse === 'TR') return;
+    const ocupante = Object.keys(elencoFixo).find((id) => elencoFixo[id] === 'TR' && id !== 'mateus_buse');
+    if (ocupante) {
+      const usados = new Set(Object.values(elencoFixo));
+      const livre = ['TC', 'TL'].find((s) => !usados.has(s));
+      if (livre) {
+        elencoFixo[ocupante] = livre;
+        posicionar(ocupante, livre);
+      }
+    }
+    elencoFixo.mateus_buse = 'TR';
+    posicionar('mateus_buse', 'TR');
+    if (!dicaCarroMostrada) {
+      dicaCarroMostrada = true;
+      setTimeout(() => root.LuiggiDialogue?.mostrarInterjeicao?.({ texto: '🖱️ Dá pra clicar nas coisas do Subaru: volante, porta-luvas, o Mateus lá atrás... e o compartimento entre os bancos da frente.', duracao: 5600 }), 1600);
+    }
+  }
+
   function onHover(e) {
-    if (!gato) return;
-    stage.domElement.style.cursor = picker.pick(e, [gato]) ? 'pointer' : '';
+    let nome = null;
+    if (gato && picker.pick(e, [gato])) nome = '🐈‍⬛ ...';
+    else {
+      const a = acaoCarro(e);
+      if (a) nome = root.LuiggiSubaruPOV.NOMES_ACAO[a] || a;
+    }
+    stage.domElement.style.cursor = nome ? 'pointer' : '';
+    if (!carroCtl) return;
+    if (!tipCarro) {
+      tipCarro = document.createElement('div');
+      tipCarro.className = 'sp3d-tooltip hidden';
+      (host.parentElement || host).appendChild(tipCarro);
+    }
+    if (nome && nome !== '🐈‍⬛ ...') {
+      const r = (host.parentElement || host).getBoundingClientRect();
+      tipCarro.textContent = nome;
+      tipCarro.style.left = `${e.clientX - r.left + 14}px`;
+      tipCarro.style.top = `${e.clientY - r.top + 14}px`;
+      tipCarro.classList.remove('hidden');
+    } else tipCarro.classList.add('hidden');
   }
 
   // ------------------------------------------------------------------
@@ -320,6 +412,7 @@
     if (!env) return;
     env.update(dt, t);
     cartas.forEach(({ card }) => card.update(dt, stage.camera));
+    if (carroCtl) carroCtl.update(dt, t);
     if (gato) {
       gato.userData.cauda.rotation.z = Math.sin(t * 2) * 0.3;
       const piscar = t % 4 < 0.12;
@@ -427,6 +520,7 @@
       if (!ativo) return;
       modoMenu = false;
       montarAmbiente(nome, opts);
+      if (env?.pov) garantirMateusNoBancoDeTras();
     },
     foco,
     efeito,

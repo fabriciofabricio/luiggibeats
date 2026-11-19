@@ -693,7 +693,7 @@
     return new Promise((resolve) => {
       const host = document.getElementById('minigame-overlay');
       const falas = [
-        { autor: 'Fabricio', texto: 'E quando o Vitor elogiou o tênis da menina dizendo que a mãe tinha igual?!', alvo: 'grilo', label: '🦗 Grilo' },
+        { autor: 'Fabricio', texto: 'E quando o Vitor ajoelhou na chuva defendendo a Amanda Becker botijão?!', alvo: 'grilo', label: '🦗 Grilo' },
         { autor: 'Mateus Buse', texto: 'E o Luis na cozinha às 4 da manhã jurando que era só uma fornada!', alvo: 'risada', label: '😂 Risada' },
         { autor: 'Fabricio', texto: 'Mano, lembra do corredor da faculdade?!', alvo: 'felps', label: '📢 FELPS!' },
         { autor: 'Mateus Buse', texto: 'E o Subaru balançando na frente da academia kkkkk', alvo: 'buzina', label: '📯 Buzina' },
