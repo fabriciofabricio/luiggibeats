@@ -1868,7 +1868,7 @@
     const THREE = T();
     const { box, cyl, plane, sphere, M, textures, halo, makeCanvasTex } = L();
     const g = new THREE.Group();
-    ceu(g, ['#05071a', '#0d1433', '#1b2350']);
+    ceu(g, [[0, '#05071a'], [0.55, '#0d1433'], [1, '#1b2350']]);
     estrelas(g, 380, 100, '#ffffff', 0.15);
 
     // Gramado + deck de madeira em volta da piscina
@@ -2033,7 +2033,15 @@
 
   function build(nome, opts) {
     const fn = BUILDERS[nome] || BUILDERS.safepoint;
-    const env = fn(opts || {});
+    let env;
+    try {
+      env = fn(opts || {});
+    } catch (e) {
+      // Um cenário quebrado não pode travar a história com a tela preta: cai no Safepoint
+      console.error(`[Luiggi3DEnv] erro ao montar o cenário "${nome}":`, e);
+      if (fn === BUILDERS.safepoint) throw e;
+      env = BUILDERS.safepoint({});
+    }
     env.nome = nome;
     env.update = env.update || (() => { });
     return env;

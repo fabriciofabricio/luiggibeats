@@ -162,14 +162,19 @@
     const primeira = !env || fade >= 0.99;
     return new Promise((resolve) => {
       const trocar = () => {
-        montarAmbiente(nome, opts);
-        aproximarEntrada();
-        if (elenco) {
-          elencoFixo = { ...elenco };
-          Object.entries(elencoFixo).forEach(([id, seat]) => posicionar(id, seat));
+        try {
+          montarAmbiente(nome, opts);
+          aproximarEntrada();
+          if (elenco) {
+            elencoFixo = { ...elenco };
+            Object.entries(elencoFixo).forEach(([id, seat]) => posicionar(id, seat));
+          }
+          if (env.pov) garantirMateusNoBancoDeTras();
+          if (capAtual?.temGatoEscondido) colocarGato(capAtual.id);
+        } catch (e) {
+          // Nunca deixa a tela presa no preto: mostra o que deu pra montar e segue a história
+          console.error(`[LuiggiStory3D] erro ao trocar para o cenário "${nome}":`, e);
         }
-        if (env.pov) garantirMateusNoBancoDeTras();
-        if (capAtual?.temGatoEscondido) colocarGato(capAtual.id);
         fadeAlvo = 0;
         setTimeout(resolve, 380);
       };
