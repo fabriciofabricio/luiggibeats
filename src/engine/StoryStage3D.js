@@ -71,7 +71,7 @@
   function montarMenu() {
     montarAmbiente('safepoint', { farois: true, rotSubaru: Math.PI * 0.82 });
     modoMenu = true;
-    if (!env.foto) {
+    if (!env.dia) {
       const spot = new root.THREE.SpotLight('#cfe0ff', 40, 18, 0.5, 0.6, 1.2);
       spot.position.set(3, 6, 2);
       spot.target.position.set(0, 0.5, -3.2);
@@ -81,7 +81,7 @@
     [['luis', [1.4, 0, -0.9]], ['fabricio', [2.5, 0, -0.2]]].forEach(([id, pos]) => {
       const ch = map?.get(id);
       if (!ch) return;
-      const card = L().createCharacterCard(ch, { altura: 2.25, tint: env.foto ? '#ffffff' : '#dfe6ff', expr: 'feliz', emotes: false });
+      const card = L().createCharacterCard(ch, { altura: 2.25, tint: env.dia ? '#ffffff' : '#dfe6ff', expr: 'feliz', emotes: false });
       card.group.position.set(...pos);
       stage.scene.add(card.group);
       cartas.set(id, { card, slot: null });

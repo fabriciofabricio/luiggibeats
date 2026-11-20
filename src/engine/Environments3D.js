@@ -1541,38 +1541,17 @@
     };
   };
 
-  // ---------- SAFEPOINT (mirante noturno; menu e exterior) ----------
+  // ---------- SAFEPOINT · R. Mercedes Seiler Rocha (rua 3D completa, ver RuaSafepoint3D.js) ----------
   BUILDERS.safepoint = (o = {}) => {
+    if (root.LuiggiRuaSafepoint) return root.LuiggiRuaSafepoint.construir(o);
+    return BUILDERS.mirante(o);
+  };
+
+  // ---------- MIRANTE NOTURNO (Safepoint antigo; reserva caso a rua não esteja carregada) ----------
+  BUILDERS.mirante = (o = {}) => {
     const THREE = T();
     const { box, plane, M, textures, createSubaruMesh, createParticles, addHeadlights } = L();
     const g = new THREE.Group();
-    // Com a foto real do Safepoint (servidor local): cenário 2.5D com a foto ao fundo
-    const foto = fotoPanorama(g, FOTO_SAFEPOINT, { raio: o.raio || 12, arco: o.arco || Math.PI * 0.46, corte: 0.2, brilho: o.brilhoFoto ?? 1.0 });
-    if (foto) {
-      ceu(g, [[0, '#6ea8e8'], [0.6, '#bcd8f5'], [1, '#e8f1fa']], 140);
-      const asfalto = plane(40, 40, M.std('#ffffff', 0.85, 0.05, { map: textures.asphalt(8, 8, { lines: false, base: '#4b4f57' }) }), 0, -0.005, 4);
-      asfalto.rotation.x = -Math.PI / 2;
-      g.add(asfalto);
-      let sub = null;
-      if (!o.semSubaru) {
-        sub = createSubaruMesh(root.LuiggiSave?.state?.subaruMods?.cor || '#1245A8', !!root.LuiggiSave?.state?.subaruMods?.neon);
-        sub.position.set(0, 0, -3.2);
-        sub.rotation.y = o.rotSubaru ?? Math.PI * 0.82;
-        g.add(sub);
-      }
-      return {
-        group: g,
-        subaru: sub,
-        foto: true,
-        slots: { L: [-1.5, 0, 0.8], R: [1.5, 0, 0.8], C: [0, 0, 0.8] },
-        cam: { pos: [5.5, 2.0, 5], look: [0, 0.9, -3] },
-        bg: 0xbcd8f5,
-        fog: null,
-        luz: { sky: '#e0efff', ground: '#6b6256', hemi: 1.3, key: '#fff4e0', keyI: 2.4, keyPos: [8, 14, 6], fillI: 0.6 },
-        grade: { tint: [1.02, 1.0, 0.98], saturation: 1.05, bloom: 0.45, vignette: 0.55, threshold: 1.3 },
-        update() { }
-      };
-    }
     ceu(g, [
       [0, '#020410'],
       [0.5, '#0b1230'],
@@ -1617,69 +1596,6 @@
       }
     };
   };
-
-  // ---------- FOTO DO SAFEPOINT COMO CENÁRIO 2.5D ----------
-  const FOTO_SAFEPOINT = 'assets/Cenarios/safe point para chilling/Screenshot 2026-11-17 012957.png';
-
-  /**
-   * Pano de fundo com a foto real: a parte de cima (fachada) vira um painel curvo e a faixa de baixo
-   * (calçada/rua) vira chão em perspectiva, o que dá profundidade quando a câmera se move.
-   * Retorna null quando imagens locais não podem virar textura (abrindo via file://).
-   */
-  function fotoPanorama(g, url, o = {}) {
-    if (!L().canUseImageTextures()) return null;
-    const THREE = T();
-    const raio = o.raio || 16;
-    const arco = o.arco || Math.PI * 0.62;
-    const aspecto = o.aspecto || 705 / 521;
-    const largura = raio * arco;
-    const altura = largura / aspecto;
-    const corte = o.corte ?? 0.2; // fração de baixo da foto usada como chão
-    const tex = new THREE.TextureLoader().load(encodeURI(url));
-    tex.colorSpace = THREE.SRGBColorSpace;
-    tex.anisotropy = 4;
-    const texChao = new THREE.TextureLoader().load(encodeURI(url));
-    texChao.colorSpace = THREE.SRGBColorSpace;
-    tex.repeat.set(1, 1 - corte);
-    tex.offset.set(0, corte);
-    texChao.repeat.set(1, corte);
-    texChao.offset.set(0, 0);
-    const brilho = o.brilho ?? 1;
-    // Fachada curva
-    const geo = new THREE.CylinderGeometry(raio, raio, altura * (1 - corte), 48, 1, true, Math.PI - arco / 2 + (o.giro || 0), arco);
-    const fachada = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide, color: new THREE.Color(brilho, brilho, brilho), fog: false }));
-    fachada.position.y = (altura * (1 - corte)) / 2 + (o.y || 0);
-    fachada.scale.x = -1; // a câmera vê a foto pelo lado de dentro sem espelhar
-    fachada.userData.noOutline = true;
-    g.add(fachada);
-    // Chão (calçada/rua da foto) em perspectiva até perto da câmera
-    const profundidade = o.chao || raio * 0.55;
-    const pts = [];
-    const uvs = [];
-    const idx = [];
-    const seg = 32;
-    for (let i = 0; i <= seg; i++) {
-      const a = Math.PI - arco / 2 + (o.giro || 0) + (arco * i) / seg;
-      const fx = Math.sin(a) * raio;
-      const fz = Math.cos(a) * raio;
-      const nx = Math.sin(a) * (raio - profundidade);
-      const nz = Math.cos(a) * (raio - profundidade);
-      pts.push(-fx, (o.y || 0) + 0.01, fz, -nx, (o.y || 0) + 0.01, nz);
-      uvs.push(i / seg, 1, i / seg, 0);
-      if (i < seg) {
-        const k = i * 2;
-        idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2);
-      }
-    }
-    const geoChao = new THREE.BufferGeometry();
-    geoChao.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
-    geoChao.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
-    geoChao.setIndex(idx);
-    const chao = new THREE.Mesh(geoChao, new THREE.MeshBasicMaterial({ map: texChao, side: THREE.DoubleSide, color: new THREE.Color(brilho, brilho, brilho), fog: false }));
-    chao.userData.noOutline = true;
-    g.add(chao);
-    return { fachada, chao, tex };
-  }
 
   // ---------- INTERIOR DO SUBARU (cenas de história dentro do carro) ----------
   function interiorSubaru(g) {
@@ -2039,8 +1955,8 @@
     } catch (e) {
       // Um cenário quebrado não pode travar a história com a tela preta: cai no Safepoint
       console.error(`[Luiggi3DEnv] erro ao montar o cenário "${nome}":`, e);
-      if (fn === BUILDERS.safepoint) throw e;
-      env = BUILDERS.safepoint({});
+      if (fn === BUILDERS.mirante) throw e;
+      env = fn === BUILDERS.safepoint ? BUILDERS.mirante({}) : BUILDERS.safepoint({});
     }
     env.nome = nome;
     env.update = env.update || (() => { });

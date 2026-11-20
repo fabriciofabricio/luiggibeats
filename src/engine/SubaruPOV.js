@@ -340,8 +340,70 @@
     g.add(box(1.4, 0.15, 0.5, tecido, 0, 0.42, 1.2));
     g.add(box(1.4, 0.6, 0.12, tecido, 0, 0.75, 1.45));
 
+    // Assoalho: carpete, tapetes, túnel do câmbio, parede de fogo e pedais
+    const carpete = M.std('#ffffff', 1, 0, {
+      map: L().makeCanvasTex(128, 128, (ctx, w, h) => {
+        ctx.fillStyle = '#1b1d22';
+        ctx.fillRect(0, 0, w, h);
+        for (let i = 0; i < 2600; i++) {
+          ctx.fillStyle = ['#23262c', '#15171b', '#202329', '#2a2d34'][i % 4];
+          ctx.fillRect(Math.random() * w, Math.random() * h, 1.5, 1.5);
+        }
+      }, 6, 8)
+    });
+    const borracha = M.std('#0d0e11', 0.9);
+    g.add(box(1.86, 0.04, 2.72, carpete, 0, 0.28, 0.24));
+    // Parede de fogo (entre o painel e o assoalho) e lateral dos pés
+    g.add(box(1.86, 0.5, 0.05, carpete, 0, 0.53, -1.07));
+    const rampa = box(1.86, 0.04, 0.42, carpete, 0, 0.36, -0.9);
+    rampa.rotation.x = 0.42;
+    g.add(rampa);
+    // Túnel central entre os bancos da frente e o de trás
+    g.add(box(0.3, 0.1, 1.5, carpete, 0, 0.34, 0.2));
+    // Tapetes de borracha
+    [-0.42, 0.42].forEach((x) => g.add(box(0.5, 0.012, 0.55, borracha, x, 0.306, -0.5, { cast: false })));
+    [-0.42, 0.42].forEach((x) => g.add(box(0.48, 0.012, 0.36, borracha, x, 0.306, 0.78, { cast: false })));
+    // Pedais (embreagem, freio, acelerador)
+    [[-0.54, 0.07, 0.07], [-0.4, 0.08, 0.07], [-0.24, 0.05, 0.12]].forEach(([x, w, h]) => {
+      const p = box(w, h, 0.018, M.std('#2b2e35', 0.4, 0.7), x, 0.42, -0.86);
+      p.rotation.x = -0.45;
+      g.add(p);
+      g.add(box(0.015, 0.2, 0.015, M.std('#1f2228', 0.5, 0.6), x, 0.55, -0.9));
+    });
+    // Trilhos e base dos bancos da frente; base do banco de trás
+    [-0.42, 0.42].forEach((x) => {
+      g.add(box(0.42, 0.08, 0.44, plastico, x, 0.33, 0.15));
+      [-0.15, 0.15].forEach((dx) => g.add(box(0.03, 0.02, 0.6, M.std('#3a3d44', 0.4, 0.8), x + dx, 0.31, 0.15, { cast: false })));
+    });
+    g.add(box(1.4, 0.07, 0.5, tecido, 0, 0.33, 1.2));
+    // Parte de baixo das portas, colunas dos pés e laterais traseiras (fecha o carro até o assoalho)
+    [-1, 1].forEach((s) => {
+      g.add(box(0.06, 0.22, 1.8, M.std('#14161b', 0.8), s * 0.95, 0.39, 0.2));
+      g.add(box(0.06, 0.7, 0.36, plastico, s * 0.93, 0.62, -0.88));
+      g.add(box(0.06, 0.62, 0.5, plastico, s * 0.93, 0.6, 1.36));
+      // Soleira com detalhe azul
+      g.add(box(0.1, 0.03, 1.7, plastico, s * 0.89, 0.31, 0.2, { cast: false }));
+    });
+
+    // Capô azul com a tomada de ar (aparece pelo para-brisa) e retrovisores externos
+    const capo = box(1.72, 0.06, 1.55, azul, 0, 0.96, -1.85);
+    capo.rotation.x = -0.07;
+    g.add(capo);
+    const tomada = box(0.5, 0.07, 0.4, azul, 0, 1.0, -1.5);
+    tomada.rotation.x = -0.12;
+    g.add(tomada);
+    g.add(box(0.42, 0.03, 0.02, plastico, 0, 1.01, -1.3, { cast: false }));
+    g.add(box(1.8, 0.05, 0.14, plastico, 0, 0.99, -1.06));
+    [-1, 1].forEach((s) => {
+      g.add(box(0.12, 0.05, 0.08, azul, s * 0.98, 0.98, -0.66));
+      g.add(box(0.2, 0.12, 0.09, azul, s * 1.09, 1.03, -0.68));
+      g.add(plane(0.17, 0.09, M.std('#9fb1c9', 0.05, 0.9), s * 1.09, 1.03, -0.633));
+    });
+
     // Estrutura: teto, colunas, portas
-    g.add(box(1.9, 0.04, 2.6, M.std('#2a2c33', 0.95), 0, 1.5, 0.2));
+    // Teto termina na travessa do para-brisa (antes ia até o painel e escondia tudo acima de ~3 m lá fora)
+    g.add(box(1.9, 0.04, 2.02, M.std('#2a2c33', 0.95), 0, 1.5, 0.56));
+    g.add(box(1.86, 0.07, 0.12, plastico, 0, 1.47, -0.47));
     const barra = (a, b, esp, mat) => {
       const va = new THREE.Vector3(...a);
       const vb = new THREE.Vector3(...b);
@@ -353,11 +415,10 @@
       return m;
     };
     [-1, 1].forEach((s) => {
-      g.add(barra([s * 0.9, 1.0, -1.02], [s * 0.82, 1.5, -0.32], 0.08, plastico));
+      g.add(barra([s * 0.9, 1.0, -1.04], [s * 0.84, 1.49, -0.46], 0.08, plastico));
       g.add(box(0.06, 0.45, 1.8, M.std('#14161b', 0.8), s * 0.95, 0.72, 0.2));
       g.add(box(0.05, 0.03, 1.6, azul, s * 0.93, 0.96, 0.2));
       g.add(box(0.06, 0.05, 1.8, plastico, s * 0.95, 1.48, 0.2));
-      g.add(box(0.06, 0.05, 0.05, plastico, s * 0.95, 1.2, 0.35));
     });
 
     // Traseira: colunas, moldura e vidro traseiro (olhando pra trás dá pra ver que é um carro)
@@ -376,8 +437,8 @@
     g.add(luzTras);
 
     // Para-brisa (vidro com leve reflexo)
-    const vidro = plane(1.8, 0.62, new THREE.MeshPhysicalMaterial({ color: 0x9fb4d8, transparent: true, opacity: 0.08, roughness: 0.05, metalness: 0.0, clearcoat: 1, depthWrite: false }), 0, 1.22, -0.98);
-    vidro.rotation.x = -0.65;
+    const vidro = plane(1.8, 0.8, new THREE.MeshPhysicalMaterial({ color: 0x9fb4d8, transparent: true, opacity: 0.08, roughness: 0.05, metalness: 0.0, clearcoat: 1, depthWrite: false }), 0, 1.24, -0.76);
+    vidro.rotation.x = 0.89;
     vidro.userData.noOutline = true;
     g.add(vidro);
 
@@ -388,7 +449,7 @@
     rt.texture.repeat.x = -1;
     rt.texture.offset.x = 1;
     const retro = new THREE.Group();
-    retro.position.set(0.02, 1.36, -0.72);
+    retro.position.set(0.02, 1.37, -0.5);
     retro.rotation.y = 0.18;
     retro.add(box(0.27, 0.085, 0.03, plastico, 0, 0, 0));
     const espelho = plane(0.25, 0.07, o.estatico ? M.std('#1e293b', 0.05, 0.9) : new THREE.MeshBasicMaterial({ map: rt.texture }), 0, 0, 0.017);
@@ -625,11 +686,13 @@
     const U = L().U;
     const stage = L().createStage(view, { radius: '0', fov: 68, near: 0.02, far: 400, fillIntensity: 0.6, fillColor: '#9fb4ff' });
     if (!stage) return null;
-    const env = root.Luiggi3DEnv.build('safepoint', { semSubaru: true, raio: 9, arco: Math.PI * 0.62 });
-    env.group.position.z = 2.5;
+    const env = root.Luiggi3DEnv.build('safepoint', { semSubaru: true });
+    // O carro fica na origem olhando pra −z: a rua é deslocada pra vaga do Subaru cair aqui
+    const vaga = env.vaga || [0, 0, -2.5];
+    env.group.position.set(-vaga[0], 0, -vaga[2]);
     stage.scene.add(env.group);
     root.Luiggi3DEnv.aplicar(stage, env);
-    stage.setGrade(env.foto ? { vignette: 0.7, bloom: 0.5, threshold: 1.4 } : { vignette: 0.85, bloom: 1.1 });
+    stage.setGrade(env.dia ? { vignette: 0.7, bloom: 0.4, threshold: 1.4 } : { vignette: 0.85, bloom: 1.1 });
     const interior = construirInterior();
     stage.scene.add(interior.group);
 
@@ -638,7 +701,7 @@
     Object.entries(LUGARES).forEach(([id, l]) => {
       const ch = map.get(id);
       if (!ch) return;
-      const c = L().createCharacterCard(ch, { altura: l.altura, tint: env.foto ? '#ffffff' : '#dfe6ff', emotes: false });
+      const c = L().createCharacterCard(ch, { altura: l.altura, tint: env.dia ? '#ffffff' : '#dfe6ff', emotes: false });
       c.group.position.set(...l.carta);
       stage.scene.add(c.group);
       cartas[id] = c;
