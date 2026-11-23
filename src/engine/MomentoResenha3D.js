@@ -214,6 +214,7 @@
               ${Object.entries(PERSONAGENS).map(([id, p], i) => `<button class="mini-btn" data-pers="${id}" title="Ser o ${p.nome} (${i + 1})">${p.icone} ${p.nome}<span class="rs-pov-n" data-pers-n="${id}"></span></button>`).join('')}
               ${root.LuiggiResenhaConvidados ? '<button class="mini-btn" id="rs-conv-btn" title="Colocar mais gente no banco de trás">➕ Banco de trás</button>' : ''}
               <button class="mini-btn" id="rs-classico" title="Modo clássico: só o pessoal dentro do carro, sem andar pela rua">🎴 Clássico</button>
+              <button class="mini-btn rs-cam-btn" id="rs-cam-btn" title="Alternar primeira / terceira pessoa (V)">👁️ 1ª pessoa <kbd>V</kbd></button>
               <button class="mini-btn rs-online-btn" id="rs-online-btn" title="Resenha Online: várias pessoas no mesmo Subaru">🌐 Online</button>
               <button class="mini-btn" id="rs-duelos-btn" title="Duelos 1x1 / 2x2, friendly fire e placar">⚔️ Duelos</button>
               <button class="mini-btn" id="rs-config-btn" title="Voltar ao menu, gráficos, som e teclas (Esc)">⚙️ Configurações</button>
@@ -236,11 +237,12 @@
             <div class="rs-pose-prontas">${POSES_PRONTAS.map((p) => `<button class="chip-btn" data-pronta="${p.id}">${p.nome}</button>`).join('')}</div>
           </div>
           <div class="rs-bancos hidden" id="rs-bancos"></div>
-          <div class="rs-dica-andar hidden" id="rs-dica-andar">${toque ? '🕹️ Arraste o controle pra andar · arraste a tela pra girar a câmera' : '⌨️ <b>WASD</b>/setas andam · <b>Shift</b> corre · <b>arraste</b> pra girar a câmera · <b>rodinha</b> aproxima · <b>F</b> entra no carro'}</div>
+          <div class="rs-dica-andar hidden" id="rs-dica-andar">${toque ? '🕹️ Arraste o controle pra andar · arraste a tela pra girar a câmera' : '⌨️ <b>WASD</b>/setas andam · <b>Shift</b> corre · <b>arraste</b> pra girar a câmera · <b>rodinha</b> aproxima · <b>V</b> 1ª/3ª pessoa · <b>F</b> entra no carro'}</div>
           <div class="rs-joy hidden" id="rs-joy"><div class="rs-joy-bola" id="rs-joy-bola"></div></div>
           <div class="rs-velo hidden" id="rs-velo">0 km/h</div>
           <div class="rs-mapa hidden" id="rs-mapa" title="Mapa do bairro (clique pra aumentar)"><canvas id="rs-mapa-cv" width="360" height="360"></canvas><div class="rs-rua" id="rs-rua"></div></div>
           <div class="sp3d-tooltip hidden" id="rs-tip"></div>
+          <div class="rs-aviso-pe" id="rs-aviso-pe"></div>
           <div class="sp3d-dialog">
             <div class="sp3d-portrait" id="rs-portrait"></div>
             <div class="sp3d-body">
@@ -281,8 +283,19 @@
       const desligarVolume = VOL ? VOL.ligar(shell) : () => { };
       let ultimaInteracao = performance.now();
 
+      // A pé a caixa de fala some (fica só a música): os avisos aparecem num balãozinho que some sozinho
+      let avisoPeT = 0;
+      function avisoPe(texto) {
+        const el = document.getElementById('rs-aviso-pe');
+        if (!el || !document.getElementById('rs-shell')?.classList.contains('rs-a-pe')) return;
+        el.textContent = texto;
+        el.classList.add('on');
+        clearTimeout(avisoPeT);
+        avisoPeT = setTimeout(() => el.classList.remove('on'), 4200);
+      }
       function falar(texto, quem = null, rotulo = null) {
         txtEl.textContent = texto;
+        avisoPe(texto);
         if (quem) {
           const p = map.get(quem);
           spkEl.textContent = `${PERSONAGENS[quem]?.icone || ''} ${p?.nome || quem}`;
@@ -2557,6 +2570,14 @@
         resolve(trocarPara ? { trocarPara, net: sessao, convidados } : undefined);
       }
       document.getElementById('rs-config-btn').addEventListener('click', () => alternarConfig());
+      const camBtn = document.getElementById('rs-cam-btn');
+      const rotuloCam = () => (camBtn.innerHTML = combate?.primeiraPessoa ? '🎥 3ª pessoa <kbd>V</kbd>' : '👁️ 1ª pessoa <kbd>V</kbd>');
+      camBtn.addEventListener('click', (e) => {
+        e.currentTarget.blur();
+        interagir('camfora');
+        rotuloCam();
+      });
+      window.addEventListener('keyup', (e) => e.code === 'KeyV' && rotuloCam());
 
       // ---------------- ⚙️ Configurações: voltar ao menu, câmera, gráficos, som e teclas ----------------
       const painelConfig = document.getElementById('rs-config');

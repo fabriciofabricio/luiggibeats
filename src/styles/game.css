@@ -2174,7 +2174,19 @@ body.resenha-aberta .lc-mini { display: none; }
 .rs-carr-caixa small { color: #64748b; }
 
 /* A pé: some o menu de baixo e os botões do topo (ficam Online, Duelos e Configurações) */
-.rs-a-pe .rs-povs > :not(#rs-online-btn):not(#rs-duelos-btn):not(#rs-config-btn) { display: none !important; }
+.rs-a-pe .rs-povs > :not(#rs-online-btn):not(#rs-duelos-btn):not(#rs-config-btn):not(#rs-cam-btn) { display: none !important; }
+.rs-cam-btn { display: none !important; }
+.rs-a-pe .rs-cam-btn { display: inline-flex !important; }
+.rs-cam-btn kbd { font-size: 0.65rem; opacity: 0.7; margin-left: 4px; }
+/* A pé: some a caixa de fala, fica só um quadradinho com a música no canto inferior esquerdo */
+.rs-a-pe .sp3d-dialog { right: auto; left: 16px; bottom: 16px; display: block; padding: 10px 12px; border-radius: 14px; width: 230px; }
+.rs-a-pe .sp3d-dialog .sp3d-portrait, .rs-a-pe .sp3d-dialog .sp3d-body { display: none !important; }
+.rs-a-pe .rs-musica { min-width: 0; gap: 6px; }
+.rs-a-pe .rs-musica .mg-btn { padding: 4px 10px; min-height: 0; font-size: 0.85rem; }
+.rs-a-pe .rs-faixa { max-width: 100%; }
+.rs-a-pe .cb-status { bottom: 150px; }
+.rs-aviso-pe { position: absolute; left: 50%; top: 118px; transform: translate(-50%, -8px); z-index: 6; max-width: min(560px, 90vw); padding: 8px 14px; border-radius: 12px; background: rgba(8, 12, 26, 0.85); border: 1px solid rgba(96, 165, 250, 0.35); color: #e2e8f0; font-size: 0.85rem; text-align: center; pointer-events: none; opacity: 0; transition: opacity 0.25s, transform 0.25s; }
+.rs-aviso-pe.on { opacity: 1; transform: translate(-50%, 0); }
 .rs-a-pe .rs-acoes { display: none !important; }
 /* Painel de configurações dentro do Momento Resenha */
 .rs-config { right: auto; left: 50%; top: 80px; transform: translateX(-50%); width: min(560px, calc(100% - 32px)); max-height: calc(100% - 110px); overflow: auto; z-index: 12; }

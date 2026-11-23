@@ -47,6 +47,48 @@
   // ------------------------------------------------------------------
   // Modelos 3D das armas (feitos aqui, estilizados): cano no +z, topo no +y
   // ------------------------------------------------------------------
+  /** Malha da karambit real (data/karambit_modelo.js) com textura e um reflexo de céu pro aço brilhar. */
+  let karambitCache = null;
+  function karambitReal() {
+    const THREE = T();
+    if (!karambitCache) {
+      const D = root.LuiggiKarambitModelo;
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(D.pos, 3));
+      geo.setAttribute('uv', new THREE.Float32BufferAttribute(D.uv, 2));
+      geo.computeVertexNormals();
+      D.grupos.forEach(([ini, n], i) => geo.addGroup(ini, n, i));
+      const img = new Image();
+      const tex = new THREE.Texture(img);
+      img.onload = () => (tex.needsUpdate = true);
+      img.src = D.tex;
+      if ('colorSpace' in tex) tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 4;
+      // "Céu" falso só pra refletir no metal (sem isso o aço fica escuro)
+      const c = document.createElement('canvas');
+      c.width = 64;
+      c.height = 32;
+      const x = c.getContext('2d');
+      const gr = x.createLinearGradient(0, 0, 0, 32);
+      gr.addColorStop(0, '#f4f8ff');
+      gr.addColorStop(0.45, '#b9c9dc');
+      gr.addColorStop(0.55, '#5d646c');
+      gr.addColorStop(1, '#2a2d31');
+      x.fillStyle = gr;
+      x.fillRect(0, 0, 64, 32);
+      const env = new THREE.CanvasTexture(c);
+      env.mapping = THREE.EquirectangularReflectionMapping;
+      if ('colorSpace' in env) env.colorSpace = THREE.SRGBColorSpace;
+      const lamina = new THREE.MeshStandardMaterial({ map: tex, metalness: 0.85, roughness: 0.3, envMap: env, envMapIntensity: 1.1, side: THREE.DoubleSide });
+      const cabo = new THREE.MeshStandardMaterial({ map: tex, metalness: 0.08, roughness: 0.78, envMap: env, envMapIntensity: 0.3, side: THREE.DoubleSide });
+      karambitCache = { geo, mats: [lamina, cabo] };
+    }
+    const m = new THREE.Mesh(karambitCache.geo, karambitCache.mats);
+    m.castShadow = true;
+    m.userData.noOutline = true;
+    return m;
+  }
+
   function modeloArma(id) {
     const THREE = T();
     const g = new THREE.Group();
@@ -127,8 +169,14 @@
       caixa(0.028, 0.1, 0.045, preto, 0, -0.035, -0.03, -0.25);
       cil(0.018, 0.018, 0.16, std('#26282c', 0.45, 0.7), 0, 0.032, 0.2);
       muzzle = 0.28;
+    } else if (id === 'karambit' && root.LuiggiKarambitModelo) {
+      // Karambit 3D de verdade (modelo CC-BY de JoshAS, texturizado: aço escovado, fio polido, cabo G10)
+      const mesh = karambitReal();
+      g.add(mesh);
+      muzzle = 0.25;
+      g.scale.setScalar(1.25);
     } else if (id === 'karambit') {
-      // Lâmina curva (garra) com fio claro, cabo com argola
+      // Reserva (se o arquivo do modelo não carregar): lâmina curva (garra) com fio claro, cabo com argola
       const aco = std('#dfe4ea', 0.28, 0.55);
       const fio = std('#ffffff', 0.15, 0.4);
       const cabo = std('#1e2126', 0.6, 0.2);
@@ -851,6 +899,7 @@
       st.proximoTiro = agora + def.cadencia;
       const n = net();
       if (def.faca) {
+        vm.tocar('leve');
         golpe(def, false);
         return;
       }
@@ -968,6 +1017,7 @@
       if (ARMAS[st.arma]?.slot === Number(slot)) id = lista[(lista.indexOf(st.arma) + 1) % lista.length];
       else id = st.ultimoPorSlot[slot] || lista[0];
       st.ultimoPorSlot[slot] = id;
+      if (id === 'karambit' && st.arma !== id) vm.tocar('sacar');
       st.arma = id;
       st.recarregandoAte = 0;
       st.proximoTiro = performance.now() / 1000 + 0.35;
@@ -991,6 +1041,152 @@
       stage.camera.updateProjectionMatrix();
       lunetaEl.classList.toggle('hidden', !st.mira);
     }
+
+
+    // ---------- Viewmodel da faca (primeira pessoa): mão de luva no canto inferior direito ----------
+    // Botão esquerdo: corte rápido alternando o lado · direito: golpe forte com preparação · sacar: giro da karambit
+    const vm = (() => {
+      const raiz = new THREE.Group(); // preso na câmera
+      const anim = new THREE.Group(); // deslocamento das animações
+      const pulso = new THREE.Group(); // orientação da mão + faca
+      raiz.add(anim);
+      anim.add(pulso);
+      raiz.visible = false;
+      if (!stage.camera.parent) stage.scene.add(stage.camera);
+      stage.camera.add(raiz);
+      const luva = new THREE.MeshStandardMaterial({ color: '#23262b', roughness: 0.85, metalness: 0.05 });
+      const luvaCouro = new THREE.MeshStandardMaterial({ color: '#3a3f46', roughness: 0.6, metalness: 0.1 });
+      const manga = new THREE.MeshStandardMaterial({ color: '#2f3a2c', roughness: 0.9 });
+      const pele = new THREE.MeshStandardMaterial({ color: '#c99674', roughness: 0.7 });
+      const cap = (r, h, mat) => new THREE.Mesh(new THREE.CapsuleGeometry(r, h, 4, 10), mat);
+      // Faca (origem na empunhadura; cabo no eixo z, lâmina curvando pra +y)
+      const giro = new THREE.Group(); // gira em volta da argola ao sacar
+      giro.position.set(0, 0, -0.092);
+      pulso.add(giro);
+      const faca = modeloArma('karambit');
+      faca.scale.setScalar(1);
+      faca.position.set(0, 0, 0.092);
+      giro.add(faca);
+      // Punho fechado em volta do cabo
+      const punho = cap(0.026, 0.07, luva);
+      punho.rotation.x = Math.PI / 2;
+      punho.position.set(0, -0.012, -0.005);
+      pulso.add(punho);
+      for (let i = 0; i < 4; i++) {
+        const dedo = cap(0.0105, 0.02, luvaCouro);
+        dedo.rotation.z = Math.PI / 2;
+        dedo.position.set(0.006, -0.03, -0.035 + i * 0.022);
+        pulso.add(dedo);
+      }
+      const polegar = cap(0.011, 0.04, luva);
+      polegar.rotation.x = Math.PI / 2 + 0.35;
+      polegar.position.set(-0.018, 0.012, 0.012);
+      pulso.add(polegar);
+      // Antebraço saindo pra fora da tela (canto inferior direito)
+      const braco = new THREE.Group();
+      const ante = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.036, 0.36, 12), manga);
+      ante.position.y = -0.2;
+      braco.add(ante);
+      const punhoLuva = new THREE.Mesh(new THREE.CylinderGeometry(0.031, 0.031, 0.05, 12), luva);
+      punhoLuva.position.y = -0.03;
+      braco.add(punhoLuva);
+      const relogioPele = new THREE.Mesh(new THREE.CylinderGeometry(0.0305, 0.0305, 0.02, 12), pele);
+      relogioPele.position.y = -0.065;
+      braco.add(relogioPele);
+      // o braço fica no espaço da câmera, saindo do punho pro canto inferior direito
+      braco.position.set(0.012, -0.02, 0.01);
+      braco.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), new THREE.Vector3(0.5, -0.62, 0.6).normalize());
+      anim.add(braco);
+      raiz.traverse((m) => {
+        if (m.isMesh) {
+          m.castShadow = false;
+          m.userData.noOutline = true;
+          m.frustumCulled = false;
+        }
+      });
+      // Pose de descanso: cabo apontando pra frente/cima, lâmina curvando pro meio da tela
+      const BASE = new THREE.Vector3(0.15, -0.13, -0.3);
+      {
+        const z = new THREE.Vector3(-0.3, 0.72, -0.62).normalize(); // cabo -> lâmina: pra cima e pra frente
+        const y = new THREE.Vector3(-0.85, -0.15, -0.45); // curva da lâmina: pro meio da tela
+        y.addScaledVector(z, -y.dot(z)).normalize();
+        const x = new THREE.Vector3().crossVectors(y, z);
+        pulso.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z));
+      }
+
+      const estado = { tipo: null, t: 0, dur: 1, lado: 1, fase: 0, swayX: 0, swayY: 0, yawAnt: orb.yaw, pitchAnt: orb.pitch, pousou: 0, noArAnt: false };
+      // Quadros-chave: [tempo 0..1, px, py, pz, rx, ry, rz]
+      const ANIM = {
+        leve: { dur: 0.38, k: [[0, 0, 0, 0, 0, 0, 0], [0.16, 0.05, 0.02, 0.01, -0.15, -0.35, -0.45], [0.42, -0.16, -0.035, -0.06, 0.25, 0.75, 0.55], [1, 0, 0, 0, 0, 0, 0]] },
+        forte: { dur: 0.85, k: [[0, 0, 0, 0, 0, 0, 0], [0.34, 0.05, 0.07, 0.07, -0.7, -0.15, -0.35], [0.47, -0.07, -0.07, -0.15, 0.95, 0.3, 0.45], [0.6, -0.075, -0.075, -0.14, 0.9, 0.3, 0.42], [1, 0, 0, 0, 0, 0, 0]] },
+        sacar: { dur: 0.75, k: [[0, 0.02, -0.16, 0.04, 0.4, 0, 0], [0.35, 0, -0.01, 0, -0.1, 0, 0.05], [1, 0, 0, 0, 0, 0, 0]] }
+      };
+      const suave = (x) => x * x * (3 - 2 * x);
+      function amostra(a, p) {
+        const k = a.k;
+        let i = 0;
+        while (i < k.length - 2 && p > k[i + 1][0]) i++;
+        const A = k[i];
+        const B = k[i + 1];
+        const f = suave(Math.min(1, Math.max(0, (p - A[0]) / (B[0] - A[0] || 1))));
+        return A.map((v, j) => v + (B[j] - v) * f);
+      }
+      function tocar(tipo) {
+        estado.tipo = tipo;
+        estado.t = 0;
+        estado.dur = ANIM[tipo].dur;
+        if (tipo === 'leve') estado.lado = -estado.lado;
+      }
+      function atualizar(dt, ativo, vh, noAr) {
+        raiz.visible = ativo;
+        if (!ativo) {
+          estado.tipo = null;
+          estado.yawAnt = orb.yaw;
+          estado.pitchAnt = orb.pitch;
+          return;
+        }
+        // Balanço do passo e atraso ao virar a câmera
+        const k = Math.min(1, vh / 5);
+        estado.fase += dt * (noAr ? 0 : 2 + vh * 1.6);
+        let dyaw = orb.yaw - estado.yawAnt;
+        if (dyaw > Math.PI) dyaw -= Math.PI * 2;
+        if (dyaw < -Math.PI) dyaw += Math.PI * 2;
+        const dpit = orb.pitch - estado.pitchAnt;
+        estado.yawAnt = orb.yaw;
+        estado.pitchAnt = orb.pitch;
+        const lerp = 1 - Math.exp(-dt * 10);
+        estado.swayX += (Math.max(-0.04, Math.min(0.04, dyaw * 0.9)) - estado.swayX) * lerp;
+        estado.swayY += (Math.max(-0.03, Math.min(0.03, -dpit * 0.6)) - estado.swayY) * lerp;
+        if (estado.noArAnt && !noAr) estado.pousou = 1;
+        estado.noArAnt = noAr;
+        estado.pousou = Math.max(0, estado.pousou - dt * 5);
+        raiz.position.set(
+          BASE.x + Math.sin(estado.fase) * 0.007 * k + estado.swayX,
+          BASE.y - Math.abs(Math.cos(estado.fase)) * 0.009 * k + estado.swayY + (noAr ? 0.012 : 0) - estado.pousou * 0.02,
+          BASE.z
+        );
+        // Animação de ataque / sacar
+        let v = [0, 0, 0, 0, 0, 0, 0];
+        if (estado.tipo) {
+          estado.t += dt;
+          const p = estado.t / estado.dur;
+          if (p >= 1) estado.tipo = null;
+          else {
+            v = amostra(ANIM[estado.tipo], p);
+            if (estado.tipo === 'leve' && estado.lado < 0) {
+              v[1] = -v[1] * 0.8;
+              v[5] = -v[5];
+              v[6] = -v[6];
+            }
+          }
+          // Giro da karambit ao sacar (em volta da argola, no dedo)
+          giro.rotation.x = estado.tipo === 'sacar' ? -Math.PI * 2 * suave(Math.min(1, Math.max(0, (p - 0.12) / 0.6))) : 0;
+        } else giro.rotation.x = 0;
+        anim.position.set(v[1], v[2], v[3]);
+        anim.rotation.set(v[4], v[5], v[6]);
+      }
+      return { tocar, atualizar, raiz };
+    })();
 
     // ---------- Vida, dano, morte ----------
     let piscar = 0;
@@ -1145,8 +1341,11 @@
         else if (ARMAS[st.arma]?.faca) {
           const agora = performance.now() / 1000;
           if (agora >= st.proximoTiro) {
-            st.proximoTiro = agora + 0.9;
-            golpe(ARMAS.karambit, true);
+            st.proximoTiro = agora + 0.95;
+            vm.tocar('forte');
+            setTimeout(() => {
+              if (st.arma === 'karambit' && !st.morto) golpe(ARMAS.karambit, true);
+            }, 300);
           }
         }
         return true;
@@ -1515,6 +1714,9 @@
         atualizarPainel();
       }
       atualizarEfeitos(dt);
+      const comVm = ctx.modoCam() === 'pe' && st.primeira && !st.mira && !st.morto && st.arma === 'karambit';
+      vm.atualizar(dt, comVm, Math.hypot(st.vel.x, st.vel.z), !st.noChao);
+      if (eu.armaObj) eu.armaObj.visible = !comVm; // em primeira pessoa a faca do boneco some (fica a da tela)
       if ((hudT -= dt) <= 0) {
         hudT = 0.15;
         atualizarHud();

@@ -25,7 +25,8 @@ def com_versao(m):
     return f'{attr}="{base}?v={versao}"'
 
 
-s = re.sub(r'(src|href)="((?:src|data|vendor)/[^"]+\.(?:js|css))"', com_versao, s)
+# aceita também endereço que já tem ?v=... (senão, da segunda vez em diante, nada mudava)
+s = re.sub(r'(src|href)="((?:src|data|vendor)/[^"?]+\.(?:js|css)(?:\?[^"]*)?)"', com_versao, s)
 marca = '<script>window.LUIGGI_VERSAO = '
 if marca in s:
     s = re.sub(r"<script>window\.LUIGGI_VERSAO = '[^']*';</script>", f"<script>window.LUIGGI_VERSAO = '{versao}';</script>", s)

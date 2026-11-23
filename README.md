@@ -81,6 +81,11 @@ No menu, **🎶 Momento Resenha** abre o Subaru Legacy azul parado na rua do Saf
 - Pra refazer: baixe os blocos com `https://api.openstreetmap.org/api/0.6/map?bbox=OESTE,SUL,LESTE,NORTE` (a região inteira em 4 pedaços) numa pasta e rode `python ferramentas/gerar_bairro.py <pasta> [caixas_do_cenario_antigo.json] --predios=predios.json --copa=copa.npy`. O `predios.json` é uma consulta por caixa ao arquivo GeoParquet do Brasil (célula S2 nível 5 de Curitiba) do Source Cooperative, e o `copa.npy` é o recorte do GeoTIFF `chm/210311203.tif` da Meta (lido por pedaços via HTTP).
 - Desempenho: `src/engine/BairroCuritiba3D.js` junta tudo em poucas malhas (cada bloco de 160 m vira ~6 chamadas de desenho), some com os blocos longe (a neblina esconde), só deixa os blocos perto projetarem sombra e faz a sombra do sol acompanhar quem joga. O cenário da rua e o interior do Subaru também juntam as peças paradas por material (de ~1700 pra ~1100 chamadas de desenho perto da casa, e ~400 no meio do bairro). Se o computador for fraco, o jogo ainda baixa a resolução e desliga os efeitos sozinho.
 
+### Karambit 3D
+
+- `data/karambit_modelo.js` é gerado por `ferramentas/gerar_karambit.py` a partir do modelo **"Karambit Knife" de JoshAS** ([OpenGameArt](https://opengameart.org/content/karambit-knife), licença [CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/)). Alterado: lâmina afinada, escala/orientação pro jogo e textura pintada pelo script (aço escovado, fio polido com linha de afiação, cabo de G10 com parafusos).
+- Em primeira pessoa (V) a karambit aparece na mão de luva no canto inferior direito: botão esquerdo = corte rápido alternando o lado, botão direito = golpe forte (prepara e acerta no meio do movimento), sacar = giro da karambit no dedo.
+
 ## Gráficos (do PC fraco ao PC forte)
 
 Em **⚙️ Configurações → 🖥️ Gráficos**: qualidade **Automática** (o jogo olha a placa de vídeo, a memória e a tela e escolhe sozinho) ou **Muito baixa / Baixa / Média / Alta / Ultra**, limite de FPS (30, 60 ou livre) e **resolução dinâmica** (se o FPS cair, a resolução diminui sozinha e volta quando der).
