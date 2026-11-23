@@ -331,7 +331,7 @@
       // Desempenho: o interior tem centenas de pecinhas paradas; junta por material (o que mexe ou é clicável fica separado)
       if (root.LuiggiRuaSafepoint?.juntarEstaticos) {
         // Partes que se mexem (ficam como estão) e partes que somem/aparecem juntas (cada uma é juntada por dentro)
-        const mexem = [interior.volante, interior.portaLuvas, interior.consoleTampa, interior.retro, interior.aromatizante, interior.chaveiro, interior.cookieMini, interior.camRetro, ...[].concat(interior.rodas || []), ...[].concat(interior.bancosFrente || [])].filter(Boolean);
+        const mexem = [interior.volante, interior.portaLuvas, interior.consoleTampa, interior.retro, interior.aromatizante, interior.chaveiro, interior.camisinhas, interior.camRetro, ...[].concat(interior.rodas || []), ...[].concat(interior.bancosFrente || [])].filter(Boolean);
         const blocosCarro = [interior.teto, interior.exterior, interior.laterais].filter(Boolean);
         const dentroDe = (m, raiz, lista) => {
           for (let p = m; p && p !== raiz; p = p.parent) if (lista.includes(p)) return true;
@@ -2004,7 +2004,7 @@
             chip('curtir', '🎶 Curtir o som', eu.curtir),
             chip('volante', '🛞 Acelerar'),
             chip('buzina', '📣 Buzina'),
-            chip('portaluvas', '🍪 Porta-luvas'),
+            chip('portaluvas', '🧤 Porta-luvas'),
             chip('tictac', '🍬 Compartimento'),
             chip('retrovisor', '🪞 Retrovisor'),
             chip('olhar_tras', '👀 Olhar pro Mateus')

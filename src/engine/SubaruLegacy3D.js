@@ -7,7 +7,7 @@
  * volante de 3 raios com o logo das plêiades, alavancas de seta/limpador, chave com chaveiro de cookie,
  * câmbio com coifa, freio de mão, porta-copos, compartimento dos Tic Tacs, bancos com abas laterais e
  * faixa azul, cintos, forro de porta (descansa-braço, maçaneta, vidro elétrico, alto-falante),
- * quebra-sóis, puxadores, luz de teto, teto solar, retrovisor com imagem real e a arvorezinha de baunilha.
+ * quebra-sóis, puxadores, luz de teto, retrovisor com imagem real e a arvorezinha de baunilha.
  * Exterior (o.exterior): lataria fina que encaixa no interior (dá pra ver quem está dentro pelos vidros),
  * capô com tomada de ar, grade com o emblema, faróis, lanternas, aerofólio, escapamento duplo e rodas douradas.
  *
@@ -357,11 +357,13 @@
     puxador.userData.acao = 'portaluvas';
     g.add(portaLuvas);
     g.add(box(0.4, 0.14, 0.2, M.std('#07080b', 0.9), 0.48, 0.69, -0.6, { cast: false }));
-    const cookieMini = L().createCookieMesh('#d69249', '#3b1f10', { gotas: 5 });
-    cookieMini.scale.setScalar(0.035);
-    cookieMini.position.set(0.48, 0.72, -0.56);
-    cookieMini.visible = false;
-    g.add(cookieMini);
+    // Caixinha de camisinhas guardada no porta-luvas (aparece quando abre)
+    const camisinhas = L().createCamisinhasMesh();
+    camisinhas.scale.setScalar(0.07);
+    camisinhas.position.set(0.46, 0.715, -0.57);
+    camisinhas.rotation.y = 0.25;
+    camisinhas.visible = false;
+    g.add(camisinhas);
 
     // ==================================================================
     // VOLANTE, COLUNA, ALAVANCAS E CHAVE
@@ -603,18 +605,8 @@
     // ==================================================================
     const teto = new THREE.Group();
     g.add(teto);
-    // Forro do teto com o recorte do teto solar
-    const SOL = { x: 0.42, z0: -0.22, z1: 0.42 };
-    teto.add(box(1.9, 0.04, 0.24, forro, 0, 1.5, -0.34));
-    teto.add(box(1.9, 0.04, 1.15, forro, 0, 1.5, 0.995));
-    [-1, 1].forEach((s) => teto.add(box(0.95 - SOL.x, 0.04, SOL.z1 - SOL.z0, forro, s * (SOL.x + (0.95 - SOL.x) / 2), 1.5, (SOL.z0 + SOL.z1) / 2)));
-    // Moldura e vidro do teto solar (dá pra ver o céu)
-    [[0, SOL.z0], [0, SOL.z1]].forEach(([x, z]) => teto.add(peca(SOL.x * 2 + 0.04, 0.03, 0.03, plastico, x, 1.485, z)));
-    [-1, 1].forEach((s) => teto.add(peca(0.03, 0.03, SOL.z1 - SOL.z0, plastico, s * SOL.x, 1.485, (SOL.z0 + SOL.z1) / 2)));
-    const vidroSol = plane(SOL.x * 2, SOL.z1 - SOL.z0, vidroMat(0.28, 0x6b7f9e), 0, 1.535, (SOL.z0 + SOL.z1) / 2);
-    vidroSol.rotation.x = -Math.PI / 2;
-    vidroSol.userData.noOutline = true;
-    teto.add(vidroSol);
+    // Forro do teto inteiriço (o carro não tem teto solar)
+    teto.add(box(1.9, 0.04, 2.03, forro, 0, 1.5, 0.555));
     teto.add(box(1.86, 0.07, 0.12, plastico, 0, 1.47, -0.47));
     // Luz de teto, console de teto e quebra-sóis
     teto.add(peca(0.2, 0.025, 0.1, grafite, 0, 1.47, -0.37));
@@ -834,10 +826,8 @@
           exterior.add(cx);
         });
       });
-      // Teto por fora com o recorte do teto solar
-      exterior.add(box(1.86, 0.035, 0.26, pintura, 0, 1.535, -0.34));
-      exterior.add(box(1.86, 0.035, 1.07, pintura, 0, 1.535, 0.955));
-      [-1, 1].forEach((s) => exterior.add(box(0.93 - SOL.x, 0.035, SOL.z1 - SOL.z0, pintura, s * (SOL.x + (0.93 - SOL.x) / 2), 1.535, (SOL.z0 + SOL.z1) / 2)));
+      // Teto por fora, inteiriço
+      exterior.add(box(1.86, 0.035, 1.96, pintura, 0, 1.535, 0.51));
       // Frente: para-choque, grade com emblema, faróis, neblina
       exterior.add(box(2.0, 0.42, 0.12, pintura, 0, 0.5, -2.58));
       exterior.add(box(1.96, 0.24, 0.04, pintura, 0, 0.8, -2.6));
@@ -925,7 +915,7 @@
       });
     }
 
-    return { group: g, volante, gauges, radioTex, portaLuvas, cookieMini, consoleTampa, retro, rt, camRetro, botoesRadio, aromatizante, chaveiro, teto, exterior, laterais, rodas, bancosFrente };
+    return { group: g, volante, gauges, radioTex, portaLuvas, camisinhas, consoleTampa, retro, rt, camRetro, botoesRadio, aromatizante, chaveiro, teto, exterior, laterais, rodas, bancosFrente };
   }
 
   root.LuiggiSubaruLegacy = { construir, ASSENTOS, CAIXA };

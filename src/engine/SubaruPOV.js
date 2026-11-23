@@ -7,7 +7,7 @@
  *   dá pra virar a cabeça pros lados e pra trás pra ver o Mateus.
  * - Momento Resenha (menu): ficar no carro ouvindo música com o Fabricio e o Mateus, trocando o POV
  *   entre Luis (motorista), Fabricio (passageiro) e Mateus (banco de trás).
- * - Interações (clique no objeto 3D ou nos atalhos): volante (boxer), buzina, rádio, porta-luvas (cookie),
+ * - Interações (clique no objeto 3D ou nos atalhos): volante (boxer), buzina, rádio, porta-luvas (camisinhas),
  *   retrovisor e o compartimento entre os bancos da frente, que só tem caixinhas de Tic Tac branco:
  *   abrir sempre faz o Mateus e o Fabricio rirem juntos ("kkkkkkkkkk").
  * - criarControleCarro() também é usado pelas cenas de história dentro do carro (StoryStage3D).
@@ -197,7 +197,7 @@
     radio_toggle: '⏯ Rádio · tocar / pausar',
     porta: '🚪 Porta',
     entrar_carro: '🚗 Subaru Legacy · entrar',
-    portaluvas: '🍪 Porta-luvas',
+    portaluvas: '🧤 Porta-luvas',
     tictac: '🍬 Compartimento entre os bancos',
     retrovisor: '🪞 Retrovisor',
     fabricio: '🎧 Fabricio',
@@ -324,11 +324,13 @@
     portaLuvas.userData.acao = 'portaluvas';
     tampa.userData.acao = 'portaluvas';
     g.add(portaLuvas);
-    const cookieMini = L().createCookieMesh('#d69249', '#3b1f10', { gotas: 5 });
-    cookieMini.scale.setScalar(0.035);
-    cookieMini.position.set(0.48, 0.72, -0.56);
-    cookieMini.visible = false;
-    g.add(cookieMini);
+    // Caixinha de camisinhas guardada no porta-luvas (aparece quando abre)
+    const camisinhas = L().createCamisinhasMesh();
+    camisinhas.scale.setScalar(0.07);
+    camisinhas.position.set(0.46, 0.715, -0.57);
+    camisinhas.rotation.y = 0.25;
+    camisinhas.visible = false;
+    g.add(camisinhas);
 
     // Bancos
     const banco = (x) => {
@@ -490,7 +492,7 @@
     h.position.set(-0.38, 0.99, -0.6);
     g.add(h);
 
-    return { group: g, volante, gauges, radioTex, portaLuvas, cookieMini, consoleTampa, retro, rt, camRetro };
+    return { group: g, volante, gauges, radioTex, portaLuvas, camisinhas, consoleTampa, retro, rt, camRetro };
   }
 
   function desenharGauges(tex, rpm, vel) {
@@ -710,8 +712,8 @@
       if (acao === 'portaluvas') {
         A.playSFX('forno');
         st.portaAberta = op.aberto !== undefined ? !!op.aberto : !st.portaAberta;
-        interior.cookieMini.visible = st.portaAberta;
-        return { texto: st.portaAberta ? 'Porta-luvas aberto: um cookie de emergência. Fabricio: "Me dá um aí, Tico!"' : 'Porta-luvas fechado. O cheiro de baunilha fica.' };
+        interior.camisinhas.visible = st.portaAberta;
+        return { texto: st.portaAberta ? 'Porta-luvas aberto: uma caixinha de camisinhas guardada "pra emergência". Fabricio: "Precavido, hein, Tico!"' : 'Porta-luvas fechado. O cheiro de baunilha fica.' };
       }
       if (acao === 'mateus_buse') {
         A.playSFX('blip');
@@ -764,7 +766,7 @@
     function definir(e = {}) {
       if (typeof e.porta === 'boolean') {
         st.portaAberta = e.porta;
-        interior.cookieMini.visible = e.porta;
+        interior.camisinhas.visible = e.porta;
       }
       if (typeof e.cons === 'boolean') st.consoleAberto = e.cons;
     }
@@ -982,7 +984,7 @@
     <button class="chip-btn" data-acao="buzina">📣 Buzina</button>
     <button class="chip-btn" data-acao="radio_prev" title="Rádio: voltar faixa">⏮</button>
     <button class="chip-btn" data-acao="radio">📻 <span class="radio-lbl">Rádio</span> ⏭</button>
-    <button class="chip-btn" data-acao="portaluvas">🍪 Porta-luvas</button>
+    <button class="chip-btn" data-acao="portaluvas">🧤 Porta-luvas</button>
     <button class="chip-btn" data-acao="tictac">🍬 Compartimento</button>
     <button class="chip-btn" data-acao="retrovisor">🪞 Retrovisor</button>
     <button class="chip-btn" data-acao="olhar_tras">👀 Olhar pro Mateus</button>`;

@@ -1642,7 +1642,7 @@
     car.add(box(W + 0.02, 0.1, 2.0, trim, 0, 0.33, 0));
 
     if (tipo !== 'civic') {
-      // Hood scoop característico + aerofólio + teto solar
+      // Hood scoop característico + aerofólio
       const scoop = box(0.62, 0.1, 0.6, trim, 0, 0.92, 1.45);
       scoop.rotation.x = -0.06;
       car.add(scoop);
@@ -1650,7 +1650,6 @@
       const wing = box(1.6, 0.05, 0.3, paint, 0, 1.08, -2.0);
       car.add(wing);
       [-0.6, 0.6].forEach((x) => car.add(box(0.06, 0.14, 0.12, trim, x, 1.0, -2.0)));
-      car.add(box(0.7, 0.02, 0.5, glass, 0, 1.43, -0.15, { cast: false }));
     } else {
       // Lip dianteiro e asa baixa do Civic
       car.add(box(W - 0.1, 0.05, 0.25, trim, 0, 0.27, 2.25));
@@ -1783,6 +1782,61 @@
       lights.push(s);
     });
     return lights;
+  }
+
+  // =====================================================================
+  // CAIXINHA DE CAMISINHAS (porta-luvas do Subaru)
+  // =====================================================================
+  let texCamisinha = null;
+  function createCamisinhasMesh() {
+    const THREE = T();
+    const grp = new THREE.Group();
+    if (!texCamisinha) {
+      const c = document.createElement('canvas');
+      c.width = 256;
+      c.height = 160;
+      const x = c.getContext('2d');
+      const gr = x.createLinearGradient(0, 0, 256, 160);
+      gr.addColorStop(0, '#e11d48');
+      gr.addColorStop(1, '#7e22ce');
+      x.fillStyle = gr;
+      x.fillRect(0, 0, 256, 160);
+      x.fillStyle = 'rgba(255,255,255,0.18)';
+      for (let i = 0; i < 6; i++) { x.beginPath(); x.arc(30 + i * 45, 140 - (i % 2) * 20, 16, 0, Math.PI * 2); x.fill(); }
+      x.fillStyle = '#ffffff';
+      x.font = 'bold 40px Arial, sans-serif';
+      x.textAlign = 'center';
+      x.fillText('PRESERVATIVO', 128, 62);
+      x.font = 'bold 22px Arial, sans-serif';
+      x.fillStyle = '#fde68a';
+      x.fillText('LUBRIFICADO · 3 UNIDADES', 128, 96);
+      x.strokeStyle = '#ffffff';
+      x.lineWidth = 4;
+      x.strokeRect(6, 6, 244, 148);
+      texCamisinha = new THREE.CanvasTexture(c);
+      if ('colorSpace' in texCamisinha) texCamisinha.colorSpace = THREE.SRGBColorSpace;
+    }
+    const lado = new THREE.MeshStandardMaterial({ color: '#be123c', roughness: 0.55 });
+    const frente = new THREE.MeshStandardMaterial({ map: texCamisinha, roughness: 0.5 });
+    // caixinha deitada: frente pra cima
+    const caixa = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.36, 1.0), [lado, lado, frente, lado, lado, lado]);
+    caixa.castShadow = true;
+    grp.add(caixa);
+    // dois envelopinhos de alumínio quadrados saindo do lado
+    const foil = new THREE.MeshStandardMaterial({ color: '#d4d4d8', roughness: 0.25, metalness: 0.85 });
+    const anel = new THREE.MeshStandardMaterial({ color: '#a1a1aa', roughness: 0.3, metalness: 0.8 });
+    [[1.05, 0.0, 0.15, 0.35], [1.25, -0.05, -0.3, -0.25]].forEach(([px, py, pz, rot]) => {
+      const env = new THREE.Group();
+      env.add(new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.04, 0.75), foil));
+      const r = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.035, 6, 20), anel);
+      r.rotation.x = Math.PI / 2;
+      r.position.y = 0.035;
+      env.add(r);
+      env.position.set(px, py - 0.14, pz);
+      env.rotation.y = rot;
+      grp.add(env);
+    });
+    return grp;
   }
 
   // =====================================================================
@@ -2358,6 +2412,7 @@
     createCivicMesh,
     addHeadlights,
     createCookieMesh,
+    createCamisinhasMesh,
     createCupMesh,
     desenharLatte,
     createPhoneMesh,
