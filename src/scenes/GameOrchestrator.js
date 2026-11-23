@@ -415,7 +415,7 @@
         : ''
       }
               <button class="mg-btn ${temSave ? '' : 'primary span-2'}" id="mm-new">🚙 Novo Jogo (Começar no Subaru · Safepoint)</button>
-              <button class="mg-btn ${temSave ? '' : 'span-2'}" id="mm-resenha">🎶 Momento Resenha</button>
+              <button class="mg-btn ${temSave ? '' : 'span-2'}" id="mm-resenha">🎶 Momento Resenha <small>· 🌐 online</small></button>
               <button class="mg-btn" id="mm-caps">📖 Capítulos</button>
               <button class="mg-btn" id="mm-museum">🏛️ Museu das Memórias</button>
               <button class="mg-btn" id="mm-cfg">⚙️ Configurações</button>
@@ -630,9 +630,17 @@
   }
 
   // Atalhos por URL (úteis para testar): ?capitulo=3  ·  ?minigame=basquete_maria_clara  ·  ?safepoint=4
+  // Convite da Resenha Online: ?resenha=CODIGO
   function aplicarAtalhosDeTeste() {
     const q = new URLSearchParams(location.search);
-    if (q.has('capitulo')) setTimeout(() => iniciarCapitulo(Number(q.get('capitulo'))), 50);
+    if (q.has('resenha')) {
+      root.LuiggiStory3D?.pausar();
+      setTimeout(async () => {
+        await root.LuiggiSubaruPOV.abrirMomentoResenha({ sala: q.get('resenha') });
+        root.LuiggiStory3D?.retomar();
+        mostrarMenuPrincipal();
+      }, 50);
+    } else if (q.has('capitulo')) setTimeout(() => iniciarCapitulo(Number(q.get('capitulo'))), 50);
     else if (q.has('minigame')) setTimeout(() => executarMinigame(q.get('minigame'), true).then(() => mostrarMenuPrincipal()), 50);
     else if (q.has('safepoint')) {
       root.LuiggiStory3D?.pausar();

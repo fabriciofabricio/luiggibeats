@@ -1924,3 +1924,51 @@ body.lc-escondido .lc-mini { opacity: 0; pointer-events: none; transform: transl
 #safepoint-overlay:not(.hidden) ~ .lc-mini { top: 84px; bottom: auto; }
 /* No Momento Resenha os controles de música já ficam no painel do carro */
 body.resenha-aberta .lc-mini { display: none; }
+
+/* ==================== RESENHA ONLINE ==================== */
+.rs-online-btn.ativo { border-color: #22c55e; color: #fff; background: rgba(34, 197, 94, 0.18); }
+.rs-pov-n { color: #86efac; font-weight: 800; font-size: 0.72em; }
+.rs-online {
+  position: absolute; z-index: 5; top: 62px; right: clamp(10px, 3vw, 36px);
+  width: min(340px, calc(100vw - 32px)); max-height: calc(100vh - 230px); overflow-y: auto;
+  background: linear-gradient(180deg, rgba(10, 14, 30, 0.95), rgba(6, 8, 18, 0.97));
+  border: 1px solid rgba(96, 165, 250, 0.4); border-top: 3px solid #22c55e; border-radius: 16px;
+  padding: 12px 14px 14px; color: #e2e8f0; backdrop-filter: blur(12px); box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.rs-online .mg-btn { width: 100%; }
+.rs-on-head { display: flex; justify-content: space-between; align-items: center; }
+.rs-on-campo { display: flex; flex-direction: column; gap: 4px; font-size: 0.75rem; color: #93c5fd; text-transform: uppercase; letter-spacing: 0.06em; }
+.rs-online input {
+  background: #0b1020; border: 1px solid #1e3a8a; border-radius: 10px; color: #f8fafc;
+  padding: 8px 10px; font-size: 0.95rem; font-family: inherit; text-transform: none; letter-spacing: normal; min-width: 0;
+}
+.rs-online input:focus { outline: none; border-color: #fbbf24; }
+.rs-online input.erro { border-color: #ef4444; }
+#rs-on-codigo { flex: 1; text-transform: uppercase; letter-spacing: 0.25em; font-weight: 800; text-align: center; }
+.rs-on-linha { display: flex; gap: 8px; }
+.rs-on-linha .mg-btn { width: auto; }
+.rs-on-ou { display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 0.75rem; }
+.rs-on-ou::before, .rs-on-ou::after { content: ''; flex: 1; height: 1px; background: #1e293b; }
+.rs-on-dica { color: #94a3b8; font-size: 0.75rem; line-height: 1.4; }
+.rs-on-aviso { color: #fcd34d; font-size: 0.75rem; line-height: 1.4; margin: 0; }
+.rs-on-sala { display: flex; flex-direction: column; align-items: center; padding: 6px 0 2px; }
+.rs-on-sala small { color: #93c5fd; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.rs-on-sala strong { font-size: 2rem; letter-spacing: 0.3em; color: #fbbf24; font-family: monospace; padding-left: 0.3em; }
+.rs-on-status { font-size: 0.8rem; color: #86efac; text-align: center; }
+.rs-on-status.pulsando { color: #93c5fd; animation: rsPulsa 1.2s ease-in-out infinite; }
+@keyframes rsPulsa { 50% { opacity: 0.45; } }
+.rs-on-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.rs-on-lista li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 10px; background: rgba(30, 41, 59, 0.55); font-size: 0.88rem; }
+.rs-on-lista li.eu { background: rgba(251, 191, 36, 0.12); }
+.rs-on-nome { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+.rs-on-nome small { color: #94a3b8; font-weight: 500; }
+.rs-on-banco { color: #94a3b8; font-size: 0.72rem; }
+/* Nome de quem está em cada banco, por cima do boneco */
+.rs-tags { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.rs-tag {
+  position: absolute; left: 0; top: 0; white-space: nowrap; will-change: transform;
+  background: rgba(8, 12, 28, 0.85); border: 1px solid #22c55e; color: #dcfce7;
+  font-size: 0.78rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+}
+@media (max-width: 760px) { .rs-online { top: 96px; max-height: calc(100vh - 300px); } }

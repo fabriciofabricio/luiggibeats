@@ -606,14 +606,20 @@
       return `📻 ${NOMES_RADIO[ESTILOS_RADIO[st.radio]]}`;
     }
 
-    function interagir(acao) {
+    /**
+     * op.aberto: estado forçado de porta-luvas/compartimento (vem do anfitrião na Resenha Online).
+     * op.remoto: a ação foi de outra pessoa (não conta conquista nem contador pra quem só viu).
+     */
+    function interagir(acao, op = {}) {
       const A = root.LuiggiAudio;
       if (acao === 'tictac') {
-        st.consoleAberto = !st.consoleAberto;
+        st.consoleAberto = op.aberto !== undefined ? !!op.aberto : !st.consoleAberto;
         A.playSFX(st.consoleAberto ? 'tranca' : 'blip');
         if (!st.consoleAberto) return { texto: 'Compartimento fechado. Os Tic Tacs continuam lá dentro. Sempre estarão.' };
-        root.LuiggiSave?.incrementarContador('ticTacs', 1);
-        root.LuiggiAchievements?.desbloquear('so_tic_tac');
+        if (!op.remoto) {
+          root.LuiggiSave?.incrementarContador('ticTacs', 1);
+          root.LuiggiAchievements?.desbloquear('so_tic_tac');
+        }
         return {
           texto: 'Você abre o compartimento entre os bancos da frente: só caixinhas de Tic Tac branco. Várias. Mais nada.',
           interjeicao: { ids: ['mateus_buse', 'fabricio'], texto: 'kkkkkkkkkk', som: 'risada' },
@@ -635,7 +641,7 @@
       if (acao === 'radio') return { texto: trocarRadio(1), radio: true };
       if (acao === 'portaluvas') {
         A.playSFX('forno');
-        st.portaAberta = !st.portaAberta;
+        st.portaAberta = op.aberto !== undefined ? !!op.aberto : !st.portaAberta;
         interior.cookieMini.visible = st.portaAberta;
         return { texto: st.portaAberta ? 'Porta-luvas aberto: um cookie de emergência. Fabricio: "Me dá um aí, Tico!"' : 'Porta-luvas fechado. O cheiro de baunilha fica.' };
       }
@@ -673,7 +679,16 @@
       }
     }
 
-    return { interagir, update, trocarRadio, st };
+    /** Ajusta porta-luvas e compartimento sem som (quem entra numa Resenha Online já em andamento). */
+    function definir(e = {}) {
+      if (typeof e.porta === 'boolean') {
+        st.portaAberta = e.porta;
+        interior.cookieMini.visible = e.porta;
+      }
+      if (typeof e.cons === 'boolean') st.consoleAberto = e.cons;
+    }
+
+    return { interagir, update, trocarRadio, definir, st };
   }
 
   // ------------------------------------------------------------------
@@ -1057,11 +1072,33 @@
     { quem: 'fabricio', fala: 'Tico e Teco e o comentarista mutado. Formação clássica.' }
   ];
 
-  function abrirMomentoResenha() {
+  // Resenha Online: ações que mudam o carro de todo mundo (o resto é só da tela de cada um)
+  const ACOES_COMPARTILHADAS = ['volante', 'buzina', 'portaluvas', 'tictac'];
+  const CMDS_RADIO = ['next', 'prev', 'toggle'];
+  const escHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const lerNomeOnline = () => {
+    try {
+      return localStorage.getItem('luiggi_resenha_nome') || '';
+    } catch (_) {
+      return '';
+    }
+  };
+  const gravarNomeOnline = (n) => {
+    try {
+      localStorage.setItem('luiggi_resenha_nome', n);
+    } catch (_) { }
+  };
+
+  /**
+   * opcoes.sala: código de uma sala da Resenha Online (link de convite ?resenha=CODIGO);
+   * abre o painel online já preenchido.
+   */
+  function abrirMomentoResenha(opcoes = {}) {
     return new Promise((resolve) => {
       const ov = document.getElementById('safepoint-overlay');
       const map = root.LuiggiData.cache.personagemMap;
       const cloud = () => (root.LuiggiCloud?.ativo ? root.LuiggiCloud : null);
+      const Online = root.LuiggiResenhaOnline;
 
       root.LuiggiAudio.tocarEstiloSintetizado('lofi', 98);
       document.body.classList.add('resenha-aberta');
@@ -1070,12 +1107,18 @@
       ov.innerHTML = `
         <div class="sp3d-shell resenha-shell" id="rs-shell">
           <div class="sp3d-view" id="rs-view"></div>
+          <div class="rs-tags" id="rs-tags"></div>
           <div class="sp3d-topbar">
             <div class="sp3d-local"><span>🎶 Momento Resenha</span><small id="rs-pov-lbl"></small></div>
             <div class="btn-row rs-povs">
-              ${Object.entries(LUGARES).map(([id, l]) => `<button class="mini-btn" data-pov="${id}">${l.icone} ${l.nome}</button>`).join('')}
+              ${Object.entries(LUGARES).map(([id, l]) => `<button class="mini-btn" data-pov="${id}">${l.icone} ${l.nome}<span class="rs-pov-n" data-pov-n="${id}"></span></button>`).join('')}
+              <button class="mini-btn rs-online-btn" id="rs-online-btn" title="Resenha Online: várias pessoas no mesmo Subaru">🌐 Online</button>
               <button class="mini-btn" id="rs-sair">🏠 Menu</button>
             </div>
+          </div>
+          <div class="rs-online hidden" id="rs-online">
+            <div class="rs-on-head"><strong>🌐 Resenha Online</strong><button class="mini-btn" id="rs-on-fechar" title="Fechar">✕</button></div>
+            <div id="rs-on-corpo"></div>
           </div>
           <div class="sp3d-tooltip hidden" id="rs-tip"></div>
           <div class="sp3d-dialog">
@@ -1097,43 +1140,117 @@
         </div>`;
 
       const shell = document.getElementById('rs-shell');
+      const view = document.getElementById('rs-view');
       const txtEl = document.getElementById('rs-text');
       const spkEl = document.getElementById('rs-speaker');
       const portraitEl = document.getElementById('rs-portrait');
       const faixaEl = document.getElementById('rs-faixa');
+      const painelOnline = document.getElementById('rs-online');
       let ultimaInteracao = performance.now();
+      let povAtual = 'luis';
 
-      function falar(texto, quem = null) {
+      // Estado da Resenha Online
+      let net = null;
+      let modoPainel = null;
+      let prefill = Online ? Online.normalizarCodigo(opcoes.sala) : '';
+      let chaveRadio = null; // última faixa/estado do rádio anunciado
+      let ultimoPor = null; // { id, chave }: quem mexeu no rádio por último
+      let membrosAnt = new Map();
+      let jaSincronizou = false;
+
+      function falar(texto, quem = null, rotulo = null) {
         txtEl.textContent = texto;
         if (quem) {
           const p = map.get(quem);
           spkEl.textContent = `${LUGARES[quem]?.icone || ''} ${p?.nome || quem}`;
           if (p) portraitEl.innerHTML = root.LuiggiRig.renderVisualNovelSprite(p, { expressao: 'feliz', speaking: true });
+        } else if (rotulo) spkEl.textContent = rotulo;
+      }
+      const avisoOnline = (texto) => falar(texto, null, '🌐 Resenha Online');
+
+      const carro = montarCarro3D(view, { pov: 'luis', tip: document.getElementById('rs-tip'), onAcao: interagir, onFrame: posicionarTags });
+
+      // ---------------- Rádio ----------------
+      function estadoRadio() {
+        const c = cloud();
+        if (c) return { m: 'c', id: c.faixa?.id || null, p: Math.round((c.posicao || 0) * 1000) / 1000, on: c.tocando };
+        return { m: 's', e: carro ? carro.controle.st.radio : 0, on: tocandoSintetizado };
+      }
+      const chaveDe = (r) => `${r.m === 'c' ? r.id : `s${r.e}`}|${r.on ? 1 : 0}`;
+
+      /** Executa um comando de rádio aqui (sozinho ou como anfitrião). */
+      function executarRadio(cmd) {
+        let txt = null;
+        const c = cloud();
+        if (cmd === 'next' || cmd === 'prev') {
+          if (carro) txt = carro.controle.trocarRadio(cmd === 'next' ? 1 : -1);
+          else if (c) cmd === 'next' ? c.proxima() : c.anterior();
+          tocandoSintetizado = !cloud();
+        } else if (cmd === 'toggle') {
+          if (c) {
+            if (c.tocando) c.pause();
+            else c.play();
+          } else if (tocandoSintetizado) {
+            root.LuiggiAudio.pararMusica();
+            tocandoSintetizado = false;
+          } else {
+            root.LuiggiAudio.tocarEstiloSintetizado(ESTILOS_RADIO[carro ? carro.controle.st.radio : 0], 98);
+            tocandoSintetizado = true;
+          }
+        }
+        atualizarFaixa();
+        setTimeout(atualizarFaixa, 120);
+        return txt;
+      }
+
+      /** Botões ⏮ ⏯ ⏭ e o rádio do painel. Online, quem decide é o anfitrião. */
+      function comandoRadio(cmd, doCarro = false) {
+        ultimaInteracao = performance.now();
+        if (net) {
+          if (!net.pedir({ tipo: 'radio', cmd })) avisoOnline('Ainda conectando ao carro…');
+          return;
+        }
+        const txt = executarRadio(cmd);
+        if (doCarro && txt) falar(txt);
+      }
+
+      /** Quem não é anfitrião: deixa o rádio igual ao dele. */
+      function aplicarEstadoRadio(r, atraso) {
+        const c = cloud();
+        if (r.m === 'c' && c && typeof r.id === 'string') {
+          c.sincronizar({ id: r.id, pos: (Number(r.p) || 0) + (r.on ? atraso : 0), tocando: !!r.on });
+          return;
+        }
+        // Rádio sintetizado (ou este jogo não tem as músicas): segue só a estação e o liga/desliga
+        const e = r.m === 's' ? Math.max(0, Math.min(ESTILOS_RADIO.length - 1, Number(r.e) || 0)) : carro ? carro.controle.st.radio : 0;
+        const mudou = carro && carro.controle.st.radio !== e;
+        if (carro) carro.controle.st.radio = e;
+        if (r.on && (!tocandoSintetizado || mudou)) {
+          if (c?.tocando) c.pause(false);
+          root.LuiggiAudio.tocarEstiloSintetizado(ESTILOS_RADIO[e], 98, { forcar: true });
+          tocandoSintetizado = true;
+        } else if (!r.on && tocandoSintetizado) {
+          root.LuiggiAudio.pararMusica();
+          tocandoSintetizado = false;
         }
       }
 
-      const carro = montarCarro3D(document.getElementById('rs-view'), { pov: 'luis', tip: document.getElementById('rs-tip'), onAcao: interagir });
-
-      function interagir(acao) {
-        ultimaInteracao = performance.now();
-        if (acaoDeTela(carro, acao, falar)) return;
-        const r = carro ? carro.controle.interagir(acao) : null;
-        aplicarReacao(carro, r, falar, shell);
-        if (!carro && acao === 'tictac') root.LuiggiDialogue?.mostrarInterjeicao?.({ ids: ['mateus_buse', 'fabricio'], texto: 'kkkkkkkkkk', som: 'risada', host: shell });
-        if (r?.radio) tocandoSintetizado = !cloud();
-        if (carro && carro.cartas[acao]) carro.cartas[acao].setExpression('feliz');
-        atualizarFaixa();
-      }
-
-      function trocarPOV(id) {
-        carro?.aplicarPOV(id);
-        ov.querySelectorAll('[data-pov]').forEach((b) => b.classList.toggle('ativo', b.dataset.pov === id));
-        document.getElementById('rs-pov-lbl').textContent = `${LUGARES[id].icone} ${LUGARES[id].nome} · ${LUGARES[id].papel} · 🖱️ mexa o mouse pra olhar em volta`;
-        const p = map.get(id);
-        spkEl.textContent = `${LUGARES[id].icone} Você é ${p?.nome || LUGARES[id].nome}`;
-        if (p) portraitEl.innerHTML = root.LuiggiRig.renderVisualNovelSprite(p, { expressao: 'feliz', speaking: false });
-        txtEl.textContent = POV_TEXTO[id];
-        root.LuiggiAudio.playSFX('blip');
+      /** Anuncia quando a música muda ou alguém pausa/solta o som. */
+      function notarRadio(r, porId) {
+        const chave = chaveDe(r);
+        if (chave === chaveRadio) return;
+        const antes = chaveRadio;
+        chaveRadio = chave;
+        if (antes === null || !net) return;
+        const quem = porId ? (porId === net.eu ? 'Você' : net.nomeDe(porId)) : null;
+        const trocouFaixa = antes.split('|')[0] !== chave.split('|')[0];
+        if (trocouFaixa) {
+          const f = cloud()?.faixa;
+          const nome = r.m === 'c' ? (f ? `"${f.titulo}" — ${f.artista}` : 'outra faixa') : NOMES_RADIO[ESTILOS_RADIO[r.e]] || 'outra estação';
+          falar(quem ? `${quem} trocou a música: ${nome}` : `Tocando agora: ${nome}`, null, '📻 Rádio');
+        } else {
+          falar(r.on ? `▶ ${quem || 'O rádio'} soltou o som.` : `⏸ ${quem || 'O rádio'} pausou o rádio.`, null, '📻 Rádio');
+        }
       }
 
       function atualizarFaixa() {
@@ -1146,47 +1263,338 @@
         }
       }
 
-      document.getElementById('rs-prev').addEventListener('click', () => {
-        if (carro) carro.controle.trocarRadio(-1);
-        tocandoSintetizado = !cloud();
-        atualizarFaixa();
-      });
-      document.getElementById('rs-next').addEventListener('click', () => {
-        if (carro) carro.controle.trocarRadio(1);
-        tocandoSintetizado = !cloud();
-        atualizarFaixa();
-      });
-      document.getElementById('rs-play').addEventListener('click', () => {
-        const c = cloud();
-        if (c) {
-          if (c.tocando) c.pause();
-          else c.play();
-        } else if (tocandoSintetizado) {
-          root.LuiggiAudio.pararMusica();
-          tocandoSintetizado = false;
-        } else {
-          root.LuiggiAudio.tocarEstiloSintetizado(ESTILOS_RADIO[carro ? carro.controle.st.radio : 0], 98);
-          tocandoSintetizado = true;
+      // ---------------- Ações do carro ----------------
+      function interagir(acao) {
+        ultimaInteracao = performance.now();
+        if (acaoDeTela(carro, acao, falar)) return;
+        if (acao === 'radio') return comandoRadio('next', true);
+        if (net && carro && ACOES_COMPARTILHADAS.includes(acao)) {
+          if (!net.pedir({ tipo: 'acao', acao })) avisoOnline('Ainda conectando ao carro…');
+          return;
         }
-        setTimeout(atualizarFaixa, 120);
+        const r = carro ? carro.controle.interagir(acao) : null;
+        aplicarReacao(carro, r, falar, shell);
+        if (!carro && acao === 'tictac') root.LuiggiDialogue?.mostrarInterjeicao?.({ ids: ['mateus_buse', 'fabricio'], texto: 'kkkkkkkkkk', som: 'risada', host: shell });
+        if (carro && carro.cartas[acao]) carro.cartas[acao].setExpression('feliz');
+        atualizarFaixa();
+      }
+
+      /** Mostra o resultado de uma ação; se foi outra pessoa, aparece o nome dela e a câmera não vira. */
+      function mostrarReacao(r, porId) {
+        if (!r) return;
+        if (!net || porId === net.eu) return aplicarReacao(carro, r, falar, shell);
+        const nome = net.nomeDe(porId);
+        falar(String(r.texto || '').replace(/^Você /, `${nome} `), null, `🌐 ${nome}`);
+        if (r.interjeicao) root.LuiggiDialogue?.mostrarInterjeicao?.({ ...r.interjeicao, host: shell });
+      }
+
+      // ---------------- Anfitrião ----------------
+      function publicarEstado(alvo) {
+        if (!net || !net.souHost) return;
+        const r = estadoRadio();
+        const por = ultimoPor && ultimoPor.chave === chaveDe(r) ? ultimoPor.id : null;
+        net.enviarEstado({ r, c: carro ? { porta: carro.controle.st.portaAberta, cons: carro.controle.st.consoleAberto } : null, por }, alvo);
+        notarRadio(r, por);
+      }
+
+      function processarPedido(d, de) {
+        if (!d || typeof d !== 'object') return;
+        if (d.tipo === 'radio' && CMDS_RADIO.includes(d.cmd)) {
+          executarRadio(d.cmd);
+          ultimoPor = { id: de, chave: chaveDe(estadoRadio()) };
+          publicarEstado();
+        } else if (d.tipo === 'acao' && ACOES_COMPARTILHADAS.includes(d.acao) && carro) {
+          const r = carro.controle.interagir(d.acao, { remoto: de !== net.eu });
+          mostrarReacao(r, de);
+          net.fx({ acao: d.acao, por: de, porta: carro.controle.st.portaAberta, cons: carro.controle.st.consoleAberto });
+        }
+      }
+
+      // ---------------- Quem segue o anfitrião ----------------
+      function aplicarEstado(d, _de, atraso) {
+        if (!d || typeof d !== 'object') return;
+        if (d.r && typeof d.r === 'object') {
+          aplicarEstadoRadio(d.r, atraso);
+          notarRadio(d.r, typeof d.por === 'string' ? d.por : null);
+        }
+        if (d.c && carro) carro.controle.definir(d.c);
+        atualizarFaixa();
+        if (!jaSincronizou && net) {
+          jaSincronizou = true;
+          atualizarListaOnline();
+          avisoOnline(`Você entrou no Subaru da sala ${net.sala}! O rádio agora é de todo mundo.`);
+        }
+      }
+
+      function aplicarFx(d) {
+        if (!carro || !d || !ACOES_COMPARTILHADAS.includes(d.acao)) return;
+        const aberto = d.acao === 'tictac' ? d.cons : d.acao === 'portaluvas' ? d.porta : undefined;
+        const r = carro.controle.interagir(d.acao, { remoto: d.por !== net?.eu, aberto });
+        mostrarReacao(r, d.por);
+      }
+
+      // ---------------- Conexão ----------------
+      function conectar(sala, nome, fundador) {
+        if (net || !Online) return;
+        const n = Online.limparNome(nome || lerNomeOnline() || `Passageiro ${Math.floor(Math.random() * 90 + 10)}`);
+        gravarNomeOnline(n);
+        root.LuiggiAudio?.obterContexto?.();
+        // Quem entra numa sala existente não avança faixa sozinho até o anfitrião mandar o estado
+        if (!fundador && cloud()) cloud().controleExterno = true;
+        try {
+          net = Online.criarSessao({
+            sala,
+            nome: n,
+            pov: povAtual,
+            fundador,
+            eventos: {
+              onMembros: (lista, info) => {
+                anunciarMudanca(lista, info);
+                atualizarListaOnline();
+              },
+              onHost: (souHost, hostId, antes) => {
+                const c = cloud();
+                if (c) c.controleExterno = !souHost;
+                if (souHost) setTimeout(publicarEstado, 0);
+                if (antes && net) avisoOnline(souHost ? '👑 O anfitrião saiu: agora o rádio de referência é o seu.' : `👑 ${net.nomeDe(hostId)} virou o anfitrião.`);
+                else if (souHost && !fundador && net) avisoOnline('Ninguém apareceu nessa sala ainda, então o rádio de referência é o seu. Quando a galera entrar, todo mundo ouve junto.');
+                setTimeout(atualizarListaOnline, 0);
+              },
+              onEstado: aplicarEstado,
+              onPedido: processarPedido,
+              onFx: aplicarFx,
+              onPrecisaEstado: (alvo) => publicarEstado(alvo),
+              onStatus: (tipo, msg) => tipo === 'erro' && avisoOnline(`Problema na conexão: ${msg}`)
+            }
+          });
+        } catch (e) {
+          net = null;
+          if (cloud()) cloud().controleExterno = false;
+          avisoOnline('Não deu pra ligar o modo online neste navegador.');
+          return;
+        }
+        prefill = sala;
+        renderOnline();
+        avisoOnline(fundador ? `Sala ${sala} criada! Copie o link do convite e mande pra galera.` : `Entrando na sala ${sala}… procurando a galera.`);
+      }
+
+      function desconectar(manual) {
+        if (!net) return;
+        net.sair();
+        net = null;
+        if (cloud()) cloud().controleExterno = false;
+        chaveRadio = null;
+        ultimoPor = null;
+        membrosAnt = new Map();
+        jaSincronizou = false;
+        renderOnline();
+        if (manual) avisoOnline('Você saiu da sala. O Subaru voltou a ser só seu.');
+      }
+
+      function anunciarMudanca(lista, info) {
+        const antes = membrosAnt;
+        membrosAnt = new Map(lista.map((p) => [p.id, p.pov]));
+        if (!net || !net.sincronizado || !info) return;
+        const p = lista.find((x) => x.id === info.id);
+        if (info.tipo === 'entrou' && p) {
+          root.LuiggiAudio.playSFX('blip');
+          avisoOnline(`${p.nome} entrou no Subaru (${LUGARES[p.pov]?.papel || 'banco'}).`);
+        } else if (info.tipo === 'saiu') avisoOnline(`${info.nome} saiu do carro.`);
+        else if (info.tipo === 'mudou' && p && antes.has(p.id) && antes.get(p.id) !== p.pov) avisoOnline(`${p.nome} trocou de lugar: agora tá no POV ${LUGARES[p.pov]?.nome || p.pov}.`);
+      }
+
+      const linkConvite = () => `${location.href.split(/[?#]/)[0]}?resenha=${net.sala}`;
+      async function copiarConvite() {
+        if (!net) return;
+        const link = linkConvite();
+        try {
+          await navigator.clipboard.writeText(link);
+          avisoOnline(`Link copiado! Mande pra galera: ${link}`);
+        } catch (_) {
+          window.prompt('Copie o link do convite:', link);
+        }
+      }
+
+      // ---------------- Painel online ----------------
+      function abrirPainelOnline(v) {
+        painelOnline.classList.toggle('hidden', !v);
+        if (v) {
+          renderOnline();
+          // Convite com nome já salvo: o foco vai direto pro Entrar
+          painelOnline.querySelector(prefill && lerNomeOnline() ? '#rs-on-entrar' : '#rs-on-nome')?.focus();
+        }
+      }
+
+      function renderOnline() {
+        const corpo = document.getElementById('rs-on-corpo');
+        const modo = !Online || !Online.disponivel() ? 'indisponivel' : net ? 'sala' : 'entrar';
+        if (modo !== modoPainel) {
+          modoPainel = modo;
+          if (modo === 'indisponivel') {
+            corpo.innerHTML = '<p class="rs-on-aviso">Este navegador não suporta o modo online (WebRTC). Tente no Chrome, Edge, Firefox ou Safari atualizados.</p>';
+          } else if (modo === 'entrar') {
+            corpo.innerHTML = `
+              <label class="rs-on-campo">Seu nome<input id="rs-on-nome" maxlength="18" autocomplete="nickname" placeholder="Como a galera te chama" value="${escHtml(lerNomeOnline())}"></label>
+              <button class="mg-btn primary" id="rs-on-criar">➕ Criar sala</button>
+              <div class="rs-on-ou"><span>ou entre numa sala</span></div>
+              <div class="rs-on-linha"><input id="rs-on-codigo" maxlength="8" placeholder="CÓDIGO" spellcheck="false" autocapitalize="characters" value="${escHtml(prefill)}"><button class="mg-btn" id="rs-on-entrar">Entrar</button></div>
+              <small class="rs-on-dica">Até ${Online.MAX_PESSOAS} pessoas no mesmo Subaru. Cada um escolhe o banco (POV) que quiser e todo mundo mexe no rádio. A música toca no jogo de cada um, sincronizada.</small>`;
+            const nomeEl = corpo.querySelector('#rs-on-nome');
+            const codEl = corpo.querySelector('#rs-on-codigo');
+            codEl.addEventListener('input', () => {
+              codEl.value = Online.normalizarCodigo(codEl.value);
+              codEl.classList.remove('erro');
+            });
+            const entrar = () => {
+              const c = Online.normalizarCodigo(codEl.value);
+              if (c.length < 4) {
+                codEl.classList.add('erro');
+                codEl.focus();
+                return;
+              }
+              conectar(c, nomeEl.value, false);
+            };
+            corpo.querySelector('#rs-on-criar').addEventListener('click', () => conectar(Online.gerarCodigo(), nomeEl.value, true));
+            corpo.querySelector('#rs-on-entrar').addEventListener('click', entrar);
+            codEl.addEventListener('keydown', (e) => e.key === 'Enter' && entrar());
+            nomeEl.addEventListener('keydown', (e) => e.key === 'Enter' && (codEl.value ? entrar() : corpo.querySelector('#rs-on-criar').click()));
+          } else {
+            corpo.innerHTML = `
+              <div class="rs-on-sala"><small>Código da sala</small><strong id="rs-on-cod"></strong></div>
+              <button class="mg-btn primary" id="rs-on-copiar">🔗 Copiar link do convite</button>
+              ${location.protocol === 'file:' ? '<small class="rs-on-aviso">Você abriu o jogo direto do arquivo: o link só funciona neste PC. Pra chamar a galera, abram o jogo pelo site (GitHub Pages) e usem o código.</small>' : ''}
+              <div class="rs-on-status" id="rs-on-status"></div>
+              <ul class="rs-on-lista" id="rs-on-lista"></ul>
+              <label class="rs-on-campo">Seu nome<input id="rs-on-nome" maxlength="18" value=""></label>
+              <button class="mg-btn" id="rs-on-sair">🚪 Sair da sala</button>`;
+            corpo.querySelector('#rs-on-copiar').addEventListener('click', copiarConvite);
+            const nomeEl = corpo.querySelector('#rs-on-nome');
+            nomeEl.value = net.nomeDe(net.eu);
+            nomeEl.addEventListener('change', () => {
+              const n = Online.limparNome(nomeEl.value);
+              nomeEl.value = n;
+              gravarNomeOnline(n);
+              net?.atualizar({ nome: n });
+            });
+            corpo.querySelector('#rs-on-sair').addEventListener('click', () => desconectar(true));
+          }
+        }
+        atualizarListaOnline();
+      }
+
+      /** Atualiza o que muda com a galera: botão 🌐, lista, contagem por banco e etiquetas no 3D. */
+      function atualizarListaOnline() {
+        const btn = document.getElementById('rs-online-btn');
+        if (!btn) return;
+        btn.textContent = net ? `🌐 ${net.sala} · ${net.total}` : '🌐 Online';
+        btn.classList.toggle('ativo', !!net);
+        const pessoas = net ? net.pessoas : [];
+        ov.querySelectorAll('[data-pov-n]').forEach((el) => {
+          const n = pessoas.filter((p) => !p.eu && p.pov === el.dataset.povN).length;
+          el.textContent = n ? ` +${n}` : '';
+        });
+        Object.entries(tagEls).forEach(([id, el]) => {
+          const nomes = pessoas.filter((p) => !p.eu && p.pov === id).map((p) => p.nome);
+          el.textContent = nomes.length ? `🎮 ${nomes.join(', ')}` : '';
+          el.dataset.vazio = nomes.length ? '' : '1';
+          if (!nomes.length) el.classList.add('hidden');
+        });
+        if (!net || modoPainel !== 'sala') return;
+        const cod = document.getElementById('rs-on-cod');
+        if (cod) cod.textContent = net.sala;
+        const status = document.getElementById('rs-on-status');
+        if (status) {
+          status.textContent = !net.sincronizado ? 'Conectando ao carro… procurando a galera.' : net.total === 1 ? 'Só você no carro por enquanto. Mande o link pra galera.' : `${net.total} pessoas no Subaru`;
+          status.classList.toggle('pulsando', !net.sincronizado);
+        }
+        const lista = document.getElementById('rs-on-lista');
+        if (lista) {
+          lista.innerHTML = pessoas
+            .map(
+              (p) => `<li class="${p.eu ? 'eu' : ''}">
+                <span class="rs-on-pov">${LUGARES[p.pov]?.icone || '❔'}</span>
+                <span class="rs-on-nome">${escHtml(p.nome)}${p.eu ? ' <small>(você)</small>' : ''}</span>
+                ${p.host ? '<span class="rs-on-host" title="Anfitrião: o rádio dele é a referência de todo mundo">👑</span>' : ''}
+                ${p.versaoDiferente ? '<span title="Essa pessoa está com outra versão do jogo">⚠️</span>' : ''}
+                <small class="rs-on-banco">${escHtml(LUGARES[p.pov]?.nome || '')}</small>
+              </li>`
+            )
+            .join('');
+        }
+      }
+
+      // ---------------- Etiquetas 3D (nome de quem está em cada banco) ----------------
+      const tagsHost = document.getElementById('rs-tags');
+      const tagEls = {};
+      Object.keys(LUGARES).forEach((id) => {
+        const el = document.createElement('div');
+        el.className = 'rs-tag hidden';
+        el.dataset.vazio = '1';
+        tagsHost.appendChild(el);
+        tagEls[id] = el;
       });
+      const vTag = root.THREE ? new root.THREE.Vector3() : null;
+      function posicionarTags() {
+        if (!net || !carro || !vTag) return;
+        const cam = carro.stage.camera;
+        const w = view.clientWidth;
+        const h = view.clientHeight;
+        Object.entries(LUGARES).forEach(([id, l]) => {
+          const el = tagEls[id];
+          if (!el || el.dataset.vazio || id === carro.pov) {
+            el?.classList.add('hidden');
+            return;
+          }
+          // O sprite tem uma folga transparente em cima: 84% da altura fica logo acima da cabeça
+          vTag.set(l.carta[0], l.carta[1] + l.altura * 0.84, l.carta[2]).project(cam);
+          const dentro = vTag.z < 1 && Math.abs(vTag.x) < 1.05 && Math.abs(vTag.y) < 1.05;
+          el.classList.toggle('hidden', !dentro);
+          if (dentro) el.style.transform = `translate(${((vTag.x + 1) / 2) * w}px, ${((1 - vTag.y) / 2) * h}px) translate(-50%, -100%)`;
+        });
+      }
+
+      // ---------------- POV ----------------
+      function trocarPOV(id) {
+        if (!LUGARES[id]) return;
+        povAtual = id;
+        carro?.aplicarPOV(id);
+        ov.querySelectorAll('[data-pov]').forEach((b) => b.classList.toggle('ativo', b.dataset.pov === id));
+        document.getElementById('rs-pov-lbl').textContent = `${LUGARES[id].icone} ${LUGARES[id].nome} · ${LUGARES[id].papel} · 🖱️ mexa o mouse pra olhar em volta`;
+        const p = map.get(id);
+        spkEl.textContent = `${LUGARES[id].icone} Você é ${p?.nome || LUGARES[id].nome}`;
+        if (p) portraitEl.innerHTML = root.LuiggiRig.renderVisualNovelSprite(p, { expressao: 'feliz', speaking: false });
+        txtEl.textContent = POV_TEXTO[id];
+        root.LuiggiAudio.playSFX('blip');
+        net?.atualizar({ pov: id });
+      }
+
+      document.getElementById('rs-prev').addEventListener('click', () => comandoRadio('prev'));
+      document.getElementById('rs-next').addEventListener('click', () => comandoRadio('next'));
+      document.getElementById('rs-play').addEventListener('click', () => comandoRadio('toggle'));
+      document.getElementById('rs-online-btn').addEventListener('click', () => abrirPainelOnline(painelOnline.classList.contains('hidden')));
+      document.getElementById('rs-on-fechar').addEventListener('click', () => abrirPainelOnline(false));
+      ['keydown', 'pointerdown'].forEach((t) => painelOnline.addEventListener(t, (e) => e.stopPropagation()));
 
       ov.querySelectorAll('[data-acao]').forEach((b) => b.addEventListener('click', () => interagir(b.dataset.acao)));
       ov.querySelectorAll('[data-pov]').forEach((b) => b.addEventListener('click', () => trocarPOV(b.dataset.pov)));
 
-      // Resenha de fundo: de vez em quando alguém comenta alguma coisa
+      // Uma vez por segundo: atualiza a faixa, o anfitrião espalha o estado e, de vez em quando, alguém comenta
       let ambIdx = Math.floor(Math.random() * RESENHA_AMBIENTE.length);
       const relogio = setInterval(() => {
         atualizarFaixa();
+        if (net?.souHost) publicarEstado();
         if (performance.now() - ultimaInteracao < 40000) return;
         ultimaInteracao = performance.now();
         const linha = RESENHA_AMBIENTE[ambIdx++ % RESENHA_AMBIENTE.length];
         if (carro && carro.pov === linha.quem) return;
+        // Personagem "ocupado" por alguém da sala não fala sozinho
+        if (net && net.pessoas.some((p) => !p.eu && p.pov === linha.quem)) return;
         falar(linha.fala, linha.quem);
         carro?.cartas[linha.quem]?.setExpression('feliz');
       }, 1000);
 
       function sair() {
+        desconectar(false);
         document.body.classList.remove('resenha-aberta');
         clearInterval(relogio);
         window.removeEventListener('keydown', onKey);
@@ -1197,7 +1605,11 @@
         resolve();
       }
       function onKey(e) {
-        if (e.key === 'Escape') sair();
+        if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+        if (e.key === 'Escape') {
+          if (!painelOnline.classList.contains('hidden')) abrirPainelOnline(false);
+          else sair();
+        }
         if (e.key === '1') trocarPOV('luis');
         if (e.key === '2') trocarPOV('fabricio');
         if (e.key === '3') trocarPOV('mateus_buse');
@@ -1207,6 +1619,11 @@
 
       trocarPOV('luis');
       atualizarFaixa();
+      atualizarListaOnline();
+      if (prefill) {
+        abrirPainelOnline(true);
+        avisoOnline(`Convite para a sala ${prefill}: escreva seu nome e clique em Entrar.`);
+      }
     });
   }
 

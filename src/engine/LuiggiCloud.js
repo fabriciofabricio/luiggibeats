@@ -30,6 +30,9 @@
   let painelAberto = false;
   let duckTimer = null;
   let pronto = false;
+  // Resenha Online: quem não é o anfitrião segue a faixa e a posição dele (não avança sozinho)
+  let controleExterno = false;
+  let syncPendente = null;
   const artes = new Map();
 
   const st = () => root.LuiggiSave?.state;
@@ -646,8 +649,10 @@
       render();
     });
     audio.addEventListener('pause', () => render());
-    audio.addEventListener('ended', () => proxima(true));
-    audio.addEventListener('error', () => setTimeout(() => proxima(true), 400));
+    audio.addEventListener('ended', () => {
+      if (!controleExterno) proxima(true);
+    });
+    audio.addEventListener('error', () => setTimeout(() => !controleExterno && proxima(true), 400));
     criarDom();
     envolverMinigamesComMusica();
     // Esconde o mini player dentro de minigames e no museu
@@ -664,6 +669,65 @@
     pronto = true;
     render();
     loopOnda();
+  }
+
+  /**
+   * Resenha Online: deixa este player igual ao do anfitrião.
+   * id = faixa, pos = segundos (já compensando a latência), tocando = se deve estar tocando.
+   * Diferenças pequenas são corrigidas acelerando/freando de leve; grandes, pulando direto.
+   */
+  function sincronizar({ id, pos: posAlvo = 0, tocando: deveTocar = true } = {}) {
+    if (!pronto || !audio) return false;
+    const f = catalogo.faixas.find((x) => x.id === id);
+    if (!f) return false;
+    posAlvo = Number(posAlvo);
+    if (!isFinite(posAlvo)) posAlvo = 0;
+    const recebidoEm = performance.now();
+    const alvo = () => Math.max(0, posAlvo + (deveTocar ? (performance.now() - recebidoEm) / 1000 : 0));
+
+    if (faixaAtual()?.id !== id) {
+      fila = catalogo.faixas.map((x) => x.id);
+      carregar(fila.indexOf(id), false);
+      audio.playbackRate = 1;
+      syncPendente = { alvo, deveTocar, desde: performance.now() };
+      audio.addEventListener(
+        'loadedmetadata',
+        () => {
+          const s = syncPendente;
+          syncPendente = null;
+          if (!s) return;
+          try {
+            audio.currentTime = Math.min(s.alvo(), Math.max(0, (audio.duration || 1e9) - 0.25));
+          } catch (_) { }
+          if (s.deveTocar) play();
+          else pause(true);
+        },
+        { once: true }
+      );
+      return true;
+    }
+    // Ainda carregando a faixa: só atualiza o alvo (desiste depois de 8 s se o arquivo não carregar)
+    if (syncPendente) {
+      if (performance.now() - syncPendente.desde < 8000) {
+        syncPendente = { ...syncPendente, alvo, deveTocar };
+        return true;
+      }
+      syncPendente = null;
+    }
+    if (!deveTocar) {
+      if (!audio.paused) pause(true);
+      audio.playbackRate = 1;
+      if (Math.abs(audio.currentTime - posAlvo) > 0.5) audio.currentTime = posAlvo;
+      return true;
+    }
+    const d = alvo() - audio.currentTime;
+    if (Math.abs(d) > 0.4) {
+      audio.currentTime = alvo();
+      audio.playbackRate = 1;
+    } else if (Math.abs(d) > 0.05) audio.playbackRate = 1 + Math.max(-0.04, Math.min(0.04, d * 0.4));
+    else audio.playbackRate = 1;
+    if (audio.paused) play();
+    return true;
   }
 
   /** Nível RMS da saída (0..1), útil para conferir se o som está passando pelos efeitos. */
@@ -692,6 +756,19 @@
     play,
     pause,
     abrirPainel,
+    sincronizar,
+    /** Segundos tocados da faixa atual. */
+    get posicao() {
+      return audio ? audio.currentTime : 0;
+    },
+    get controleExterno() {
+      return controleExterno;
+    },
+    set controleExterno(v) {
+      controleExterno = !!v;
+      syncPendente = null;
+      if (audio) audio.playbackRate = 1;
+    },
     get faixa() {
       return faixaAtual();
     },

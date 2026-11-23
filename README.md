@@ -50,6 +50,17 @@ A trilha do jogo é o **LuiggiCloud**, um mini player no estilo SoundCloud (cant
 
 As mesmas músicas aparecem no **LuiggiBeats Hero** e na Jukebox do Museu.
 
+## Momento Resenha Online (multiplayer)
+
+No **Momento Resenha**, o botão **🌐 Online** deixa várias pessoas (até 8) no mesmo Subaru:
+
+- **Criar sala** gera um código de 5 letras e um link de convite (`?resenha=CODIGO`). Quem abre o link só digita o nome e clica em Entrar.
+- Cada um escolhe o banco/POV que quiser (Luis, Fabricio ou Mateus Buse). A lista mostra quem está onde, e uma etiqueta com o nome aparece em cima do boneco.
+- Todo mundo controla o rádio (⏮ ⏯ ⏭ e o rádio do painel). A buzina, o volante, o porta-luvas e os Tic Tacs aparecem para todos.
+- A conexão é P2P (WebRTC, via `vendor/trystero-nostr.min.js`): não precisa de servidor, então funciona no GitHub Pages. Ninguém transmite áudio; cada jogo toca o próprio MP3 e só a faixa/posição é sincronizada. Um anfitrião é escolhido sozinho e, se ele sair, outro assume sem parar a música.
+- Para jogar online, todos devem abrir o jogo pelo site. Servidores locais sem suporte a *Range* (como o `python -m http.server` do `INICIAR_JOGO.bat`) não deixam pular para o meio da música.
+- Algumas redes muito restritas (4G com CGNAT, firewall corporativo) podem não conseguir conexão direta.
+
 ## Como editar conteúdo, personagens, textos e charts
 
 - **Personagens e fichas visuais:** edite `data/personagens.json` e rode:
