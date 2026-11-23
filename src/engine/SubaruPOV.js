@@ -191,7 +191,12 @@
   const NOMES_ACAO = {
     volante: '🛞 Volante · acelerar o boxer',
     buzina: '📣 Buzina',
-    radio: '📻 Rádio LuiggiBeats',
+    radio: '📻 Rádio LuiggiBeats · próxima',
+    radio_prev: '⏮ Rádio · voltar faixa',
+    radio_next: '⏭ Rádio · próxima faixa',
+    radio_toggle: '⏯ Rádio · tocar / pausar',
+    porta: '🚪 Porta',
+    entrar_carro: '🚗 Subaru Legacy · entrar',
     portaluvas: '🍪 Porta-luvas',
     tictac: '🍬 Compartimento entre os bancos',
     retrovisor: '🪞 Retrovisor',
@@ -205,6 +210,8 @@
   // INTERIOR DO SUBARU (frente = -z)
   // ------------------------------------------------------------------
   function construirInterior(o = {}) {
+    // Modelo novo e detalhado (SubaruLegacy3D.js); o de baixo fica de reserva
+    if (root.LuiggiSubaruLegacy) return root.LuiggiSubaruLegacy.construir(o);
     const THREE = root.THREE;
     const { box, cyl, plane, M, textures, halo } = L();
     const g = new THREE.Group();
@@ -535,28 +542,45 @@
     tex.needsUpdate = true;
   }
 
-  function desenharRadio(tex, estilo, t) {
+  function desenharRadio(tex, estilo, t, tocando = true) {
     const ctx = tex.userData.ctx;
     ctx.fillStyle = '#020617';
     ctx.fillRect(0, 0, 256, 128);
+    const cloud = root.LuiggiCloud?.ativo ? root.LuiggiCloud : null;
+    const f = cloud?.faixa;
+    if (cloud) tocando = cloud.tocando;
+    // Barra de status: fonte (bluetooth do celular ou FM) e play/pause
+    ctx.font = 'bold 11px monospace';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#64748b';
+    ctx.fillText(f ? 'BT · LUIGGICLOUD' : 'FM · LUIGGIBEATS', 10, 16);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = tocando ? '#22c55e' : '#f59e0b';
+    ctx.fillText(tocando ? '▶ PLAY' : '❚❚ PAUSE', 246, 16);
     ctx.fillStyle = '#38bdf8';
     ctx.font = 'bold 20px monospace';
     ctx.textAlign = 'center';
-    const f = root.LuiggiCloud?.faixa;
     const nome = f ? f.titulo : NOMES_RADIO[estilo] || estilo.toUpperCase();
     const largura = ctx.measureText(nome).width;
     const x = largura > 230 ? 128 + ((240 - largura) / 2) * Math.sin(t * 0.6) : 128;
-    ctx.fillText(nome, x, 40);
+    ctx.fillText(nome, x, 42);
     if (f) {
       ctx.font = '13px monospace';
       ctx.fillStyle = '#94a3b8';
       ctx.fillText(f.artista, 128, 60);
     }
     for (let i = 0; i < 16; i++) {
-      const hh = 8 + Math.abs(Math.sin(t * 6 + i * 0.7)) * 38;
+      const hh = tocando ? 6 + Math.abs(Math.sin(t * 6 + i * 0.7)) * 30 : 3;
       ctx.fillStyle = i % 2 ? '#0ea5e9' : '#a855f7';
-      ctx.fillRect(16 + i * 14.5, 112 - hh, 10, hh);
+      ctx.fillRect(16 + i * 14.5, 104 - hh, 10, hh);
     }
+    // Progresso da faixa
+    const dur = f?.duracao || 0;
+    const k = dur ? Math.min(1, (cloud.posicao || 0) / dur) : (t * 0.02) % 1;
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(16, 114, 224, 4);
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillRect(16, 114, 224 * k, 4);
     tex.needsUpdate = true;
   }
 
@@ -592,17 +616,46 @@
    */
   function criarControleCarro(interior, o = {}) {
     const U = () => L().U;
-    const st = { rpm: 850, rpmAlvo: 850, radio: 0, portaAberta: false, consoleAberto: false, gaugeT: 0, radioT: 0, mateusIdx: 0 };
+    // vel: velocidade do carro em m/s (o Momento Resenha preenche quando alguém dirige)
+    const st = { rpm: 850, rpmAlvo: 850, vel: 0, radio: 0, portaAberta: false, consoleAberto: false, gaugeT: 0, radioT: 0, mateusIdx: 0, sintetizadoTocando: true, apertos: {} };
+    const BOTAO_DA_ACAO = { radio_prev: 'prev', radio_next: 'next', radio_toggle: 'toggle', radio: 'next' };
+
+    /** Afunda um botão físico do rádio por um instante. */
+    function apertarBotao(acao) {
+      const nome = BOTAO_DA_ACAO[acao] || acao;
+      if (interior.botoesRadio?.[nome]) st.apertos[nome] = 0.18;
+    }
+
+    /** ⏯ do rádio: pausa ou solta o som (LuiggiCloud ou rádio sintetizado). */
+    function alternarRadio() {
+      const c = root.LuiggiCloud?.ativo ? root.LuiggiCloud : null;
+      if (c) {
+        const estava = c.tocando;
+        if (estava) c.pause();
+        else c.play();
+        const f = c.faixa;
+        return estava ? `⏸ Rádio pausado${f ? `: "${f.titulo}"` : ''}.` : `▶ Tocando${f ? ` "${f.titulo}" — ${f.artista}` : ''}.`;
+      }
+      if (st.sintetizadoTocando) {
+        root.LuiggiAudio.pararMusica();
+        st.sintetizadoTocando = false;
+        return '⏸ Rádio desligado. Silêncio no Subaru… até alguém rir.';
+      }
+      root.LuiggiAudio.tocarEstiloSintetizado(ESTILOS_RADIO[st.radio], 98);
+      st.sintetizadoTocando = true;
+      return `▶ ${NOMES_RADIO[ESTILOS_RADIO[st.radio]]}`;
+    }
 
     function trocarRadio(passo = 1) {
       if (root.LuiggiCloud?.ativo) {
-        if (passo < 0 && root.LuiggiCloud.anterior) root.LuiggiCloud.anterior();
+        if (passo < 0 && root.LuiggiCloud.anterior) root.LuiggiCloud.anterior(true);
         else root.LuiggiCloud.proxima();
         const f = root.LuiggiCloud.faixa;
         return f ? `📻 Tocando agora: "${f.titulo}" — ${f.artista}` : '📻 Rádio LuiggiBeats';
       }
       st.radio = (st.radio + passo + ESTILOS_RADIO.length) % ESTILOS_RADIO.length;
       root.LuiggiAudio.tocarEstiloSintetizado(ESTILOS_RADIO[st.radio], 122);
+      st.sintetizadoTocando = true;
       return `📻 ${NOMES_RADIO[ESTILOS_RADIO[st.radio]]}`;
     }
 
@@ -638,7 +691,22 @@
         o.stage?.shake?.(0.006, 4);
         return { texto: '*BII BIIII!* Alguém lá fora levou um susto.' };
       }
-      if (acao === 'radio') return { texto: trocarRadio(1), radio: true };
+      if (acao === 'radio' || acao === 'radio_next') {
+        apertarBotao(acao);
+        return { texto: trocarRadio(1), radio: true };
+      }
+      if (acao === 'radio_prev') {
+        apertarBotao(acao);
+        return { texto: trocarRadio(-1), radio: true };
+      }
+      if (acao === 'radio_toggle') {
+        apertarBotao(acao);
+        return { texto: alternarRadio(), radio: true };
+      }
+      if (acao === 'porta' || acao === 'entrar_carro') {
+        A.playSFX('blip');
+        return { texto: 'Melhor deixar a porta fechada: a resenha tá boa aqui dentro.' };
+      }
       if (acao === 'portaluvas') {
         A.playSFX('forno');
         st.portaAberta = op.aberto !== undefined ? !!op.aberto : !st.portaAberta;
@@ -670,13 +738,26 @@
       st.gaugeT += dt;
       if (st.gaugeT > 0.05) {
         st.gaugeT = 0;
-        desenharGauges(interior.gauges, st.rpm, 0);
+        desenharGauges(interior.gauges, st.rpm, Math.abs(st.vel || 0) * 3.6);
       }
       st.radioT += dt;
       if (st.radioT > 0.08) {
         st.radioT = 0;
-        desenharRadio(interior.radioTex, ESTILOS_RADIO[st.radio], t);
+        desenharRadio(interior.radioTex, ESTILOS_RADIO[st.radio], t, st.sintetizadoTocando);
       }
+      // Botões do rádio voltando depois do clique
+      Object.entries(interior.botoesRadio || {}).forEach(([nome, b]) => {
+        const k = st.apertos[nome] || 0;
+        if (k > 0) st.apertos[nome] = Math.max(0, k - dt);
+        b.position.z = b.userData.zBase - (k > 0 ? 0.007 : 0);
+      });
+      // Arvorezinha de baunilha e chaveiro balançando (mais ainda com o motor acelerado)
+      const vibra = st.rpm > 2500 ? 0.12 : 0.03;
+      if (interior.aromatizante) {
+        interior.aromatizante.rotation.z = Math.sin(t * 1.7) * 0.06 + Math.sin(t * 23) * vibra * 0.3;
+        interior.aromatizante.rotation.x = Math.sin(t * 1.1) * 0.04;
+      }
+      if (interior.chaveiro) interior.chaveiro.rotation.x = Math.sin(t * 2.3) * 0.12 + Math.sin(t * 27) * vibra * 0.2;
     }
 
     /** Ajusta porta-luvas e compartimento sem som (quem entra numa Resenha Online já em andamento). */
@@ -688,7 +769,7 @@
       if (typeof e.cons === 'boolean') st.consoleAberto = e.cons;
     }
 
-    return { interagir, update, trocarRadio, definir, st };
+    return { interagir, update, trocarRadio, alternarRadio, apertarBotao, definir, st };
   }
 
   // ------------------------------------------------------------------
@@ -704,7 +785,9 @@
     const env = root.Luiggi3DEnv.build('safepoint', { semSubaru: true });
     // O carro fica na origem olhando pra −z: a rua é deslocada pra vaga do Subaru cair aqui
     const vaga = env.vaga || [0, 0, -2.5];
-    env.group.position.set(-vaga[0], 0, -vaga[2]);
+    // A rua é curva: alinharNaVaga põe a vaga na origem com o carro reto em relação à rua
+    if (env.alinharNaVaga) env.alinharNaVaga();
+    else env.group.position.set(-vaga[0], 0, -vaga[2]);
     stage.scene.add(env.group);
     root.Luiggi3DEnv.aplicar(stage, env);
     stage.setGrade(env.dia ? { vignette: 0.7, bloom: 0.4, threshold: 1.4 } : { vignette: 0.85, bloom: 1.1 });
@@ -721,6 +804,29 @@
       stage.scene.add(c.group);
       cartas[id] = c;
     });
+
+    // Convidados do banco de trás (Momento Resenha): atrás do motorista e no meio
+    const CARTA_CONVIDADO = { tras_esq: [-0.42, 0.32, 1.12], tras_meio: [0.0, 0.34, 1.17] };
+    const convAtual = {};
+    function definirConvidados(conv = {}) {
+      Object.entries(CARTA_CONVIDADO).forEach(([slot, pos]) => {
+        const pid = conv[slot] || null;
+        const id = `conv:${slot}`;
+        if (convAtual[slot] === pid) return;
+        convAtual[slot] = pid;
+        if (cartas[id]) {
+          stage.scene.remove(cartas[id].group);
+          cartas[id].dispose?.();
+          delete cartas[id];
+        }
+        const ch = pid && map.get(pid);
+        if (!ch) return;
+        const c = L().createCharacterCard(ch, { altura: slot === 'tras_meio' ? 0.98 : 1.02, tint: env.dia ? '#ffffff' : '#dfe6ff', emotes: false });
+        c.group.position.set(...pos);
+        stage.scene.add(c.group);
+        cartas[id] = c;
+      });
+    }
 
     const controle = criarControleCarro(interior, { stage });
     const picker = L().createPicker(stage);
@@ -783,7 +889,8 @@
       view.style.cursor = a ? 'pointer' : '';
       if (o.tip) {
         if (a) {
-          o.tip.textContent = NOMES_ACAO[a] || a;
+          const conv = a.startsWith('conv:') ? convAtual[a.slice(5)] : null;
+          o.tip.textContent = conv ? `💬 ${map.get(conv)?.nome || conv} · banco de trás` : NOMES_ACAO[a] || a;
           o.tip.style.left = `${e.clientX - r.left + 14}px`;
           o.tip.style.top = `${e.clientY - r.top + 14}px`;
           o.tip.classList.remove('hidden');
@@ -846,6 +953,7 @@
       controle,
       aplicarPOV,
       mirarEm,
+      definirConvidados,
       get pov() {
         return pov;
       },
@@ -872,7 +980,8 @@
   const CHIPS_CARRO = `
     <button class="chip-btn" data-acao="volante">🛞 Acelerar</button>
     <button class="chip-btn" data-acao="buzina">📣 Buzina</button>
-    <button class="chip-btn" data-acao="radio">📻 <span class="radio-lbl">Rádio</span></button>
+    <button class="chip-btn" data-acao="radio_prev" title="Rádio: voltar faixa">⏮</button>
+    <button class="chip-btn" data-acao="radio">📻 <span class="radio-lbl">Rádio</span> ⏭</button>
     <button class="chip-btn" data-acao="portaluvas">🍪 Porta-luvas</button>
     <button class="chip-btn" data-acao="tictac">🍬 Compartimento</button>
     <button class="chip-btn" data-acao="retrovisor">🪞 Retrovisor</button>
@@ -1093,7 +1202,41 @@
    * opcoes.sala: código de uma sala da Resenha Online (link de convite ?resenha=CODIGO);
    * abre o painel online já preenchido.
    */
-  function abrirMomentoResenha(opcoes = {}) {
+  const lerModoResenha = () => {
+    try {
+      return localStorage.getItem('luiggi_resenha_modo') === 'classico' ? 'classico' : '3d';
+    } catch (_) {
+      return '3d';
+    }
+  };
+  const gravarModoResenha = (m) => {
+    try {
+      localStorage.setItem('luiggi_resenha_modo', m);
+    } catch (_) { }
+  };
+
+  /**
+   * Momento Resenha: abre o modo 3D (MomentoResenha3D.js: bonecos andando, poses, celular) ou o
+   * clássico (só o pessoal dentro do carro, trocando de POV). Lembra o último modo usado e troca
+   * de um pro outro sem sair da sala online nem parar a música.
+   * opcoes: { sala, modo: '3d' | 'classico', net (sessão online já aberta, vinda do outro modo) }
+   */
+  async function abrirMomentoResenha(opcoes = {}) {
+    const tem3D = !!(root.LuiggiMomentoResenha && root.Luiggi3D?.hasThree());
+    let modo = opcoes.modo || (opcoes.classico ? 'classico' : lerModoResenha());
+    let op = { ...opcoes };
+    for (;;) {
+      if (!tem3D) modo = 'classico';
+      const r = modo === 'classico' ? await abrirResenhaClassica(op) : await root.LuiggiMomentoResenha.abrir(op);
+      if (!r || !r.trocarPara) return;
+      modo = r.trocarPara;
+      gravarModoResenha(modo);
+      // A sala online (se tiver) passa direto pro outro modo
+      op = { net: r.net || null, convidados: r.convidados };
+    }
+  }
+
+  function abrirResenhaClassica(opcoes = {}) {
     return new Promise((resolve) => {
       const ov = document.getElementById('safepoint-overlay');
       const map = root.LuiggiData.cache.personagemMap;
@@ -1112,6 +1255,8 @@
             <div class="sp3d-local"><span>🎶 Momento Resenha</span><small id="rs-pov-lbl"></small></div>
             <div class="btn-row rs-povs">
               ${Object.entries(LUGARES).map(([id, l]) => `<button class="mini-btn" data-pov="${id}">${l.icone} ${l.nome}<span class="rs-pov-n" data-pov-n="${id}"></span></button>`).join('')}
+              ${root.LuiggiResenhaConvidados ? '<button class="mini-btn" id="rs-conv-btn" title="Colocar mais gente no banco de trás">➕ Banco de trás</button>' : ''}
+              ${root.LuiggiMomentoResenha && root.Luiggi3D?.hasThree() ? '<button class="mini-btn" id="rs-modo3d" title="Modo 3D: bonecos andando pela rua, poses e celular">🧍 Modo 3D</button>' : ''}
               <button class="mini-btn rs-online-btn" id="rs-online-btn" title="Resenha Online: várias pessoas no mesmo Subaru">🌐 Online</button>
               <button class="mini-btn" id="rs-sair">🏠 Menu</button>
             </div>
@@ -1157,6 +1302,12 @@
       let ultimoPor = null; // { id, chave }: quem mexeu no rádio por último
       let membrosAnt = new Map();
       let jaSincronizou = false;
+      // Convidados do banco de trás: sozinho fica salvo; online quem manda é o anfitrião
+      const Conv = root.LuiggiResenhaConvidados;
+      // Vindo do outro modo, continua com os mesmos convidados (sem avisar de novo)
+      let convidados = Conv ? (opcoes.convidados ? Conv.limpar(opcoes.convidados) : Conv.ler()) : {};
+      let ultimoConvPor = null;
+      let painelConv = null;
 
       function falar(texto, quem = null, rotulo = null) {
         txtEl.textContent = texto;
@@ -1169,6 +1320,28 @@
       const avisoOnline = (texto) => falar(texto, null, '🌐 Resenha Online');
 
       const carro = montarCarro3D(view, { pov: 'luis', tip: document.getElementById('rs-tip'), onAcao: interagir, onFrame: posicionarTags });
+      carro?.definirConvidados(convidados);
+
+      /** Troca a lista de convidados e avisa o que mudou. */
+      function aplicarConvidados(novo, porId) {
+        if (!Conv) return;
+        novo = Conv.limpar(novo);
+        const quem = porId && net ? (porId === net.eu ? 'Você' : net.nomeDe(porId)) : null;
+        const msg = Conv.descreverMudanca(convidados, novo, quem);
+        convidados = novo;
+        carro?.definirConvidados(convidados);
+        painelConv?.atualizar();
+        if (msg) falar(`🪑 ${msg}`, null, '➕ Banco de trás');
+      }
+      function definirConvidado(slot, pid) {
+        if (net) {
+          if (!net.pedir({ tipo: 'convidado', banco: slot, pid: pid || null })) avisoOnline('Ainda conectando ao carro…');
+          return;
+        }
+        aplicarConvidados({ ...convidados, [slot]: pid || null }, null);
+        Conv.gravar(convidados);
+        root.LuiggiAudio.playSFX('blip');
+      }
 
       // ---------------- Rádio ----------------
       function estadoRadio() {
@@ -1266,6 +1439,14 @@
       // ---------------- Ações do carro ----------------
       function interagir(acao) {
         ultimaInteracao = performance.now();
+        if (typeof acao === 'string' && acao.startsWith('conv:')) {
+          const pid = convidados[acao.slice(5)];
+          if (!pid) return;
+          root.LuiggiAudio.playSFX('blip');
+          falar(`"${Conv.frase(pid)}"`, pid);
+          carro?.cartas[acao]?.setExpression('feliz');
+          return;
+        }
         if (acaoDeTela(carro, acao, falar)) return;
         if (acao === 'radio') return comandoRadio('next', true);
         if (net && carro && ACOES_COMPARTILHADAS.includes(acao)) {
@@ -1293,7 +1474,7 @@
         if (!net || !net.souHost) return;
         const r = estadoRadio();
         const por = ultimoPor && ultimoPor.chave === chaveDe(r) ? ultimoPor.id : null;
-        net.enviarEstado({ r, c: carro ? { porta: carro.controle.st.portaAberta, cons: carro.controle.st.consoleAberto } : null, por }, alvo);
+        net.enviarEstado({ r, c: { porta: carro ? carro.controle.st.portaAberta : false, cons: carro ? carro.controle.st.consoleAberto : false, conv: convidados }, cq: ultimoConvPor, por }, alvo);
         notarRadio(r, por);
       }
 
@@ -1302,6 +1483,11 @@
         if (d.tipo === 'radio' && CMDS_RADIO.includes(d.cmd)) {
           executarRadio(d.cmd);
           ultimoPor = { id: de, chave: chaveDe(estadoRadio()) };
+          publicarEstado();
+        } else if (d.tipo === 'convidado' && Conv && Conv.SLOTS.includes(d.banco) && (d.pid === null || Conv.valido(d.pid))) {
+          ultimoConvPor = de;
+          aplicarConvidados({ ...convidados, [d.banco]: d.pid }, de);
+          if (de === net.eu) Conv.gravar(convidados);
           publicarEstado();
         } else if (d.tipo === 'acao' && ACOES_COMPARTILHADAS.includes(d.acao) && carro) {
           const r = carro.controle.interagir(d.acao, { remoto: de !== net.eu });
@@ -1318,6 +1504,7 @@
           notarRadio(d.r, typeof d.por === 'string' ? d.por : null);
         }
         if (d.c && carro) carro.controle.definir(d.c);
+        if (d.c && d.c.conv) aplicarConvidados(d.c.conv, typeof d.cq === 'string' ? d.cq : null);
         atualizarFaixa();
         if (!jaSincronizou && net) {
           jaSincronizou = true;
@@ -1334,6 +1521,45 @@
       }
 
       // ---------------- Conexão ----------------
+      /** Quem recebe os eventos da sala neste modo. */
+      function eventosRede(fundador) {
+        return {
+          onMembros: (lista, info) => {
+            anunciarMudanca(lista, info);
+            atualizarListaOnline();
+          },
+          onHost: (souHost, hostId, antes) => {
+            const c = cloud();
+            if (c) c.controleExterno = !souHost;
+            if (souHost) setTimeout(publicarEstado, 0);
+            if (antes && net) avisoOnline(souHost ? '👑 O anfitrião saiu: agora o rádio de referência é o seu.' : `👑 ${net.nomeDe(hostId)} virou o anfitrião.`);
+            else if (souHost && !fundador && net) avisoOnline('Ninguém apareceu nessa sala ainda, então o rádio de referência é o seu. Quando a galera entrar, todo mundo ouve junto.');
+            setTimeout(atualizarListaOnline, 0);
+          },
+          onEstado: aplicarEstado,
+          onPedido: processarPedido,
+          onFx: aplicarFx,
+          onPrecisaEstado: (alvo) => publicarEstado(alvo),
+          onStatus: (tipo, msg) => {
+            if (tipo === 'reserva') avisoOnline(`${msg} Tudo continua funcionando, só com um tiquinho mais de atraso.`);
+            if (tipo === 'relays') atualizarListaOnline();
+          }
+        };
+      }
+
+      /** Veio do modo 3D já numa sala: continua nela (sem sair e entrar de novo). */
+      function adotarRede(sessao) {
+        net = sessao;
+        net.adotar(eventosRede(false));
+        net.atualizar({ pov: povAtual, modo: 'classico' });
+        if (cloud()) cloud().controleExterno = !net.souHost;
+        prefill = net.sala;
+        jaSincronizou = net.sincronizado;
+        renderOnline();
+        if (net.souHost) setTimeout(publicarEstado, 0);
+        avisoOnline(`Modo clássico, ainda na sala ${net.sala}. Pra galera do modo 3D você aparece sentado no banco do seu personagem.`);
+      }
+
       function conectar(sala, nome, fundador) {
         if (net || !Online) return;
         const n = Online.limparNome(nome || lerNomeOnline() || `Passageiro ${Math.floor(Math.random() * 90 + 10)}`);
@@ -1346,29 +1572,9 @@
             sala,
             nome: n,
             pov: povAtual,
+            modo: 'classico',
             fundador,
-            eventos: {
-              onMembros: (lista, info) => {
-                anunciarMudanca(lista, info);
-                atualizarListaOnline();
-              },
-              onHost: (souHost, hostId, antes) => {
-                const c = cloud();
-                if (c) c.controleExterno = !souHost;
-                if (souHost) setTimeout(publicarEstado, 0);
-                if (antes && net) avisoOnline(souHost ? '👑 O anfitrião saiu: agora o rádio de referência é o seu.' : `👑 ${net.nomeDe(hostId)} virou o anfitrião.`);
-                else if (souHost && !fundador && net) avisoOnline('Ninguém apareceu nessa sala ainda, então o rádio de referência é o seu. Quando a galera entrar, todo mundo ouve junto.');
-                setTimeout(atualizarListaOnline, 0);
-              },
-              onEstado: aplicarEstado,
-              onPedido: processarPedido,
-              onFx: aplicarFx,
-              onPrecisaEstado: (alvo) => publicarEstado(alvo),
-              onStatus: (tipo, msg) => {
-                if (tipo === 'reserva') avisoOnline(`${msg} Tudo continua funcionando, só com um tiquinho mais de atraso.`);
-                if (tipo === 'relays') atualizarListaOnline();
-              }
-            }
+            eventos: eventosRede(fundador)
           });
         } catch (e) {
           net = null;
@@ -1390,6 +1596,13 @@
         ultimoPor = null;
         membrosAnt = new Map();
         jaSincronizou = false;
+        // Fora da sala, volta a valer o banco de trás salvo neste navegador
+        if (Conv) {
+          convidados = Conv.ler();
+          carro?.definirConvidados(convidados);
+          painelConv?.atualizar();
+        }
+        ultimoConvPor = null;
         renderOnline();
         if (manual) avisoOnline('Você saiu da sala. O Subaru voltou a ser só seu.');
       }
@@ -1420,6 +1633,7 @@
 
       // ---------------- Painel online ----------------
       function abrirPainelOnline(v) {
+        if (v) painelConv?.fechar();
         painelOnline.classList.toggle('hidden', !v);
         if (v) {
           renderOnline();
@@ -1596,6 +1810,12 @@
         if (net?.souHost) publicarEstado();
         if (performance.now() - ultimaInteracao < 40000) return;
         ultimaInteracao = performance.now();
+        const convs = Object.values(convidados).filter(Boolean);
+        if (convs.length && Math.random() < 0.35) {
+          const pid = convs[Math.floor(Math.random() * convs.length)];
+          falar(`"${Conv.frase(pid)}"`, pid);
+          return;
+        }
         const linha = RESENHA_AMBIENTE[ambIdx++ % RESENHA_AMBIENTE.length];
         if (carro && carro.pov === linha.quem) return;
         // Personagem "ocupado" por alguém da sala não fala sozinho
@@ -1604,21 +1824,29 @@
         carro?.cartas[linha.quem]?.setExpression('feliz');
       }, 1000);
 
-      function sair() {
-        desconectar(false);
+      function sair(opts = {}) {
+        const trocarPara = opts && opts.trocarPara;
+        // Trocando de modo, a sala continua aberta e vai pro outro modo
+        let sessao = null;
+        if (trocarPara && net) {
+          sessao = net;
+          sessao.adotar({});
+          net = null;
+        } else desconectar(false);
         document.body.classList.remove('resenha-aberta');
         clearInterval(relogio);
         window.removeEventListener('keydown', onKey);
         carro?.dispose();
         ov.classList.add('hidden');
         ov.innerHTML = '';
-        root.LuiggiAudio.pararMusica();
-        resolve();
+        if (!trocarPara) root.LuiggiAudio.pararMusica();
+        resolve(trocarPara ? { trocarPara, net: sessao, convidados } : undefined);
       }
       function onKey(e) {
-        if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+        if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
         if (e.key === 'Escape') {
           if (!painelOnline.classList.contains('hidden')) abrirPainelOnline(false);
+          else if (painelConv?.aberto) painelConv.fechar();
           else sair();
         }
         if (e.key === '1') trocarPOV('luis');
@@ -1626,15 +1854,26 @@
         if (e.key === '3') trocarPOV('mateus_buse');
       }
       window.addEventListener('keydown', onKey);
-      document.getElementById('rs-sair').addEventListener('click', sair);
+      document.getElementById('rs-sair').addEventListener('click', () => sair());
+      document.getElementById('rs-modo3d')?.addEventListener('click', () => sair({ trocarPara: '3d' }));
+      if (Conv) {
+        painelConv = Conv.criarPainel({ host: shell, obter: () => convidados, definir: definirConvidado });
+        document.getElementById('rs-conv-btn')?.addEventListener('click', () => {
+          painelOnline.classList.add('hidden');
+          painelConv.alternar();
+        });
+      }
 
       trocarPOV('luis');
       atualizarFaixa();
       atualizarListaOnline();
-      if (prefill) {
+      if (opcoes.net) adotarRede(opcoes.net);
+      else if (prefill) {
         abrirPainelOnline(true);
         avisoOnline(`Convite para a sala ${prefill}: escreva seu nome e clique em Entrar.`);
       }
+      // Pra testes automatizados e depuração no console
+      root.__resenhaClassica = { aplicarConvidados, definirConvidado, get convidados() { return convidados; }, get net() { return net; }, sair };
     });
   }
 
@@ -1706,5 +1945,5 @@
     return stage;
   }
 
-  root.LuiggiSubaruPOV = { abrirSubaruSafepoint, abrirMomentoResenha, cenaVoltaPraCasa, construirInterior, criarControleCarro, clicaveisDo, acaoDoObjeto, NOMES_ACAO, LUGARES };
+  root.LuiggiSubaruPOV = { abrirSubaruSafepoint, abrirMomentoResenha, cenaVoltaPraCasa, construirInterior, criarControleCarro, clicaveisDo, acaoDoObjeto, aplicarReacao, NOMES_ACAO, LUGARES, OLHAR, ESTILOS_RADIO, NOMES_RADIO, RESENHA_AMBIENTE, desenharGauges };
 })(window);

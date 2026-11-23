@@ -15,18 +15,22 @@
  *   os outros pedem (ped) e ele aplica e espalha (est/fx). Se ele sair, outro assume sem cortar a música.
  *
  * Mensagens:
- *   oi    {nome, pov, sync, h, cri, hd, v}  presença (ao entrar, a cada 8 s pela reserva e ao mudar algo)
+ *   oi    {nome, pov, modo, sync, h, cri, hd, v}  presença (ao entrar, a cada 8 s pela reserva e ao mudar algo);
+ *               modo = '3d' (bonecos andando) ou 'classico' (só o pessoal dentro do carro)
  *   tchau {}                                saiu da sala
  *   est   {…}   estado completo, anfitrião → todos (1x por segundo e a cada mudança)
  *   ped   {…}   pedido de alguém → anfitrião (rádio, ações do carro)
  *   fx    {…}   ação aplicada, anfitrião → todos (buzina, volante, porta-luvas…)
  *   pg/pp {n}   ping/pong pra medir a latência até o anfitrião (compensa a posição da música)
+ *   av    {…}   avatar de cada um, direto pra todos (personagem, banco ou posição na rua, pose, celular).
+ *               Cada pessoa manda o próprio; pela rota reserva vai no máximo ~3x por segundo.
+ *   ev    {…}   evento direto entre pessoas (ex.: cutucar alguém)
  */
 (function (root) {
   'use strict';
 
   const APP_ID = 'luiggibeats-resenha-v1';
-  const PROTO = 2;
+  const PROTO = 3;
   const MAX_PESSOAS = 8;
   const ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sem 0/O e 1/I pra não confundir
   // Quem entra por convite espera um pouco antes de concluir que a sala está vazia e virar anfitrião
@@ -184,7 +188,7 @@
     const eu = T.selfId;
     const sala = normalizarCodigo(o.sala);
     // cri: criou a sala pelo botão; hd: desde quando sou anfitrião (Date.now) — desempatam conflitos
-    const meu = { nome: limparNome(o.nome), pov: o.pov || 'luis', sync: !!o.fundador, cri: !!o.fundador, hd: null };
+    const meu = { nome: limparNome(o.nome), pov: o.pov || 'luis', modo: o.modo === 'classico' ? 'classico' : '3d', sync: !!o.fundador, cri: !!o.fundador, hd: null };
     const membros = new Map(); // peerId -> { nome, pov, sync, h, cri, hd, v, visto }
     const p2p = new Set(); // com quem a rota direta está aberta
     const rtt = new Map(); // peerId -> ms (média suave)
@@ -193,6 +197,7 @@
     let fechado = false;
     let avisouP2P = false;
     let ultimoEstRelay = { assinatura: '', t: 0 };
+    const avRelay = { ultimo: 0, pendente: null, timer: null };
 
     // Rota direta
     let room = null;
@@ -261,12 +266,12 @@
       return true;
     }
 
-    const meuOi = () => ({ t: 'oi', nome: meu.nome, pov: meu.pov, sync: meu.sync, h: hostId, cri: meu.cri, hd: meu.hd, v: PROTO });
+    const meuOi = () => ({ t: 'oi', nome: meu.nome, pov: meu.pov, modo: meu.modo, sync: meu.sync, h: hostId, cri: meu.cri, hd: meu.hd, v: PROTO });
     const enviarOi = (alvo) => enviar(meuOi(), alvo);
 
     function lista() {
-      const arr = [{ id: eu, nome: meu.nome, pov: meu.pov, eu: true, host: hostId === eu, via: 'eu' }];
-      membros.forEach((m, id) => arr.push({ id, nome: m.nome, pov: m.pov, eu: false, host: hostId === id, versaoDiferente: m.v !== PROTO, via: p2p.has(id) ? 'p2p' : 'relay' }));
+      const arr = [{ id: eu, nome: meu.nome, pov: meu.pov, modo: meu.modo, eu: true, host: hostId === eu, via: 'eu' }];
+      membros.forEach((m, id) => arr.push({ id, nome: m.nome, pov: m.pov, modo: m.modo, eu: false, host: hostId === id, versaoDiferente: m.v !== PROTO, via: p2p.has(id) ? 'p2p' : 'relay' }));
       return arr;
     }
 
@@ -342,16 +347,18 @@
       if (fechado || !de || de === eu || !m || typeof m !== 'object') return;
       const conhecido = membros.get(de);
       if (conhecido) conhecido.visto = performance.now();
-      // Pela reserva, ignora quem já fala comigo pela rota direta (a mensagem chega em dobro)
-      if (via === 'relay' && p2p.has(de) && m.t !== 'tchau') return;
+      // Pela reserva, ignora quem já fala comigo pela rota direta (a mensagem chega em dobro).
+      // Avatar passa sempre (tem número de sequência): a rota direta pode estar aberta só de um lado.
+      if (via === 'relay' && p2p.has(de) && m.t !== 'tchau' && m.t !== 'av') return;
 
       if (m.t === 'oi') {
         const novo = !conhecido;
         if (novo && membros.size >= MAX_PESSOAS - 1) return; // carro lotado
-        const antes = conhecido ? JSON.stringify([conhecido.nome, conhecido.pov, conhecido.sync, conhecido.h]) : '';
+        const antes = conhecido ? JSON.stringify([conhecido.nome, conhecido.pov, conhecido.modo, conhecido.sync, conhecido.h]) : '';
         membros.set(de, {
           nome: limparNome(m.nome),
           pov: typeof m.pov === 'string' ? m.pov : 'luis',
+          modo: m.modo === 'classico' ? 'classico' : '3d',
           sync: !!m.sync,
           h: typeof m.h === 'string' ? m.h : null,
           cri: !!m.cri,
@@ -359,7 +366,7 @@
           v: m.v,
           visto: performance.now()
         });
-        const mudou = antes !== JSON.stringify([limparNome(m.nome), m.pov, !!m.sync, m.h || null]);
+        const mudou = antes !== JSON.stringify([limparNome(m.nome), m.pov, m.modo === 'classico' ? 'classico' : '3d', !!m.sync, m.h || null]);
         eleger();
         if (novo) {
           // Alguém novo: me apresento e, se sou o anfitrião, mando o estado
@@ -383,6 +390,10 @@
         if (hostId === eu) ev.onPedido?.(m.d, de);
       } else if (m.t === 'fx') {
         if (de === hostId) ev.onFx?.(m.d, de);
+      } else if (m.t === 'av') {
+        if (m.d && typeof m.d === 'object') ev.onAvatar?.(m.d, de);
+      } else if (m.t === 'ev') {
+        if (m.d && typeof m.d === 'object') ev.onEvento?.(m.d, de);
       } else if (m.t === 'pg') {
         enviar({ t: 'pp', n: m.n }, de);
       } else if (m.t === 'pp') {
@@ -434,10 +445,34 @@
     const aoFecharAba = () => sair();
     root.addEventListener('pagehide', aoFecharAba);
 
+    /**
+     * Avatar: pela rota direta vai sempre; pela reserva junta as atualizações e manda a mais
+     * recente no máximo a cada 350 ms (relays públicos não gostam de enxurrada).
+     */
+    function enviarAvatar(d, alvo) {
+      if (fechado) return;
+      const m = { t: 'av', d };
+      if (alvo) return enviar(m, alvo);
+      if (canal && p2p.size) enviarP2P(m);
+      const faltam = [...membros.keys()].some((id) => !(canal && p2p.has(id)));
+      if (!faltam) return;
+      avRelay.pendente = m;
+      if (avRelay.timer) return;
+      const espera = Math.max(0, avRelay.ultimo + 350 - performance.now());
+      avRelay.timer = setTimeout(() => {
+        avRelay.timer = null;
+        avRelay.ultimo = performance.now();
+        const pend = avRelay.pendente;
+        avRelay.pendente = null;
+        if (pend && !fechado) relay.enviar({ de: eu, para: null, m: pend }).catch(() => { });
+      }, espera);
+    }
+
     function sair() {
       if (fechado) return;
       enviar({ t: 'tchau' });
       fechado = true;
+      clearTimeout(avRelay.timer);
       clearInterval(relogio);
       root.removeEventListener('pagehide', aoFecharAba);
       // Dá um instante pro "tchau" sair antes de fechar os sockets
@@ -482,6 +517,7 @@
       atualizar(campos = {}) {
         if (campos.nome !== undefined) meu.nome = limparNome(campos.nome);
         if (campos.pov !== undefined) meu.pov = campos.pov;
+        if (campos.modo !== undefined) meu.modo = campos.modo === 'classico' ? 'classico' : '3d';
         enviarOi();
         ev.onMembros?.(lista(), { tipo: 'eu' });
       },
@@ -502,6 +538,17 @@
       /** Anfitrião espalha uma ação já aplicada. */
       fx(d) {
         if (hostId === eu) enviar({ t: 'fx', d });
+      },
+      /** Troca quem recebe os eventos (o Momento Resenha muda de modo sem sair da sala). */
+      adotar(eventos) {
+        Object.keys(ev).forEach((k) => delete ev[k]);
+        Object.assign(ev, eventos || {});
+      },
+      /** Meu avatar → todos (ou só um, com alvo: quem acabou de entrar). */
+      enviarAvatar,
+      /** Evento direto pra uma pessoa (ou todos). */
+      enviarEvento(d, alvo) {
+        enviar({ t: 'ev', d }, alvo);
       },
       sair
     };

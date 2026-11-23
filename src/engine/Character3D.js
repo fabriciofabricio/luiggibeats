@@ -393,14 +393,18 @@
       const canela = cap(0.075, 0.24, saia || bermuda ? matPele : matBaixo);
       canela.position.y = -0.17;
       knee.add(canela);
+      // Tornozelo (articulação própria pra dar pra posar o pé)
+      const ankle = new THREE.Group();
+      ankle.position.y = -0.33;
+      knee.add(ankle);
       const sapato = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.09, 0.26), matSapato);
-      sapato.position.set(0, -0.36, 0.04);
+      sapato.position.set(0, -0.03, 0.04);
       sapato.castShadow = true;
-      knee.add(sapato);
+      ankle.add(sapato);
       const sola = new THREE.Mesh(new THREE.BoxGeometry(0.155, 0.03, 0.265), matSola);
-      sola.position.set(0, -0.405, 0.04);
-      knee.add(sola);
-      pernas[lado] = { hip, knee };
+      sola.position.set(0, -0.075, 0.04);
+      ankle.add(sola);
+      pernas[lado] = { hip, knee, ankle };
     });
 
     if (saia) {
@@ -556,14 +560,18 @@
       const antebraco = cap(0.052, 0.15, regata || mangaCurta ? matPele : matTop);
       antebraco.position.y = -0.11;
       elbow.add(antebraco);
+      // Pulso (articulação própria): a mão e o ponto de encaixe de objetos ficam nele
+      const wrist = new THREE.Group();
+      wrist.position.y = -0.22;
+      elbow.add(wrist);
       const mao = new THREE.Mesh(new THREE.SphereGeometry(0.065, 12, 10), matPele);
-      mao.position.y = -0.25;
+      mao.position.y = -0.03;
       mao.castShadow = true;
-      elbow.add(mao);
+      wrist.add(mao);
       const hand = new THREE.Group();
-      hand.position.y = -0.27;
-      elbow.add(hand);
-      bracos[lado] = { shoulder, elbow, hand };
+      hand.position.y = -0.05;
+      wrist.add(hand);
+      bracos[lado] = { shoulder, elbow, wrist, hand };
     });
     if (/tatuagem|tatuado/i.test((f.detalhes?.tatuagens || []).join(' ')) && char?.id === 'erion') {
       ['L', 'R'].forEach((lado) => {
@@ -595,8 +603,25 @@
       hL: pernas.L.hip,
       hR: pernas.R.hip,
       kL: pernas.L.knee,
-      kR: pernas.R.knee
+      kR: pernas.R.knee,
+      pL: bracos.L.wrist,
+      pR: bracos.R.wrist,
+      tL: pernas.L.ankle,
+      tR: pernas.R.ankle
     };
+    // Cada malha sabe qual articulação a move (pra clicar numa parte do corpo e posar)
+    const juntaDoObjeto = new Map(Object.entries(J).map(([k, j]) => [j, k]));
+    corpo.traverse((m) => {
+      if (!m.isMesh) return;
+      for (let p = m; p && p !== corpo; p = p.parent) {
+        if (juntaDoObjeto.has(p)) {
+          m.userData.junta = juntaDoObjeto.get(p);
+          break;
+        }
+      }
+    });
+    // Rotações extras por articulação (pose montada pelo jogador), somadas por cima da pose base
+    let extras = null;
     const estado = {
       pose: o.pose || 'idle',
       acao: null,
@@ -760,6 +785,28 @@
         alvo.sR.x = -0.4;
         alvo.eL.x = -0.6;
         alvo.eR.x = -0.6;
+      } else if (p === 'sit_car') {
+        // Sentado no banco de um carro: encosto inclinado, pés pra frente, mãos no colo
+        alvo.hipsY = -0.36;
+        alvo.hips.x = -0.12;
+        alvo.spine.x = 0.04;
+        alvo.head.x = 0.06;
+        alvo.hL.x = -1.38;
+        alvo.hR.x = -1.38;
+        alvo.hL.z = -0.06;
+        alvo.hR.z = 0.06;
+        alvo.kL.x = 1.2;
+        alvo.kR.x = 1.2;
+        alvo.tL.x = 0.2;
+        alvo.tR.x = 0.2;
+        alvo.sL.x = -0.42;
+        alvo.sR.x = -0.42;
+        alvo.sL.z = -0.08;
+        alvo.sR.z = 0.08;
+        alvo.eL.x = -0.75;
+        alvo.eR.x = -0.75;
+        alvo.eL.y = 0.25;
+        alvo.eR.y = -0.25;
       } else if (p === 'bench') {
         // Deitado no banco (o grupo é rotacionado pelo minigame); braços seguram a barra
         alvo.sL.x = -Math.PI / 2;
@@ -889,6 +936,15 @@
       }
       alvo.head.y += estado.olharY;
       alvo.head.x += estado.olharX;
+      if (extras) {
+        for (const k in extras) {
+          const e = extras[k];
+          if (!alvo[k] || !e) continue;
+          alvo[k].x += e[0] || 0;
+          alvo[k].y += e[1] || 0;
+          alvo[k].z += e[2] || 0;
+        }
+      }
     }
 
     function aplicar(dt) {
@@ -1000,6 +1056,21 @@
         estado.olharX = pitch;
         return api;
       },
+      /** Rotações extras { junta: [x, y, z] } somadas à pose (null limpa). */
+      setExtras(obj) {
+        extras = obj && Object.keys(obj).length ? obj : null;
+        return api;
+      },
+      get extras() {
+        return extras;
+      },
+      /** Articulação ('sL', 'kR', 'head'…) que move esta malha, ou null. */
+      juntaDe(obj) {
+        for (let p = obj; p; p = p.parent) if (p.userData && p.userData.junta) return p.userData.junta;
+        return null;
+      },
+      /** Ajusta a escala só do boneco (o grupo continua livre pra posicionar). */
+      escala,
       dispose() {
         faceCanvasCache.forEach((t) => t.dispose());
       }

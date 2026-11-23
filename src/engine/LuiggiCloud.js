@@ -261,8 +261,9 @@
     carregar(pos + 1);
   }
 
-  function anterior() {
-    if (audio.currentTime > 3) audio.currentTime = 0;
+  /** direto = true pula pra faixa anterior mesmo no meio da música (botão ⏮ do rádio do Subaru). */
+  function anterior(direto = false) {
+    if (!direto && audio.currentTime > 3) audio.currentTime = 0;
     else carregar(pos - 1);
   }
 
@@ -752,7 +753,19 @@
     aplicarModo,
     tocarFaixa,
     proxima: () => proxima(false),
-    anterior: () => anterior(),
+    anterior: (direto) => anterior(!!direto),
+    /** Pula pra um ponto da faixa atual (segundos). */
+    seek(t) {
+      if (!audio || !isFinite(t)) return;
+      try {
+        audio.currentTime = Math.max(0, Math.min(t, (audio.duration || t + 1) - 0.25));
+      } catch (_) { }
+    },
+    /** Catálogo (artistas e faixas tocáveis) pro celular da Resenha. */
+    get catalogo() {
+      return { artistas: catalogo.artistas.slice(), faixas: catalogo.faixas.slice() };
+    },
+    capaDe,
     play,
     pause,
     abrirPainel,
