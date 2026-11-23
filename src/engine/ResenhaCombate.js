@@ -416,7 +416,7 @@
     const hud = document.createElement('div');
     hud.className = 'cb-hud';
     hud.innerHTML = `
-      <div class="cb-mira hidden" id="cb-mira"><i></i><i></i><i></i><i></i></div>
+      <div class="cb-mira hidden" id="cb-mira"><i></i><i></i><i></i><i></i><b></b></div>
       <div class="cb-luneta hidden" id="cb-luneta"></div>
       <div class="cb-acerto hidden" id="cb-acerto">✕</div>
       <div class="cb-dano" id="cb-dano"></div>
@@ -1276,11 +1276,19 @@
     }
 
     // ---------- HUD ----------
+    // Mira fixa no meio da tela sempre que tem arma ou faca na mão (só mexe no DOM quando muda: nada de piscar)
+    let miraVisivel = null;
+    function atualizarMira() {
+      const v = ctx.modoCam() === 'pe' && !!ARMAS[st.arma] && !st.morto && !st.mira;
+      if (v === miraVisivel) return;
+      miraVisivel = v;
+      miraEl.classList.toggle('hidden', !v);
+    }
     function atualizarHud() {
       const def = ARMAS[st.arma];
       const pe = ctx.modoCam() === 'pe';
       statusEl.classList.toggle('hidden', !pe);
-      miraEl.classList.toggle('hidden', !pe || !def || st.morto || st.mira || def.faca);
+      atualizarMira();
       vidaEl.textContent = `❤ ${st.vida}`;
       vidaEl.classList.toggle('baixa', st.vida <= 30);
       if (def) {
@@ -1714,6 +1722,7 @@
         atualizarPainel();
       }
       atualizarEfeitos(dt);
+      atualizarMira();
       const comVm = ctx.modoCam() === 'pe' && st.primeira && !st.mira && !st.morto && st.arma === 'karambit';
       vm.atualizar(dt, comVm, Math.hypot(st.vel.x, st.vel.z), !st.noChao);
       if (eu.armaObj) eu.armaObj.visible = !comVm; // em primeira pessoa a faca do boneco some (fica a da tela)

@@ -2111,7 +2111,12 @@ body.resenha-aberta .lc-mini { display: none; }
 
 /* ==================== COMBATE / DUELOS (Momento Resenha 3D) ==================== */
 .cb-hud { position: absolute; inset: 0; pointer-events: none; z-index: 7; }
-.cb-mira { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; transform: translate(-50%, -50%); }
+.cb-mira { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; z-index: 8; pointer-events: none; animation: none !important; transition: none !important; opacity: 1 !important; }
+.cb-mira b { position: absolute; left: 12px; top: 12px; width: 2px; height: 2px; background: #7CFF6B; box-shadow: 0 0 2px #000; }
+/* Minimapa some enquanto um painel (Online, Configurações, Duelos, bancos, pose) está aberto por cima */
+.rs3-shell:has(.rs-online:not(.hidden)) .rs-mapa,
+.rs3-shell:has(.rs-bancos:not(.hidden)) .rs-mapa,
+.rs3-shell:has(.rs-pose:not(.hidden)) .rs-mapa { display: none !important; }
 .cb-mira i { position: absolute; background: #7CFF6B; box-shadow: 0 0 2px #000; }
 .cb-mira i:nth-child(1) { left: 12px; top: 0; width: 2px; height: 8px; }
 .cb-mira i:nth-child(2) { left: 12px; bottom: 0; width: 2px; height: 8px; }
