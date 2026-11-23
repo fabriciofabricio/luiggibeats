@@ -19,6 +19,87 @@
   };
   const cloud = () => (root.LuiggiCloud?.ativo ? root.LuiggiCloud : null);
 
+  // ---------------- Volume da música (individual: só muda o som de quem mexe) ----------------
+  // Usa o mesmo volume de música do jogo (config.volMusica), que fica salvo neste aparelho e nunca vai pra rede.
+  const volume = (() => {
+    let antesDoMudo = null;
+    const cfg = () => root.LuiggiSave?.state?.config || null;
+    const ler = () => {
+      const v = cfg()?.volMusica;
+      return Number.isFinite(v) ? v : 0.7;
+    };
+    function definir(v) {
+      v = Math.max(0, Math.min(1, Math.round(v * 100) / 100));
+      const c = cfg();
+      if (c) {
+        c.volMusica = v;
+        try {
+          root.LuiggiSave.salvar();
+        } catch (_) { }
+      }
+      root.LuiggiAudio?.aplicarVolumes?.();
+      root.LuiggiCloud?.aplicarVolume?.();
+      if (v > 0) antesDoMudo = null;
+      root.dispatchEvent(new CustomEvent('luiggi-volume-musica', { detail: v }));
+    }
+    function alternarMudo() {
+      const v = ler();
+      if (v > 0) {
+        antesDoMudo = v;
+        definir(0);
+        antesDoMudo = v;
+      } else definir(antesDoMudo || 0.7);
+    }
+    const icone = (v) => (v <= 0 ? '🔇' : v < 0.35 ? '🔈' : v < 0.7 ? '🔉' : '🔊');
+    const html = (extra = '') =>
+      `<div class="rs-vol ${extra}" title="Volume da música — só pra você, cada um ajusta o seu"><button class="rs-vol-mudo" type="button" title="Mudo (M)">🔊</button><input class="rs-vol-range" type="range" min="0" max="1" step="0.05" aria-label="Volume da música"><output class="rs-vol-n">70%</output></div>`;
+    /** Liga todos os controles .rs-vol dentro de host. Devolve uma função pra desligar. */
+    function ligar(host) {
+      const sync = () => {
+        const v = ler();
+        host.querySelectorAll('.rs-vol').forEach((w) => {
+          const r = w.querySelector('.rs-vol-range');
+          if (r && document.activeElement !== r) r.value = v;
+          const b = w.querySelector('.rs-vol-mudo');
+          if (b) b.textContent = icone(v);
+          const n = w.querySelector('.rs-vol-n');
+          if (n) n.textContent = `${Math.round(v * 100)}%`;
+          w.classList.toggle('mudo', v <= 0);
+        });
+      };
+      const onInput = (e) => {
+        if (e.target.classList?.contains('rs-vol-range')) definir(Number(e.target.value));
+      };
+      const onClick = (e) => {
+        if (e.target.closest?.('.rs-vol-mudo')) alternarMudo();
+      };
+      // Soltou o controle: devolve o teclado pro jogo (WASD não fica preso no volume)
+      const onChange = (e) => {
+        if (e.target.classList?.contains('rs-vol-range')) e.target.blur();
+      };
+      host.addEventListener('change', onChange);
+      // Não deixa o arrastar do volume girar a câmera nem as setas andarem
+      const parar = (e) => {
+        if (e.target.closest?.('.rs-vol')) e.stopPropagation();
+      };
+      host.addEventListener('input', onInput);
+      host.addEventListener('click', onClick);
+      host.addEventListener('pointerdown', parar);
+      host.addEventListener('keydown', parar);
+      root.addEventListener('luiggi-volume-musica', sync);
+      sync();
+      return () => {
+        host.removeEventListener('input', onInput);
+        host.removeEventListener('change', onChange);
+        host.removeEventListener('click', onClick);
+        host.removeEventListener('pointerdown', parar);
+        host.removeEventListener('keydown', parar);
+        root.removeEventListener('luiggi-volume-musica', sync);
+      };
+    }
+    return { ler, definir, alternarMudo, html, ligar };
+  })();
+
   function criar(o = {}) {
     const el = document.createElement('div');
     el.className = 'rs-cel hidden';
@@ -43,6 +124,7 @@
             <button data-cel="toggle" class="rs-cel-play" title="Tocar / pausar">⏯</button>
             <button data-cel="next" title="Próxima">⏭</button>
           </div>
+          ${volume.html('rs-cel-vol')}
           <div class="rs-cel-abas"></div>
           <div class="rs-cel-lista"></div>
           <div class="rs-cel-rodape"></div>
@@ -51,6 +133,7 @@
       </div>`;
     (o.host || document.body).appendChild(el);
     const $ = (s) => el.querySelector(s);
+    const desligarVolume = volume.ligar(el);
     let aba = 'todas';
     let assinaturaLista = '';
     let timer = null;
@@ -202,6 +285,7 @@
       },
       dispose() {
         clearInterval(timer);
+        desligarVolume();
         el.remove();
       }
     };
@@ -241,5 +325,5 @@
     return m;
   }
 
-  root.LuiggiResenhaCelular = { criar, criarCelular3D };
+  root.LuiggiResenhaCelular = { criar, criarCelular3D, volume };
 })(window);

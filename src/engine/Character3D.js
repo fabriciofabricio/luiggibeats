@@ -339,16 +339,19 @@
     const THREE = T();
     const M = L().M;
     const f = (char && char.fichaVisual) || {};
+    // Luis, Fabricio e Mateus Buse têm modelo próprio, feito a partir das fotos (PersonagensReais3D.js)
+    const Real = root.Luiggi3DReal;
+    const real = (!o.estilizado && Real?.MODELOS[char?.id]) || null;
     const pele = f.tomPele || '#ECC3AB';
     const pal = f.roupa?.paletaCores || ['#334155', '#1E293B'];
-    const topCol = o.corTop || pal[0] || '#27272A';
-    const botCol = o.corBaixo || pal[1] || '#18181B';
+    const topCol = o.corTop || (real ? real.camiseta.cor : pal[0]) || '#27272A';
+    const botCol = o.corBaixo || (real ? real.baixo.cor : pal[1]) || '#18181B';
     const sup = (f.roupa?.pecaSuperior || '').toLowerCase();
     const inf = (f.roupa?.pecaInferior || '').toLowerCase();
-    const regata = /regata|tomara|alcinha|top |top$|cropped|vestido/.test(sup);
-    const saia = /saia|vestido|shortinho/.test(inf) && !/calça\/saia|saia ou calça/.test(inf);
-    const bermuda = /bermuda|short/.test(inf) && !saia;
-    const jaqueta = /jaqueta|cardigã|moletom|colete|camisa .* sobre|sobre/.test(sup);
+    const regata = !real && /regata|tomara|alcinha|top |top$|cropped|vestido/.test(sup);
+    const saia = !real && /saia|vestido|shortinho/.test(inf) && !/calça\/saia|saia ou calça/.test(inf);
+    const bermuda = real ? real.baixo.tipo === 'bermuda' : /bermuda|short/.test(inf) && !saia;
+    const jaqueta = !real && /jaqueta|cardigã|moletom|colete|camisa .* sobre|sobre/.test(sup);
     const largura = LARGURA_CORPO[f.corpo?.tipoCorpo] || 1;
     const alt = f.corpo?.alturaRelativa || 3;
     const escala = (o.escala || 1) * (0.92 + (alt - 2) * 0.05);
@@ -397,13 +400,23 @@
       const ankle = new THREE.Group();
       ankle.position.y = -0.33;
       knee.add(ankle);
-      const sapato = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.09, 0.26), matSapato);
-      sapato.position.set(0, -0.03, 0.04);
-      sapato.castShadow = true;
-      ankle.add(sapato);
-      const sola = new THREE.Mesh(new THREE.BoxGeometry(0.155, 0.03, 0.265), matSola);
-      sola.position.set(0, -0.075, 0.04);
-      ankle.add(sola);
+      if (real) Real.montarTenis(THREE, M, real, ankle);
+      else {
+        const sapato = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.09, 0.26), matSapato);
+        sapato.position.set(0, -0.03, 0.04);
+        sapato.castShadow = true;
+        ankle.add(sapato);
+        const sola = new THREE.Mesh(new THREE.BoxGeometry(0.155, 0.03, 0.265), matSola);
+        sola.position.set(0, -0.075, 0.04);
+        ankle.add(sola);
+      }
+      if (real && real.baixo.tipo === 'jeans') {
+        // Costura lateral do jeans
+        const costura = new THREE.Mesh(new THREE.BoxGeometry(0.006, 0.62, 0.012), M.toon(L().shade(botCol, 25)));
+        costura.position.set(s * 0.08, -0.36, 0);
+        costura.userData.noOutline = true;
+        hip.add(costura);
+      }
       pernas[lado] = { hip, knee, ankle };
     });
 
@@ -414,7 +427,7 @@
       hips.add(saiaMesh);
     } else {
       const pelvis = new THREE.Mesh(new THREE.SphereGeometry(0.19 * largura, 16, 10), bermuda ? matBaixo : matBaixo);
-      pelvis.scale.set(1, 0.65, 0.75);
+      pelvis.scale.set(1, 0.65, real ? 0.66 : 0.75);
       pelvis.position.y = -0.02;
       pelvis.castShadow = true;
       hips.add(pelvis);
@@ -424,10 +437,13 @@
     const spine = new THREE.Group();
     spine.position.y = 0.02;
     hips.add(spine);
-    const tronco = cap(0.19, 0.28, matTop, 16);
-    tronco.scale.set(1.05 * largura, 1, 0.72);
-    tronco.position.y = 0.24;
-    spine.add(tronco);
+    if (real) Real.montarTronco(THREE, M, real, spine, largura);
+    const tronco = real ? null : cap(0.19, 0.28, matTop, 16);
+    if (tronco) {
+      tronco.scale.set(1.05 * largura, 1, 0.72);
+      tronco.position.y = 0.24;
+      spine.add(tronco);
+    }
     if (regata) {
       const colo = new THREE.Mesh(new THREE.SphereGeometry(0.17 * largura, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.32), matPele);
       colo.scale.set(1.08, 1, 0.75);
@@ -442,13 +458,13 @@
     if (f.roupa?.estampa === 'emilydoces' || /emilyd/.test(sup)) {
       const est = L().plane(0.24, 0.07, M.basic(0xffffff, { map: L().textures.text('emilydoces', { w: 256, h: 80, size: 40, font: 'Georgia, serif', color: '#fbcfe8' }), transparent: true }), 0, 0.28, 0.146);
       spine.add(est);
-    } else if (char?.id === 'fabricio') {
+    } else if (char?.id === 'fabricio' && !real) {
       const est = L().plane(0.18, 0.16, M.basic(0xffffff, { map: L().textures.text('🐈', { w: 128, h: 128, size: 100, color: '#e5e7eb' }), transparent: true }), 0, 0.22, 0.146);
       spine.add(est);
     }
     // Colar / corrente
     const accText = (f.roupa?.acessorios || []).join(' ').toLowerCase();
-    if (/corrente|colar|terço|choker|pingente/.test(accText)) {
+    if (!real && /corrente|colar|terço|choker|pingente/.test(accText)) {
       const colar = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.008, 6, 24, Math.PI), M.std('#d1d5db', 0.2, 1));
       colar.rotation.set(Math.PI * 0.62, 0, Math.PI);
       colar.position.set(0, 0.4, 0.06);
@@ -459,20 +475,22 @@
     const neck = new THREE.Group();
     neck.position.y = 0.5;
     spine.add(neck);
-    const pescoco = cap(0.055, 0.06, matPele);
-    pescoco.position.y = 0.02;
+    const pescoco = real ? cap(0.05, 0.07, L().M.std(pele, 0.72, 0)) : cap(0.055, 0.06, matPele);
+    pescoco.position.y = real ? 0.03 : 0.02;
     neck.add(pescoco);
 
     const head = new THREE.Group();
-    head.position.y = 0.26;
+    head.position.y = real ? 0.19 : 0.26;
     neck.add(head);
+    const cabecaReal = real ? Real.montarCabeca(THREE, M, f, real, head) : null;
     const R = 0.25;
     const cranio = new THREE.Mesh(new THREE.SphereGeometry(R, 32, 24), matPele);
+    if (real) cranio.visible = false;
     cranio.scale.set(1, 1.04, 0.98);
     cranio.castShadow = true;
     head.add(cranio);
     // Orelhas
-    [-1, 1].forEach((s) => {
+    (real ? [] : [-1, 1]).forEach((s) => {
       const orelha = new THREE.Mesh(new THREE.SphereGeometry(R * 0.2, 10, 8), matPele);
       orelha.scale.set(0.5, 1, 0.8);
       orelha.position.set(s * R * 0.98, -R * 0.05, 0);
@@ -482,6 +500,7 @@
     // Rosto (patch esférico com textura)
     const faceCanvasCache = new Map();
     function faceTex(expr, aberta, pisca) {
+      if (cabecaReal) return cabecaReal.faceTex(expr, aberta, pisca);
       const key = `${expr}|${aberta ? 1 : 0}|${pisca ? 1 : 0}`;
       if (faceCanvasCache.has(key)) return faceCanvasCache.get(key);
       const tex = L().makeCanvasTex(256, 256, (ctx, w, h) => desenharRosto(ctx, w, h, f, expr, aberta, pisca));
@@ -491,24 +510,24 @@
       return tex;
     }
     const faceGeo = new THREE.SphereGeometry(R * 1.006, 24, 16, Math.PI / 2 - 0.95, 1.9, Math.PI / 2 - 0.85, 1.55);
-    const faceMat = M.toon('#ffffff', { map: faceTex('neutro', false, false), transparent: true, alphaTest: 0.35 });
-    faceMat.polygonOffset = true;
-    faceMat.polygonOffsetFactor = -2;
-    const face = new THREE.Mesh(faceGeo, faceMat);
-    face.scale.copy(cranio.scale);
-    face.userData.noOutline = true;
-    head.add(face);
-    // Nariz discreto
-    const nariz = new THREE.Mesh(new THREE.SphereGeometry(R * 0.07, 8, 6), M.toon(L().shade(pele, -18)));
-    nariz.position.set(0, -R * 0.12, R * 0.98);
-    nariz.userData.noOutline = true;
-    head.add(nariz);
-
-    const cabelo = construirCabelo(THREE, f, R, M);
-    head.add(cabelo);
+    const faceMat = cabecaReal ? cabecaReal.faceMat : M.toon('#ffffff', { map: faceTex('neutro', false, false), transparent: true, alphaTest: 0.35 });
+    if (!cabecaReal) {
+      faceMat.polygonOffset = true;
+      faceMat.polygonOffsetFactor = -2;
+      const face = new THREE.Mesh(faceGeo, faceMat);
+      face.scale.copy(cranio.scale);
+      face.userData.noOutline = true;
+      head.add(face);
+      // Nariz discreto
+      const nariz = new THREE.Mesh(new THREE.SphereGeometry(R * 0.07, 8, 6), M.toon(L().shade(pele, -18)));
+      nariz.position.set(0, -R * 0.12, R * 0.98);
+      nariz.userData.noOutline = true;
+      head.add(nariz);
+      head.add(construirCabelo(THREE, f, R, M));
+    } else faceGeo.dispose();
 
     // Óculos
-    const oc = f.detalhes?.oculos;
+    const oc = real ? null : f.detalhes?.oculos;
     if (oc) {
       const armMat = M.std(oc.corArmacao || '#222222', 0.3, 0.6);
       const lenteMat = new THREE.MeshPhysicalMaterial({ color: oc.lenteTinta || 0xffffff, transparent: true, opacity: oc.lenteTinta ? 0.35 : 0.12, roughness: 0.05 });
@@ -543,8 +562,22 @@
     [-1, 1].forEach((s) => {
       const lado = s < 0 ? 'L' : 'R';
       const shoulder = new THREE.Group();
-      shoulder.position.set(s * (0.25 * largura + 0.03), 0.43, 0);
+      shoulder.position.set(s * (real ? 0.2 * largura + 0.015 : 0.25 * largura + 0.03), real ? 0.41 : 0.43, 0);
       spine.add(shoulder);
+      if (real) {
+        const elbow = new THREE.Group();
+        elbow.position.y = -0.28;
+        shoulder.add(elbow);
+        const wrist = new THREE.Group();
+        wrist.position.y = -0.23;
+        elbow.add(wrist);
+        const hand = new THREE.Group();
+        hand.position.y = -0.05;
+        wrist.add(hand);
+        Real.montarBraco(THREE, M, real, pele, lado, { shoulder, elbow, wrist }, matTop);
+        bracos[lado] = { shoulder, elbow, wrist, hand };
+        return;
+      }
       const braco = cap(0.06 * Math.min(1.2, largura), 0.16, regata ? matPele : matTop);
       braco.position.y = -0.13;
       shoulder.add(braco);
@@ -582,7 +615,8 @@
     }
 
     // Contorno cartoon
-    if (o.contorno !== false) L().addOutline(corpo, 0.012, 0x15111a);
+    // Os modelos realistas não usam o contorno de desenho (e assim gastam metade das chamadas de desenho)
+    if (o.contorno !== false && !real) L().addOutline(corpo, 0.012, 0x15111a);
 
     // Sombra de contato
     const sombra = L().blobShadow(0.42 * escala, 0.5);
@@ -1017,7 +1051,7 @@
       corpo,
       joints: J,
       char,
-      altura: 1.85 * escala,
+      altura: (real ? 1.74 : 1.85) * escala,
       maoDireita: bracos.R.hand,
       maoEsquerda: bracos.L.hand,
       cabeca: head,
@@ -1073,6 +1107,7 @@
       escala,
       dispose() {
         faceCanvasCache.forEach((t) => t.dispose());
+        cabecaReal?.dispose();
       }
     };
     return api;

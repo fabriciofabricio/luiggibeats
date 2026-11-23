@@ -927,6 +927,129 @@
     return c;
   }
 
+  /**
+   * Junta as malhas paradas que usam o mesmo material numa só (com as transformações já aplicadas).
+   * O cenário tem centenas de peças pequenas (muros, pilares, janelas, grades...): isso corta as chamadas de
+   * desenho de ~1000 pra algumas dezenas. Malhas transparentes, instanciadas, linhas e sprites ficam como estão.
+   */
+  /** Assinatura do material: materiais iguais criados separadamente (mesma cor, textura...) contam como um só. */
+  function assinaturaMaterial(m) {
+    const cor = (c) => (c && c.getHexString ? c.getHexString() : '');
+    return [m.type, cor(m.color), cor(m.emissive), m.emissiveIntensity, m.map ? m.map.uuid : '', m.roughness, m.metalness, m.side, m.flatShading ? 1 : 0, m.vertexColors ? 1 : 0, m.alphaTest, m.opacity, m.gradientMap ? m.gradientMap.uuid : '', m.fog === false ? 0 : 1, m.depthWrite ? 1 : 0, m.polygonOffset ? m.polygonOffsetFactor : 0].join('|');
+  }
+
+  function juntarEstaticos(g, opcoes = {}) {
+    const THREE = T();
+    const pular = opcoes.pular || (() => false);
+    const celula = opcoes.celula || 0; // > 0: junta só dentro de quadrados desse tamanho (melhor pra recortar o que não aparece)
+    const centro = new THREE.Vector3();
+    g.updateMatrixWorld(true);
+    const inv = new THREE.Matrix4().copy(g.matrixWorld).invert();
+    const grupos = new Map();
+    const remover = [];
+    const criadas = [];
+    g.traverse((o) => {
+      if (!o.isMesh || o.isInstancedMesh || o.isSkinnedMesh || Array.isArray(o.material) || !o.visible) return;
+      const m = o.material;
+      if (m.transparent || o.userData.dinamico || o.morphTargetInfluences || pular(o)) return;
+      const geo = o.geometry;
+      if (!geo.attributes.position || !geo.attributes.normal) return;
+      const attrs = Object.keys(geo.attributes).filter((k) => k === 'position' || k === 'normal' || k === 'uv' || k === 'color').sort();
+      // Ação de clique (do próprio objeto ou de um pai dentro de g): só junta peças com a mesma ação
+      let acao = '';
+      for (let p = o; p && p !== g; p = p.parent) if (p.userData && p.userData.acao) {
+        acao = p.userData.acao;
+        break;
+      }
+      let cel = '';
+      if (celula) {
+        if (!geo.boundingSphere) geo.computeBoundingSphere();
+        centro.copy(geo.boundingSphere.center).applyMatrix4(o.matrixWorld);
+        cel = Math.floor(centro.x / celula) + ':' + Math.floor(centro.z / celula);
+      }
+      const chave = acao + '|' + cel + '|' + assinaturaMaterial(m) + '|' + (o.castShadow ? 1 : 0) + (o.receiveShadow ? 1 : 0) + '|' + attrs.map((k) => k + geo.attributes[k].itemSize).join(',') + '|' + (o.renderOrder || 0);
+      let gr = grupos.get(chave);
+      if (!gr) grupos.set(chave, (gr = { mat: m, cast: o.castShadow, rec: o.receiveShadow, attrs, itens: [], ordem: o.renderOrder || 0, acao }));
+      gr.itens.push(o);
+    });
+    const mw = new THREE.Matrix4();
+    const nm = new THREE.Matrix3();
+    const v = new THREE.Vector3();
+    grupos.forEach((gr) => {
+      if (gr.itens.length < 2) return;
+      let total = 0;
+      let totalIdx = 0;
+      gr.itens.forEach((o) => {
+        total += o.geometry.attributes.position.count;
+        totalIdx += o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count;
+      });
+      if (total > 3e6) return;
+      const saida = {};
+      gr.attrs.forEach((k) => (saida[k] = new Float32Array(total * gr.itens[0].geometry.attributes[k].itemSize)));
+      const idx = total > 65535 ? new Uint32Array(totalIdx) : new Uint16Array(totalIdx);
+      let base = 0;
+      let bi = 0;
+      gr.itens.forEach((o) => {
+        const geo = o.geometry;
+        mw.multiplyMatrices(inv, o.matrixWorld);
+        nm.getNormalMatrix(mw);
+        const n = geo.attributes.position.count;
+        const espelhado = mw.determinant() < 0;
+        gr.attrs.forEach((k) => {
+          const a = geo.attributes[k];
+          const out = saida[k];
+          const is = a.itemSize;
+          for (let i = 0; i < n; i++) {
+            if (k === 'position') {
+              v.fromBufferAttribute(a, i).applyMatrix4(mw);
+              out[(base + i) * 3] = v.x;
+              out[(base + i) * 3 + 1] = v.y;
+              out[(base + i) * 3 + 2] = v.z;
+            } else if (k === 'normal') {
+              v.fromBufferAttribute(a, i).applyMatrix3(nm).normalize();
+              out[(base + i) * 3] = v.x;
+              out[(base + i) * 3 + 1] = v.y;
+              out[(base + i) * 3 + 2] = v.z;
+            } else for (let c = 0; c < is; c++) out[(base + i) * is + c] = a.array[i * is + c];
+          }
+        });
+        if (geo.index) {
+          const ia = geo.index.array;
+          for (let i = 0; i < ia.length; i += 3) {
+            idx[bi++] = ia[i] + base;
+            idx[bi++] = (espelhado ? ia[i + 2] : ia[i + 1]) + base;
+            idx[bi++] = (espelhado ? ia[i + 1] : ia[i + 2]) + base;
+          }
+        } else {
+          for (let i = 0; i < n; i += 3) {
+            idx[bi++] = base + i;
+            idx[bi++] = base + (espelhado ? i + 2 : i + 1);
+            idx[bi++] = base + (espelhado ? i + 1 : i + 2);
+          }
+        }
+        base += n;
+        remover.push(o);
+      });
+      const ng = new THREE.BufferGeometry();
+      gr.attrs.forEach((k) => ng.setAttribute(k, new THREE.BufferAttribute(saida[k], gr.itens[0].geometry.attributes[k].itemSize)));
+      ng.setIndex(new THREE.BufferAttribute(idx.subarray(0, bi), 1));
+      ng.computeBoundingSphere();
+      ng.computeBoundingBox();
+      const mesh = new THREE.Mesh(ng, gr.mat);
+      mesh.castShadow = gr.cast;
+      mesh.receiveShadow = gr.rec;
+      mesh.renderOrder = gr.ordem;
+      mesh.userData.noOutline = true;
+      mesh.userData.juntado = gr.itens.length;
+      if (gr.acao) mesh.userData.acao = gr.acao;
+      g.add(mesh);
+      criadas.push(mesh);
+    });
+    // Tira as originais (os grupos vazios ficam, não custam nada)
+    remover.forEach((o) => o.parent && o.parent.remove(o));
+    return criadas;
+  }
+
   // ------------------------------------------------------------------
   // MONTAGEM
   // ------------------------------------------------------------------
@@ -938,17 +1061,20 @@
     const g = new THREE.Group();
     raiz.add(g);
 
-    // ---------- CÉU, SOL E NUVENS ----------
-    H().ceu(raiz, [[0, '#2f73cf'], [0.28, '#5b9ae2'], [0.46, '#a6cbf1'], [0.52, '#dce9f6'], [1, '#e4edf6']], 150);
+    // ---------- CÉU, SOL E NUVENS (num grupo que acompanha a câmera quando o bairro está ligado) ----------
+    const ceuG = new THREE.Group();
+    raiz.add(ceuG);
+    const ceuMesh = H().ceu(ceuG, [[0, '#2f73cf'], [0.28, '#5b9ae2'], [0.46, '#a6cbf1'], [0.52, '#dce9f6'], [1, '#e4edf6']], 150);
+    if (ceuMesh) ceuMesh.renderOrder = -10;
     const solDir = new THREE.Vector3(10, 22, 14).normalize();
     const sol = L().halo('#fff7dc', 34, 1.5);
     sol.material.fog = false;
     sol.position.copy(solDir).multiplyScalar(130);
-    raiz.add(sol);
+    ceuG.add(sol);
     const nucleo = L().halo('#ffffff', 9, 2.2);
     nucleo.material.fog = false;
     nucleo.position.copy(sol.position);
-    raiz.add(nucleo);
+    ceuG.add(nucleo);
     const texNuvem = TX.nuvem();
     const nuvens = [];
     for (let i = 0; i < 16; i++) {
@@ -959,7 +1085,7 @@
       const k = rnd(28, 52);
       s.scale.set(k, k * 0.45, 1);
       s.userData.noOutline = true;
-      raiz.add(s);
+      ceuG.add(s);
       nuvens.push({ s, a, r, v: rnd(0.002, 0.005) });
     }
 
@@ -1463,6 +1589,12 @@
 
     // ---------- CURVA DA RUA (traçado real) ----------
     curvarMundo(g);
+    // ---------- DESEMPENHO: peças paradas juntadas por material ----------
+    // Cada pedaço juntado (quadrados de 50 m) só projeta sombra quando a câmera está perto
+    const sombraPorPerto = (o.juntar !== false ? juntarEstaticos(g, { celula: 50 }) : [])
+      .filter((m) => m.castShadow)
+      .map((m) => ({ m, c: m.geometry.boundingSphere.center.clone(), r: m.geometry.boundingSphere.radius }));
+    let sombraT = 0;
     const curvo = (p) => {
       const c = curvar(p[0], p[2]);
       return [c.x, p[1], c.z];
@@ -1517,8 +1649,15 @@
       return { x: c.x, z: c.z, r };
     });
 
+    // ---------- BAIRRO (até a R. Fagundes Varela), só quando pedido ----------
+    const bairro = o.bairro && root.LuiggiBairro ? root.LuiggiBairro.construir() : null;
+    if (bairro) raiz.add(bairro.group);
+    const camLocal = new THREE.Vector3();
+    let bairroT = 0;
+
     return {
       group: raiz,
+      bairro,
       subaru: sub,
       dia: true,
       vaga: [vagaC.x, VAGA_POV[1], vagaC.z],
@@ -1534,12 +1673,21 @@
        * Devolve o ponto corrigido.
        */
       limitarAndar(x, z) {
+        // Com o bairro: fora das ruas do cenário antigo vale a máscara das ruas e calçadas
+        const cb = bairro ? bairro.classeEm(x, z) : -1;
+        if (cb === 0 || cb === 1) return bairro.limitar(x, z, 0.3);
         const r = retificar(x, z);
-        r.x = Math.max(-62, Math.min(78, r.x));
+        const x0 = r.x;
+        const z0 = r.z;
+        if (cb < 0) r.x = Math.max(-62, Math.min(78, r.x));
         const naTransversal = Math.abs(r.x - eixoTransversal(r.z)) < MEIA_CRUZ + 2.6;
         // Na frente da obra o tapume chega mais perto do meio-fio indo pra oeste
         const norte = FRENTE_NORTE + (r.x < -3 ? Math.min(3.3, ((-3 - r.x) / 57.2) * 3.3) : 0) + 0.35;
-        r.z = Math.max(naTransversal ? -42 : norte, Math.min(naTransversal ? 46 : FRENTE_SUL - 0.35, r.z));
+        const tz0 = cb === 2 ? -96 : -42;
+        const tz1 = cb === 2 ? 96 : 46;
+        r.z = Math.max(naTransversal ? tz0 : norte, Math.min(naTransversal ? tz1 : FRENTE_SUL - 0.35, r.z));
+        // Nada mudou: devolve o ponto como veio (ida e volta pela rua curva tem erro de arredondamento longe do eixo)
+        if (r.x === x0 && r.z === z0) return { x, z };
         const c = curvar(r.x, r.z);
         return { x: c.x, z: c.z };
       },
@@ -1548,34 +1696,71 @@
        * Devolve o ponto corrigido (coordenadas do cenário).
        */
       limitarVeiculo(x, z, m = 1.05) {
+        const cb = bairro ? bairro.classeEm(x, z) : -1;
+        if (cb === 0 || cb === 1) return bairro.limitar(x, z, m);
         const r = retificar(x, z);
+        const x0 = r.x;
+        const z0 = r.z;
         r.x = Math.max(-100, Math.min(100, r.x));
         const meia = MEIA_CRUZ + 1.4 - m; // asfalto + um pouco da calçada da transversal (o muro da esquina fica logo depois)
         const xc = eixoTransversal(r.z);
         const norte = FRENTE_NORTE + (r.x < -3 ? Math.min(3.3, ((-3 - r.x) / 57.2) * 3.3) : 0) + m;
         if (Math.abs(r.x - xc) < meia) {
           // Dentro da faixa da transversal: pode seguir pra norte e sul
-          r.z = Math.max(-80, Math.min(85, r.z));
+          r.z = cb === 2 ? Math.max(-97, Math.min(97, r.z)) : Math.max(-80, Math.min(85, r.z));
         } else {
           const fora = r.z < norte || r.z > FRENTE_SUL - m;
           // Saindo da transversal pro lado: só volta pra rua principal pela esquina
           if (fora && (r.z < FRENTE_NORTE - 1 || r.z > FRENTE_SUL + 1)) r.x = Math.max(xc - meia, Math.min(xc + meia, r.x));
           else r.z = Math.max(norte, Math.min(FRENTE_SUL - m, r.z));
         }
+        if (r.x === x0 && r.z === z0) return { x, z };
         const c = curvar(r.x, r.z);
         return { x: c.x, z: c.z };
       },
       /** Coisas em que o carro bate (círculos, coordenadas do cenário): carros parados, postes, árvores, placas. */
       obstaculos,
+      /** Obstáculos do bairro perto de (x, z) (coordenadas do cenário). */
+      obstaculosPerto(x, z, r = 6) {
+        return bairro ? bairro.obstaculosPerto(x, z, r) : [];
+      },
+      /** Nome da rua em (x, z), quando dá pra saber. */
+      nomeDaRua(x, z) {
+        if (bairro) {
+          const n = bairro.nomeDaRua(x, z);
+          if (n) return n;
+        }
+        const r = retificar(x, z);
+        if (Math.abs(r.x - eixoTransversal(r.z)) < MEIA_CRUZ + 3 && (r.z < FRENTE_NORTE || r.z > FRENTE_SUL)) return 'Rua Professor Raul Pinheiro Machado';
+        if (Math.abs(r.x) <= 112) return 'Rua Mercedes Seiler Rocha';
+        return null;
+      },
       curvar,
       retificar,
       slots: { L: curvo([-1.5, 0, 0.8]), R: curvo([1.5, 0, 0.8]), C: curvo([0, 0, 0.8]) },
       cam: { pos: curvo([5.5, 2.0, 5]), look: curvo([0, 0.9, -3]) },
       bg: 0xa9cdf2,
-      fog: [0xd2e3f4, 0.0075],
+      fog: [0xd2e3f4, bairro ? 0.0053 : 0.0075],
       luz: { sky: '#dcebff', ground: '#7d7566', hemi: 1.2, key: '#fff3dc', keyI: 2.6, keyPos: [10, 22, 14], fillI: 0.45, fill: '#dfe8ff' },
       grade: { tint: [1.01, 1.0, 0.99], saturation: 1.06, bloom: 0.35, threshold: 1.4, vignette: 0.45 },
-      update(dt) {
+      update(dt, t, camera) {
+        if (camera && sombraPorPerto.length && (sombraT -= dt) <= 0) {
+          sombraT = 0.4;
+          camLocal.copy(camera.position);
+          raiz.worldToLocal(camLocal);
+          for (const s2 of sombraPorPerto) s2.m.castShadow = Math.hypot(s2.c.x - camLocal.x, s2.c.z - camLocal.z) - s2.r < 45;
+        }
+        if (bairro && camera) {
+          // Céu acompanha a câmera; blocos longe somem
+          camLocal.copy(camera.position);
+          raiz.worldToLocal(camLocal);
+          ceuG.position.set(camLocal.x, 0, camLocal.z);
+          bairroT -= dt;
+          if (bairroT <= 0) {
+            bairroT = 0.3;
+            bairro.atualizar(camLocal.x, camLocal.z);
+          }
+        }
         nuvens.forEach((n) => {
           n.a += n.v * dt;
           n.s.position.x = Math.cos(n.a) * n.r;
@@ -1585,5 +1770,5 @@
     };
   }
 
-  root.LuiggiRuaSafepoint = { construir, VAGA, VAGA_POV, curvar, retificar };
+  root.LuiggiRuaSafepoint = { construir, VAGA, VAGA_POV, curvar, retificar, juntarEstaticos };
 })(window);

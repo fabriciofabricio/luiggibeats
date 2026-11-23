@@ -187,6 +187,7 @@
           <div class="rs-dica-andar hidden" id="rs-dica-andar">${toque ? '🕹️ Arraste o controle pra andar · arraste a tela pra girar a câmera' : '⌨️ <b>WASD</b>/setas andam · <b>Shift</b> corre · <b>arraste</b> pra girar a câmera · <b>rodinha</b> aproxima · <b>F</b> entra no carro'}</div>
           <div class="rs-joy hidden" id="rs-joy"><div class="rs-joy-bola" id="rs-joy-bola"></div></div>
           <div class="rs-velo hidden" id="rs-velo">0 km/h</div>
+          <div class="rs-mapa hidden" id="rs-mapa" title="Mapa do bairro (clique pra aumentar)"><canvas id="rs-mapa-cv" width="360" height="360"></canvas><div class="rs-rua" id="rs-rua"></div></div>
           <div class="sp3d-tooltip hidden" id="rs-tip"></div>
           <div class="sp3d-dialog">
             <div class="sp3d-portrait" id="rs-portrait"></div>
@@ -202,6 +203,7 @@
                 <button class="mg-btn primary" id="rs-play" title="Tocar / pausar">⏯</button>
                 <button class="mg-btn" id="rs-next" title="Próxima">⏭</button>
               </div>
+              ${root.LuiggiResenhaCelular?.volume?.html() || ''}
             </div>
           </div>
         </div>`;
@@ -220,6 +222,11 @@
       const tip = document.getElementById('rs-tip');
       const tagsHost = document.getElementById('rs-tags');
       const veloEl = document.getElementById('rs-velo');
+      const mapaEl = document.getElementById('rs-mapa');
+      const ruaEl = document.getElementById('rs-rua');
+      // Volume da música: individual, cada um no seu aparelho (não vai pra rede)
+      const VOL = root.LuiggiResenhaCelular?.volume;
+      const desligarVolume = VOL ? VOL.ligar(shell) : () => { };
       let ultimaInteracao = performance.now();
 
       function falar(texto, quem = null, rotulo = null) {
@@ -233,8 +240,9 @@
       const avisoOnline = (texto) => falar(texto, null, '🌐 Resenha Online');
 
       // ---------------- Palco, rua e carro ----------------
-      const stage = L().createStage(view, { radius: '0', fov: 68, near: 0.02, far: 400, fillIntensity: 0.6, fillColor: '#9fb4ff', shadowBounds: 22 });
-      const env = root.Luiggi3DEnv.build('safepoint', { semSubaru: true });
+      const stage = L().createStage(view, { radius: '0', fov: 68, near: 0.02, far: 460, fillIntensity: 0.6, fillColor: '#9fb4ff', shadowBounds: 26 });
+      // O bairro inteiro (da casa até a R. Fagundes Varela) entra junto com a rua
+      const env = root.Luiggi3DEnv.build('safepoint', { semSubaru: true, bairro: true });
       const vaga = env.vaga || [0, 0, -1];
       if (env.alinharNaVaga) env.alinharNaVaga();
       else env.group.position.set(-vaga[0], 0, -vaga[2]);
@@ -260,6 +268,25 @@
       root.Luiggi3DEnv.aplicar(stage, env);
       stage.setGrade(env.dia ? { vignette: 0.6, bloom: 0.4, threshold: 1.4 } : { vignette: 0.85, bloom: 1.1 });
       const interior = POV().construirInterior({ exterior: true });
+      // Desempenho: o interior tem centenas de pecinhas paradas; junta por material (o que mexe ou é clicável fica separado)
+      if (root.LuiggiRuaSafepoint?.juntarEstaticos) {
+        // Partes que se mexem (ficam como estão) e partes que somem/aparecem juntas (cada uma é juntada por dentro)
+        const mexem = [interior.volante, interior.portaLuvas, interior.consoleTampa, interior.retro, interior.aromatizante, interior.chaveiro, interior.cookieMini, interior.camRetro, ...[].concat(interior.rodas || []), ...[].concat(interior.bancosFrente || [])].filter(Boolean);
+        const blocosCarro = [interior.teto, interior.exterior, interior.laterais].filter(Boolean);
+        const dentroDe = (m, raiz, lista) => {
+          for (let p = m; p && p !== raiz; p = p.parent) if (lista.includes(p)) return true;
+          return false;
+        };
+        const J = root.LuiggiRuaSafepoint.juntarEstaticos;
+        J(interior.group, { pular: (m) => dentroDe(m, interior.group, mexem) || dentroDe(m, interior.group, blocosCarro) });
+        blocosCarro.forEach((b) => J(b, { pular: (m) => dentroDe(m, b, mexem) }));
+        // Pecinhas pequenas do painel não precisam projetar sombra
+        interior.group.traverse((m) => {
+          if (!m.isMesh || !m.castShadow) return;
+          if (!m.geometry.boundingSphere) m.geometry.computeBoundingSphere();
+          if (m.geometry.boundingSphere.radius < 0.12 && !m.userData.juntado) m.castShadow = false;
+        });
+      }
       // O Subaru inteiro (interior + lataria) num grupo que anda; bancos, câmera e portas são relativos a ele
       const carroGrupo = new THREE.Group();
       carroGrupo.add(interior.group);
@@ -707,12 +734,29 @@
         const v = env.group.localToWorld(new THREE.Vector3(o.x, 0, o.z));
         return { x: v.x, z: v.z, r: o.r };
       });
+      // Obstáculos do bairro (árvores, postes, carros parados): só os perto do carro, convertidos pro mundo
+      const vObs = new THREE.Vector3();
+      const obsPerto = [];
+      function obstaculosDoBairro(x, z) {
+        obsPerto.length = 0;
+        if (!env.obstaculosPerto) return obsPerto;
+        vObs.set(x, 0, z);
+        env.group.worldToLocal(vObs);
+        const lista = env.obstaculosPerto(vObs.x, vObs.z, 6);
+        for (const o of lista) {
+          vObs.set(o.x, 0, o.z);
+          env.group.localToWorld(vObs);
+          obsPerto.push({ x: vObs.x, z: vObs.z, r: o.r });
+        }
+        return obsPerto;
+      }
       // Três círculos ao longo do carro (traseira, meio, frente) fazem a colisão
       const CIRCULOS_CARRO = [-1.6, 0, 1.55];
       function colidirCarro() {
         const fx = -Math.sin(carro.yaw);
         const fz = -Math.cos(carro.yaw);
         let impacto = 0;
+        const doBairro = obstaculosDoBairro(carro.x, carro.z);
         for (const o of CIRCULOS_CARRO) {
           const px = carro.x + fx * o;
           const pz = carro.z + fz * o;
@@ -736,6 +780,7 @@
             }
           };
           obstaculosMundo.forEach((ob) => empurrar(ob.x, ob.z, ob.r));
+          doBairro.forEach((ob) => empurrar(ob.x, ob.z, ob.r));
           avatares.forEach((a) => a.modo === 'pe' && empurrar(a.pos.x, a.pos.z, 0.3));
         }
         if (impacto > 0) {
@@ -2054,6 +2099,7 @@
         else if (e.code === 'KeyP') interagir('pose');
         else if (e.code === 'KeyC') interagir('celular');
         else if (e.code === 'KeyV') interagir('camfora');
+        else if (e.code === 'KeyM') VOL?.alternarMudo();
         else if (e.key === '1') trocarPersonagem('luis');
         else if (e.key === '2') trocarPersonagem('fabricio');
         else if (e.key === '3') trocarPersonagem('mateus_buse');
@@ -2081,18 +2127,170 @@
       // ==================================================================
       let relogioT = 0;
       let quadro = 0;
+      // ---------------- Minimapa e nome da rua ----------------
+      const mapa = (() => {
+        const D = root.__LUIGGI_BAIRRO;
+        if (!env.bairro || !D || !mapaEl) return null;
+        const [X0, Z0, GW, GH] = D.caixa;
+        const K = 0.6; // px por metro na imagem de fundo
+        const fundo = document.createElement('canvas');
+        fundo.width = Math.ceil(GW * K);
+        fundo.height = Math.ceil(GH * K);
+        const fx = fundo.getContext('2d');
+        fx.fillStyle = '#dfe7d2';
+        fx.fillRect(0, 0, fundo.width, fundo.height);
+        const P = (x, z) => [(x - X0) * K, (z - Z0) * K];
+        (D.areas || []).forEach(([t, pl]) => {
+          fx.fillStyle = t === 3 ? '#9cc3e6' : '#b9d6a3';
+          fx.beginPath();
+          for (let i = 0; i < pl.length; i += 2) fx[i ? 'lineTo' : 'moveTo'](...P(pl[i], pl[i + 1]));
+          fx.fill();
+        });
+        const ifv = D.nomes.indexOf('Rua Fagundes Varela');
+        const imsr = D.nomes.indexOf('Rua Mercedes Seiler Rocha');
+        const linha = (pts, larg, cor) => {
+          fx.strokeStyle = cor;
+          fx.lineWidth = Math.max(1.2, larg * K);
+          fx.lineCap = 'round';
+          fx.lineJoin = 'round';
+          fx.beginPath();
+          pts.forEach((p, i) => fx[i ? 'lineTo' : 'moveTo'](...P(p[0], p[1])));
+          fx.stroke();
+        };
+        const ruas = D.ruas.map(([tipo, larg, calc, nome, mao, pl]) => {
+          const pts = [];
+          for (let i = 0; i < pl.length; i += 2) pts.push([pl[i], pl[i + 1]]);
+          return { larg, nome, pts };
+        });
+        // Ruas do cenário antigo (a da casa e a transversal)
+        const S = root.LuiggiRuaSafepoint;
+        const antigas = [];
+        if (S) {
+          const casa = [];
+          for (let x = -112; x <= 112; x += 4) {
+            const c = S.curvar(x, 5.6);
+            casa.push([c.x, c.z]);
+          }
+          antigas.push({ larg: 8, nome: imsr, pts: casa });
+          const tr = [];
+          for (let z = -112; z <= 116; z += 4) {
+            const c = S.curvar(52.8 + (z - 5.6) * Math.tan(0.17), z);
+            tr.push([c.x, c.z]);
+          }
+          antigas.push({ larg: 7.6, nome: -1, pts: tr });
+        }
+        const todas = ruas.concat(antigas);
+        todas.forEach((r) => linha(r.pts, r.larg + 5, '#ffffff'));
+        todas.forEach((r) => linha(r.pts, r.larg + 1, r.nome === ifv ? '#f5b82e' : r.nome === imsr ? '#5b8def' : '#9aa1ab'));
+        const cv = document.getElementById('rs-mapa-cv');
+        const cx = cv.getContext('2d');
+        const vaga = (() => {
+          const v = new THREE.Vector3(0, 0, 0);
+          env.group.worldToLocal(v);
+          return v;
+        })();
+        const vA = new THREE.Vector3();
+        const vB = new THREE.Vector3();
+        let t = 0;
+        let ruaAnterior = '';
+        mapaEl.classList.remove('hidden');
+        mapaEl.addEventListener('click', () => mapaEl.classList.toggle('grande'));
+        mapaEl.addEventListener('pointerdown', (e) => e.stopPropagation());
+        return {
+          atualizar(dt) {
+            if ((t -= dt) > 0) return;
+            t = 0.1;
+            const quem = eu.modo === 'pe' ? eu.pos : carroGrupo.position;
+            vA.set(quem.x, 0, quem.z);
+            env.group.worldToLocal(vA);
+            // Pra onde a câmera olha (no sistema do cenário)
+            stage.camera.getWorldDirection(vB);
+            vB.multiplyScalar(10).add(stage.camera.position);
+            env.group.worldToLocal(vB);
+            const cam = new THREE.Vector3().copy(stage.camera.position);
+            env.group.worldToLocal(cam);
+            const ang = Math.atan2(vB.x - cam.x, vB.z - cam.z);
+            const W = cv.width;
+            const H = cv.height;
+            const escala = mapaEl.classList.contains('grande') ? 1.1 : 1.6;
+            cx.save();
+            cx.fillStyle = '#d5dcc8';
+            cx.fillRect(0, 0, W, H);
+            cx.translate(W / 2, H / 2);
+            // Pra cima = pra onde a câmera olha
+            cx.rotate(Math.PI + ang);
+            cx.scale(escala, escala);
+            const [px, pz] = P(vA.x, vA.z);
+            cx.drawImage(fundo, -px, -pz);
+            // Casa (vaga do Subaru)
+            const [hx, hz] = P(vaga.x, vaga.z);
+            cx.fillStyle = '#ef4444';
+            cx.beginPath();
+            cx.arc(hx - px, hz - pz, 4 / escala + 2, 0, Math.PI * 2);
+            cx.fill();
+            // O Subaru, quando a pessoa está a pé
+            if (eu.modo === 'pe') {
+              vB.set(carroGrupo.position.x, 0, carroGrupo.position.z);
+              env.group.worldToLocal(vB);
+              const [sx, sz] = P(vB.x, vB.z);
+              cx.fillStyle = '#1d4ed8';
+              cx.fillRect(sx - px - 3, sz - pz - 3, 6, 6);
+            }
+            cx.restore();
+            // Seta de quem joga (sempre no meio, apontando pra cima)
+            cx.fillStyle = '#111827';
+            cx.strokeStyle = '#ffffff';
+            cx.lineWidth = 3;
+            cx.beginPath();
+            cx.moveTo(W / 2, H / 2 - 13);
+            cx.lineTo(W / 2 + 9, H / 2 + 10);
+            cx.lineTo(W / 2, H / 2 + 5);
+            cx.lineTo(W / 2 - 9, H / 2 + 10);
+            cx.closePath();
+            cx.stroke();
+            cx.fill();
+            const nome = env.nomeDaRua ? env.nomeDaRua(vA.x, vA.z) : null;
+            const txt = nome ? '📍 ' + nome.replace(/^Rua /, 'R. ').replace(/^Avenida /, 'Av. ') : '📍 Bacacheri, Curitiba';
+            if (txt !== ruaAnterior) {
+              ruaAnterior = txt;
+              ruaEl.textContent = txt;
+            }
+          }
+        };
+      })();
+      // Sombra do sol acompanha quem joga (o bairro é grande; a caixa de sombra tem poucas dezenas de metros)
+      const luzSol = stage.dirLight;
+      const luzDesloc = luzSol ? luzSol.position.clone().sub(luzSol.target.position) : null;
+      function seguirSol() {
+        if (!luzSol) return;
+        const alvo = eu.modo === 'pe' ? eu.pos : carroGrupo.position;
+        // Anda em passos de 2 m pra sombra não "tremer"
+        const x = Math.round(alvo.x / 2) * 2;
+        const z = Math.round(alvo.z / 2) * 2;
+        if (luzSol.target.position.x === x && luzSol.target.position.z === z) return;
+        luzSol.target.position.set(x, 0, z);
+        luzSol.target.updateMatrixWorld();
+        luzSol.position.set(x + luzDesloc.x, luzDesloc.y, z + luzDesloc.z);
+      }
+      // Retrovisor só precisa do que está perto
+      if (interior.camRetro) {
+        interior.camRetro.far = Math.min(interior.camRetro.far || 90, 90);
+        interior.camRetro.updateProjectionMatrix?.();
+      }
       recalcularClicaveis();
       atualizarNPCs();
       stage.camera.position.set(...ASSENTOS.motorista.olho);
       eu.b.cabeca.visible = false;
       stage.start((dt, t) => {
         relogioT = t;
-        env.update?.(dt, t);
+        env.update?.(dt, t, stage.camera);
         controle.update(dt, t);
         dirigir(dt);
         andar(dt);
         avatares.forEach((a) => atualizarAvatar(a, dt, t));
         atualizarCamera(dt, t);
+        seguirSol();
+        mapa?.atualizar(dt);
         if (modoCam === 'carro' && ++quadro % 2 === 0) {
           interior.retro.visible = false;
           stage.renderTo(interior.rt, stage.scene, interior.camRetro);
@@ -2147,6 +2345,7 @@
         window.removeEventListener('keydown', onKey);
         window.removeEventListener('keyup', onKeyUp);
         window.removeEventListener('blur', limparTeclas);
+        desligarVolume();
         celular.dispose();
         avatares.forEach((a) => a.b.dispose());
         interior.rt.dispose();
@@ -2187,7 +2386,7 @@
       }
 
       // Pra testes automatizados e depuração no console
-      root.__resenha3D = { stage, env, avatares, eu, interagir, carro, voltarPraVaga, dirigir, get camFora() { return camFora; }, definirConvidado, get convidados() { return convidados; }, sair, trocarBanco, trocarPersonagem, comecarPose, terminarPose, selecionarJunta, girarJunta, entrarNoCarro, sairDoCarro, orb, cam, teclas, celular, get net() { return net; }, conectar, POSES_PRONTAS };
+      root.__resenha3D = { stage, env, avatares, eu, interagir, carro, voltarPraVaga, dirigir, andar, get camFora() { return camFora; }, definirConvidado, get convidados() { return convidados; }, sair, trocarBanco, trocarPersonagem, comecarPose, terminarPose, selecionarJunta, girarJunta, entrarNoCarro, sairDoCarro, orb, cam, teclas, celular, get net() { return net; }, conectar, POSES_PRONTAS };
     });
   }
 

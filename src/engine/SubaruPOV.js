@@ -1280,6 +1280,7 @@
                 <button class="mg-btn primary" id="rs-play" title="Tocar / pausar">⏯</button>
                 <button class="mg-btn" id="rs-next" title="Próxima">⏭</button>
               </div>
+              ${root.LuiggiResenhaCelular?.volume?.html() || ''}
             </div>
           </div>
         </div>`;
@@ -1836,6 +1837,7 @@
         document.body.classList.remove('resenha-aberta');
         clearInterval(relogio);
         window.removeEventListener('keydown', onKey);
+        desligarVolume();
         carro?.dispose();
         ov.classList.add('hidden');
         ov.innerHTML = '';
@@ -1849,11 +1851,14 @@
           else if (painelConv?.aberto) painelConv.fechar();
           else sair();
         }
+        if (e.code === 'KeyM') root.LuiggiResenhaCelular?.volume?.alternarMudo();
         if (e.key === '1') trocarPOV('luis');
         if (e.key === '2') trocarPOV('fabricio');
         if (e.key === '3') trocarPOV('mateus_buse');
       }
       window.addEventListener('keydown', onKey);
+      // Volume da música: individual, cada um no seu aparelho
+      const desligarVolume = root.LuiggiResenhaCelular?.volume?.ligar(shell) || (() => { });
       document.getElementById('rs-sair').addEventListener('click', () => sair());
       document.getElementById('rs-modo3d')?.addEventListener('click', () => sair({ trocarPara: '3d' }));
       if (Conv) {

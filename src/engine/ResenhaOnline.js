@@ -30,7 +30,8 @@
   'use strict';
 
   const APP_ID = 'luiggibeats-resenha-v1';
-  const PROTO = 3;
+  // 4: o mundo virou o bairro inteiro (quem está com a versão antiga aparece com ⚠️ na lista)
+  const PROTO = 4;
   const MAX_PESSOAS = 8;
   const ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sem 0/O e 1/I pra não confundir
   // Quem entra por convite espera um pouco antes de concluir que a sala está vazia e virar anfitrião

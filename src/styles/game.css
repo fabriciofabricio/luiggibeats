@@ -1919,6 +1919,15 @@ body.lc-escondido .lc-mini { opacity: 0; pointer-events: none; transform: transl
 .rs-musica { align-items: stretch; min-width: 190px; }
 .rs-faixa { font-size: 0.8rem; color: #93c5fd; max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rs-musica .btn-row { display: flex; gap: 6px; justify-content: center; }
+/* Volume da música (individual de cada pessoa) */
+.rs-vol { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: #cbd5e1; }
+.rs-vol-mudo { border: 0; background: rgba(255,255,255,0.08); color: #fff; border-radius: 8px; width: 30px; height: 26px; cursor: pointer; font-size: 0.9rem; padding: 0; flex: none; }
+.rs-vol-mudo:hover { background: rgba(255,255,255,0.16); }
+.rs-vol-range { flex: 1; min-width: 70px; accent-color: #ff5500; cursor: pointer; }
+.rs-vol-n { width: 34px; text-align: right; font-variant-numeric: tabular-nums; color: #94a3b8; }
+.rs-vol.mudo .rs-vol-range { opacity: 0.45; }
+.rs-vol.mudo .rs-vol-mudo { background: rgba(239, 68, 68, 0.3); }
+.rs-cel-vol { margin: 8px 4px 2px; }
 @media (max-width: 760px) { .rs-povs { flex-wrap: wrap; justify-content: flex-end; } .rs-musica { min-width: 0; } }
 /* Dentro do Subaru (Safepoint / Momento Resenha) o mini player desce para não cobrir o título */
 #safepoint-overlay:not(.hidden) ~ .lc-mini { top: 84px; bottom: auto; }
@@ -2093,3 +2102,9 @@ body.resenha-aberta .lc-mini { display: none; }
   padding: 8px 14px; border-radius: 12px; pointer-events: none; text-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
 }
 @media (max-width: 760px) { .rs-velo { bottom: auto; top: 104px; font-size: 1.2rem; } }
+/* Minimapa do bairro (Momento Resenha 3D) */
+.rs-mapa { position: absolute; right: 18px; top: 104px; width: 180px; z-index: 6; border-radius: 50% 50% 14px 14px; cursor: pointer; filter: drop-shadow(0 6px 16px rgba(0,0,0,0.45)); transition: width 0.2s; }
+.rs-mapa canvas { display: block; width: 100%; aspect-ratio: 1; border-radius: 50%; border: 3px solid rgba(255,255,255,0.85); background: #d5dcc8; }
+.rs-mapa.grande { width: 300px; }
+.rs-rua { margin-top: 6px; background: rgba(10, 14, 24, 0.82); color: #f8fafc; font-size: 0.78rem; font-weight: 600; text-align: center; padding: 5px 8px; border-radius: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 760px) { .rs-mapa { width: 120px; top: 150px; right: 10px; } .rs-mapa.grande { width: 200px; } .rs-rua { font-size: 0.68rem; } }
