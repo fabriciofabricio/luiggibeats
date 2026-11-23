@@ -32,7 +32,7 @@
   };
   const ORDEM_BANCOS = ['motorista', 'passageiro', 'tras_dir', 'tras_esq', 'tras_meio'];
   const ESCALA = 0.85;
-  const VEL_ANDAR = 1.9;
+  const VEL_ANDAR = 4.4;
   const VEL_CORRER = 4.4;
   // Rua (coordenadas do mundo: o carro fica na origem olhando pra −z; muros em z≈−5, cercas do outro lado em z≈15)
   const RUA = { x0: -34, x1: 34, z0: -4.75, z1: 14.6 };
@@ -216,9 +216,10 @@
               <button class="mini-btn" id="rs-classico" title="Modo clássico: só o pessoal dentro do carro, sem andar pela rua">🎴 Clássico</button>
               <button class="mini-btn rs-online-btn" id="rs-online-btn" title="Resenha Online: várias pessoas no mesmo Subaru">🌐 Online</button>
               <button class="mini-btn" id="rs-duelos-btn" title="Duelos 1x1 / 2x2, friendly fire e placar">⚔️ Duelos</button>
-              <button class="mini-btn" id="rs-sair">🏠 Menu</button>
+              <button class="mini-btn" id="rs-config-btn" title="Voltar ao menu, gráficos, som e teclas (Esc)">⚙️ Configurações</button>
             </div>
           </div>
+          <div class="rs-online rs-config hidden" id="rs-config"></div>
           <div class="rs-online hidden" id="rs-online">
             <div class="rs-on-head"><strong>🌐 Resenha Online</strong><button class="mini-btn" id="rs-on-fechar" title="Fechar">✕</button></div>
             <div id="rs-on-corpo"></div>
@@ -1882,6 +1883,7 @@
           return;
         }
         if (acao === 'camfora') {
+          if (modoCam === 'pe') return combate?.alternarCamera();
           if (eu.modo !== 'carro' || modoCam === 'pose') return;
           camFora = !camFora;
           eu.b.cabeca.visible = camFora;
@@ -1988,6 +1990,7 @@
       /** Botões da barra de baixo mudam com o lugar: dentro do carro ou na rua. */
       function atualizarAcoes() {
         const dentro = eu.modo === 'carro';
+        shell.classList.toggle('rs-a-pe', !dentro && modoCam !== 'pose' && !toque); // no celular/tablet os botões continuam (não tem teclado)
         const chip = (acao, txt, ativo = false, titulo = '') => `<button class="chip-btn ${ativo ? 'ativo' : ''}" data-acao="${acao}" ${titulo ? `title="${titulo}"` : ''}>${txt}</button>`;
         acoesEl.innerHTML = dentro
           ? [
@@ -2026,7 +2029,7 @@
               ? `🛞 ${p.nome} no volante · ${toque ? 'controle na tela dirige' : 'W/S acelera e freia · A/D vira · Espaço freio de mão · V câmera'} · F desce (parado)`
               : dentro
               ? `${p.icone} ${p.nome} · ${ASSENTOS[eu.banco].nome} · 🖱️ mexa o mouse pra olhar · F desce · P posa · C celular`
-              : `🚶 ${p.nome} na rua · ${toque ? 'controle na tela' : 'WASD anda · Shift corre · arraste gira a câmera'} · F entra no carro`;
+              : `🚶 ${p.nome} na rua · ${toque ? 'controle na tela' : 'WASD anda · Espaço pula · 1/2/3 armas · V câmera · Esc configurações'} · F entra no carro`;
         document.getElementById('rs-joy').classList.toggle('hidden', !(toque && (!dentro || euDirijo()) && modoCam !== 'pose'));
       }
       acoesEl.addEventListener('click', (e) => {
@@ -2193,7 +2196,7 @@
           if (celular.aberto) return celular.fechar();
           if (painelConv?.aberto) return painelConv.fechar();
           if (!painelOnline.classList.contains('hidden')) return abrirPainelOnline(false);
-          return sair();
+          return alternarConfig();
         }
         if (e.repeat) {
           if (e.code.startsWith('Key') || e.code.startsWith('Arrow') || e.code === 'Space') e.preventDefault();
@@ -2553,7 +2556,116 @@
         if (root.__resenha3D?.stage === stage) root.__resenha3D = null;
         resolve(trocarPara ? { trocarPara, net: sessao, convidados } : undefined);
       }
-      document.getElementById('rs-sair').addEventListener('click', () => sair());
+      document.getElementById('rs-config-btn').addEventListener('click', () => alternarConfig());
+
+      // ---------------- ⚙️ Configurações: voltar ao menu, câmera, gráficos, som e teclas ----------------
+      const painelConfig = document.getElementById('rs-config');
+      ['pointerdown', 'wheel', 'keydown'].forEach((t) => painelConfig.addEventListener(t, (e) => e.stopPropagation()));
+      const TECLAS = [
+        ['W A S D / setas', 'Andar (no volante: acelerar, frear/ré e virar)'],
+        ['Shift', 'A pé: passo lento (armado: passo silencioso)'],
+        ['Espaço', 'Pular (segure pra pular de novo toda vez que encostar no chão · bunny hop) · no volante: freio de mão'],
+        ['Rodinha do mouse', 'Armado: pular · sem arma: aproximar a câmera'],
+        ['F ou E', 'Descer do carro / entrar no carro'],
+        ['V', 'No carro: câmera de fora · a pé: primeira ou terceira pessoa'],
+        ['1', 'AK-47 → AWP → Negev (aperte de novo pra trocar) · no carro: ser o Luis'],
+        ['2', 'Desert Eagle → USP-S · no carro: ser o Fabricio'],
+        ['3', 'Karambit · no carro: ser o Mateus'],
+        ['Botão esquerdo', 'Atirar / golpe (clique uma vez pra travar o mouse e mirar)'],
+        ['Botão direito', 'Luneta da AWP / golpe forte da faca'],
+        ['R', 'Recarregar'],
+        ['Q', 'Guardar a arma'],
+        ['P', 'Posar (no carro)'],
+        ['C', 'Celular'],
+        ['M', 'Música no mudo'],
+        ['Esc', 'Soltar o mouse · fechar painel · abrir estas configurações']
+      ];
+      function montarConfig() {
+        const cfg = root.LuiggiSave?.state?.config || {};
+        const L3 = L();
+        const p = L3.perfilQualidade?.() || {};
+        const vol = (id, v) => `<input type="range" min="0" max="1" step="0.05" data-cfg="${id}" value="${v ?? 0.8}">`;
+        painelConfig.innerHTML = `
+          <div class="rs-on-head"><strong>⚙️ Configurações</strong><button class="mini-btn" data-cfg="fechar" title="Fechar (Esc)">✕</button></div>
+          <div class="rs-cfg-sec rs-cfg-botoes">
+            <button class="mg-btn" data-cfg="menu">🏠 Voltar ao menu principal</button>
+            <button class="mini-btn" data-cfg="spawn">🏁 Voltar pro spawn</button>
+            <button class="mini-btn" data-cfg="vaga">🅿️ Subaru de volta na vaga</button>
+            <button class="mini-btn" data-cfg="camera">${combate?.primeiraPessoa ? '🎥 Câmera: primeira pessoa' : '🎥 Câmera: terceira pessoa'} <kbd>V</kbd></button>
+          </div>
+          <div class="rs-cfg-sec"><b>🖥️ Gráficos</b>
+            <label>Qualidade <select data-cfg="qualidade">
+              ${[['auto', 'Automática'], ['muito_baixa', 'Muito baixa'], ['baixa', 'Baixa'], ['media', 'Média'], ['alta', 'Alta'], ['ultra', 'Ultra']].map(([v, n]) => `<option value="${v}" ${(cfg.qualidade || 'auto') === v ? 'selected' : ''}>${n}</option>`).join('')}
+            </select></label>
+            <label>Limite de FPS <select data-cfg="fps">
+              ${[['0', 'Do nível'], ['30', '30'], ['60', '60'], ['-1', 'Sem limite']].map(([v, n]) => `<option value="${v}" ${String(cfg.limiteFps ?? 0) === v ? 'selected' : ''}>${n}</option>`).join('')}
+            </select></label>
+            <label><span><input type="checkbox" data-cfg="resdin" ${cfg.resDinamica !== false ? 'checked' : ''}> Resolução dinâmica</span></label>
+            <small>Agora: ${L3.PERFIS_QUALIDADE?.[p.nome]?.rotulo || p.nome || '—'}${p.auto ? ' (automático)' : ''}. Sombras, efeitos e distância do bairro mudam ao reabrir a Resenha.</small>
+          </div>
+          <div class="rs-cfg-sec"><b>🔊 Som</b>
+            <label>Música ${vol('volMusica', cfg.volMusica ?? 0.7)}</label>
+            <label>Efeitos (tiros, carro…) ${vol('volSfx', cfg.volSfx ?? 0.85)}</label>
+            <label>Vozes ${vol('volVozes', cfg.volVozes ?? 0.75)}</label>
+          </div>
+          <div class="rs-cfg-sec"><b>⌨️ Teclas</b>
+            <table class="rs-cfg-teclas">${TECLAS.map(([k, d]) => `<tr><td><kbd>${k}</kbd></td><td>${d}</td></tr>`).join('')}</table>
+          </div>`;
+      }
+      function alternarConfig(abrir) {
+        const vai = abrir ?? painelConfig.classList.contains('hidden');
+        if (vai) {
+          montarConfig();
+          if (document.pointerLockElement) document.exitPointerLock?.();
+        }
+        painelConfig.classList.toggle('hidden', !vai);
+      }
+      painelConfig.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-cfg]');
+        if (!b || b.tagName === 'SELECT' || b.tagName === 'INPUT') return;
+        const a = b.dataset.cfg;
+        if (a === 'fechar') alternarConfig(false);
+        else if (a === 'menu') sair();
+        else if (a === 'spawn') {
+          alternarConfig(false);
+          combate?.voltarProSpawn();
+        } else if (a === 'vaga') {
+          alternarConfig(false);
+          interagir('vaga');
+        } else if (a === 'camera') {
+          if (modoCam !== 'pe') falar('A câmera em primeira/terceira pessoa é pra quando você está a pé (no carro, V liga a câmera de fora).', null, '⚙️ Configurações');
+          else combate?.alternarCamera();
+          montarConfig();
+        }
+      });
+      const salvarCfg = () => {
+        try {
+          root.LuiggiSave.salvar();
+        } catch (_) { }
+      };
+      painelConfig.addEventListener('change', (e) => {
+        const cfg = root.LuiggiSave?.state?.config;
+        if (!cfg) return;
+        const a = e.target.dataset.cfg;
+        if (a === 'qualidade') cfg.qualidade = e.target.value;
+        else if (a === 'fps') cfg.limiteFps = Number(e.target.value);
+        else if (a === 'resdin') cfg.resDinamica = e.target.checked;
+        else return;
+        salvarCfg();
+        L().aplicarQualidade?.();
+        montarConfig();
+      });
+      painelConfig.addEventListener('input', (e) => {
+        const cfg = root.LuiggiSave?.state?.config;
+        const a = e.target.dataset.cfg;
+        if (!cfg || !['volMusica', 'volSfx', 'volVozes'].includes(a)) return;
+        if (a === 'volMusica' && VOL) VOL.definir(Number(e.target.value));
+        else {
+          cfg[a] = Number(e.target.value);
+          root.LuiggiAudio?.aplicarVolumes?.();
+          salvarCfg();
+        }
+      });
       document.getElementById('rs-classico').addEventListener('click', () => sair({ trocarPara: 'classico' }));
       document.getElementById('rs-conv-btn')?.addEventListener('click', abrirConvidados);
       if (Conv) {

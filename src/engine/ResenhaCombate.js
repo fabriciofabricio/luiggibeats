@@ -356,6 +356,8 @@
       recuo: 0,
       ff: false,
       ataque: 0, // animação da faca
+      primeira: false, // câmera em primeira pessoa (a pé)
+      puloTela: false,
       travado: false,
       soltouEm: 0
     };
@@ -719,7 +721,8 @@
       // Sem arma: andar devagar e Shift corre (como antes). Armado: corre por padrão e Shift anda (passo silencioso)
       let maxVel;
       if (def) maxVel = shift ? def.vel * 0.52 : def.vel;
-      else maxVel = shift || ctx.correrSempre() || (joy.ativo && mag > 0.92) ? 4.4 : 1.9;
+      // Sem arma: anda num passo normal (4,4 m/s); Shift = passo lento; "Correr" ligado = corrida
+      else maxVel = shift ? 1.9 : ctx.correrSempre() ? 5.6 : 4.4;
       if (st.mira) maxVel *= 0.5;
       const fx = -Math.sin(orb.yaw), fz = -Math.cos(orb.yaw);
       const rx = Math.cos(orb.yaw), rz = -Math.sin(orb.yaw);
@@ -727,7 +730,8 @@
       if (wish.lengthSq() > 1e-6) wish.normalize();
       const agora = performance.now() / 1000;
       // Pulo: no chão e com o pulo apertado agora há pouco (bunny hop: pula sem atrito)
-      const quer = st.puloPedido > 0 && agora - st.puloPedido < MOV.buffer;
+      // Segurando Espaço o pulo sai sozinho toda vez que encosta no chão (bunny hop segurando)
+      const quer = (st.puloPedido > 0 && agora - st.puloPedido < MOV.buffer) || teclas.has('Space') || st.puloTela;
       if (st.noChao) {
         if (quer) {
           st.vy = MOV.pulo;
@@ -770,7 +774,7 @@
       }
       const vh = Math.hypot(st.vel.x, st.vel.z);
       // Pra onde o boneco olha: armado, pra onde a câmera olha; sem arma, pra onde anda
-      if (def) eu.rotAlvo = orb.yaw + Math.PI;
+      if (def || st.primeira) eu.rotAlvo = orb.yaw + Math.PI;
       else if (vh > 0.3) eu.rotAlvo = Math.atan2(st.vel.x, st.vel.z);
       eu.anim = !st.noChao ? 'idle' : vh > 3.2 ? 'run' : vh > 0.25 ? 'walk' : 'idle';
       if (vh > 0.2 || !st.noChao) ctx.mexeu();
@@ -1116,7 +1120,15 @@
     }
     /** Botão do mouse na tela (true = usou o clique). */
     function pointerDown(e) {
-      if (ctx.modoCam() !== 'pe' || !st.arma || st.morto) return false;
+      if (ctx.modoCam() !== 'pe' || st.morto) return false;
+      // Primeira pessoa sem arma: o clique só trava o mouse pra olhar em volta
+      if (!st.arma) {
+        if (st.primeira && e.pointerType !== 'touch' && document.pointerLockElement !== view) {
+          view.requestPointerLock?.();
+          return true;
+        }
+        return false;
+      }
       if (e.pointerType === 'touch') {
         if (e.button === 0) {
           st.atirando = true;
@@ -1150,7 +1162,7 @@
       if (document.pointerLockElement !== view) return false;
       const s = st.mira ? 0.0007 : 0.0024;
       orb.yaw -= e.movementX * s;
-      orb.pitch = Math.max(-0.6, Math.min(1.25, orb.pitch + e.movementY * s));
+      orb.pitch = Math.max(st.primeira || st.mira ? -1.3 : -0.6, Math.min(st.primeira || st.mira ? 1.35 : 1.25, orb.pitch + e.movementY * s));
       return true;
     }
     /** Rodinha: armado vira o pulo (como o "bind" de pulo na rodinha dos jogos de tiro). */
@@ -1514,7 +1526,7 @@
     /** A câmera de quem está armado fica sobre o ombro direito (e entra na luneta). */
     function ajusteCamera() {
       if (ctx.modoCam() !== 'pe' || st.morto) return null;
-      if (st.mira) return { primeiraPessoa: true };
+      if (st.mira || st.primeira) return { primeiraPessoa: true };
       if (st.arma) return { ombro: 0.55, dist: 2.3, altura: 0.3 };
       return null;
     }
@@ -1564,6 +1576,16 @@
       sacar,
       guardar,
       atirar,
+      /** Alterna a câmera a pé entre primeira e terceira pessoa. */
+      alternarCamera() {
+        st.primeira = !st.primeira;
+        if (!st.primeira && document.pointerLockElement === view && !st.arma) document.exitPointerLock?.();
+        ctx.avisar(st.primeira ? '👁️ Primeira pessoa · clique na tela pra olhar com o mouse (Esc solta) · V volta pra terceira pessoa' : '🎥 Terceira pessoa · arraste pra girar a câmera · V volta pra primeira pessoa');
+        return st.primeira;
+      },
+      get primeiraPessoa() {
+        return st.primeira;
+      },
       convidar,
       responderConvite,
       get vida() {

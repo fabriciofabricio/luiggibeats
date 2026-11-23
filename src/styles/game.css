@@ -2172,3 +2172,18 @@ body.resenha-aberta .lc-mini { display: none; }
 .rs-carr-barra { width: 260px; height: 8px; border-radius: 8px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
 .rs-carr-barra i { display: block; height: 100%; width: 5%; background: linear-gradient(90deg, #f97316, #fbbf24); transition: width 0.3s; }
 .rs-carr-caixa small { color: #64748b; }
+
+/* A pé: some o menu de baixo e os botões do topo (ficam Online, Duelos e Configurações) */
+.rs-a-pe .rs-povs > :not(#rs-online-btn):not(#rs-duelos-btn):not(#rs-config-btn) { display: none !important; }
+.rs-a-pe .rs-acoes { display: none !important; }
+/* Painel de configurações dentro do Momento Resenha */
+.rs-config { right: auto; left: 50%; top: 80px; transform: translateX(-50%); width: min(560px, calc(100% - 32px)); max-height: calc(100% - 110px); overflow: auto; z-index: 12; }
+.rs-cfg-sec { border-top: 1px solid rgba(148, 163, 184, 0.2); margin-top: 8px; padding-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.rs-cfg-sec label { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 0.85rem; }
+.rs-cfg-sec select { background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 3px 6px; }
+.rs-cfg-sec input[type=range] { width: 180px; accent-color: #ff5500; }
+.rs-cfg-sec small { color: #94a3b8; }
+.rs-cfg-botoes { flex-direction: row; flex-wrap: wrap; border-top: 0; margin-top: 4px; }
+.rs-cfg-teclas { border-collapse: collapse; font-size: 0.8rem; }
+.rs-cfg-teclas td { padding: 3px 6px; vertical-align: top; color: #e2e8f0; }
+.rs-cfg-teclas td:first-child { white-space: nowrap; }
