@@ -188,8 +188,12 @@ def ponto_em(pts, s):
 
 
 def main():
-    pasta = sys.argv[1] if len(sys.argv) > 1 else '.'
-    antigo_json = sys.argv[2] if len(sys.argv) > 2 else None
+    args = [a for a in sys.argv[1:] if not a.startswith('--')]
+    opc = dict(a[2:].split('=', 1) for a in sys.argv[1:] if a.startswith('--') and '=' in a)
+    pasta = args[0] if args else '.'
+    antigo_json = args[1] if len(args) > 1 else None
+    predios_json = opc.get('predios')  # construções (Google Open Buildings etc.), JSON [[fonte, conf, área, WKT], ...]
+    copa_npy = opc.get('copa')  # recorte da altura de copa (Meta/WRI) + .json com a georreferência
     rnd = random.Random(185)
     nos, vias = carregar_osm(pasta)
     P = {nid: para_cena(la, lo) for nid, (la, lo, _) in nos.items()}
@@ -449,12 +453,231 @@ def main():
             return False
         return bool(((seg_cruz[:, 0] - x) ** 2 + (seg_cruz[:, 1] - z) ** 2 < r * r).any())
 
-    # ---------------- Lotes (casas, sobrados, comércio) ----------------
     lotes = []
-    arvores = []  # x, z, tipo (0 copa, 1 araucária, 2 ipê, 3 palmeira)
+    arvores = []  # x, z, tipo (0 copa, 1 araucária, 2 ipê, 3 palmeira), escala
     postes = []
     carros = []
     placas = []
+
+    # ---------------- Construções e árvores de verdade (quando os dados foram baixados) ----------------
+    # Construções: Google Open Buildings / Microsoft / OSM (conjunto da VIDA no Source Cooperative, CC BY 4.0 / ODbL).
+    # Árvores: mapa de altura de copa de 1 m da Meta/WRI (CC BY 4.0): cada pico de copa vira uma árvore.
+    casas = []
+    muros = []
+    REAL = bool(predios_json and os.path.exists(predios_json))
+    if REAL:
+        import re
+        lista = json.load(open(predios_json))
+        # Prédios do OSM com andares (pra herdar a altura)
+        osm_niv = [(b['p'], b['n']) for b in predios]
+        predios = []  # os polígonos do OSM saem; entram os do conjunto (que já inclui o OSM)
+
+        def anel(wkt):
+            m = re.search(r'\(\(([^()]+)\)', wkt)
+            if not m:
+                return None
+            out = []
+            for par in m.group(1).split(','):
+                lo, la = map(float, par.split()[:2])
+                out.append(para_cena(la, lo))
+            return out
+
+        def caixa_minima(pts):
+            """Retângulo de área mínima (calibres girando sobre o fecho convexo): centro, ângulo do lado 1, larguras."""
+            P_ = np.array(pts[:-1] if pts[0] == pts[-1] else pts)
+            # Fecho convexo (cadeia monótona)
+            Q = sorted(map(tuple, P_))
+            if len(Q) < 3:
+                return None
+
+            def cr(o, a, b):
+                return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+            lo_, hi_ = [], []
+            for p in Q:
+                while len(lo_) >= 2 and cr(lo_[-2], lo_[-1], p) <= 0:
+                    lo_.pop()
+                lo_.append(p)
+            for p in reversed(Q):
+                while len(hi_) >= 2 and cr(hi_[-2], hi_[-1], p) <= 0:
+                    hi_.pop()
+                hi_.append(p)
+            H = np.array(lo_[:-1] + hi_[:-1])
+            melhor = None
+            for i in range(len(H)):
+                e = H[(i + 1) % len(H)] - H[i]
+                L_ = math.hypot(*e)
+                if L_ < 1e-6:
+                    continue
+                u = e / L_
+                v = np.array([-u[1], u[0]])
+                pu = H @ u
+                pv = H @ v
+                area = (pu.max() - pu.min()) * (pv.max() - pv.min())
+                if melhor is None or area < melhor[0]:
+                    c = u * (pu.max() + pu.min()) / 2 + v * (pv.max() + pv.min()) / 2
+                    melhor = (area, c, u, pu.max() - pu.min(), pv.max() - pv.min())
+            return melhor
+
+        def area_pol(pts):
+            a = 0
+            for i in range(len(pts) - 1):
+                a += pts[i][0] * pts[i + 1][1] - pts[i + 1][0] * pts[i][1]
+            return abs(a) / 2
+
+        # Segmentos de rua pra achar a rua mais perta de cada casa
+        segs_r = []
+        for ri, r in enumerate(ruas):
+            if r['hw'] in ('service', 'busway', 'pedestrian', 'trunk_link'):
+                continue
+            for i in range(len(r['pts']) - 1):
+                segs_r.append((r['pts'][i], r['pts'][i + 1], ri))
+        S_ = np.array([[a[0], a[1], b[0], b[1]] for a, b, _ in segs_r])
+
+        def rua_perto(x, z):
+            ax, az, bx, bz = S_[:, 0], S_[:, 1], S_[:, 2], S_[:, 3]
+            vx, vz = bx - ax, bz - az
+            L2 = np.maximum(vx * vx + vz * vz, 1e-9)
+            t = np.clip(((x - ax) * vx + (z - az) * vz) / L2, 0, 1)
+            qx, qz = ax + t * vx, az + t * vz
+            d = np.hypot(x - qx, z - qz)
+            k = int(d.argmin())
+            return d[k], (qx[k], qz[k]), segs_r[k]
+
+        n_ok = 0
+        for src, conf, area_m, wkt in lista:
+            pts = anel(wkt)
+            if not pts or len(pts) < 4:
+                continue
+            cx = sum(p[0] for p in pts) / len(pts)
+            cz = sum(p[1] for p in pts) / len(pts)
+            if not dentro_vis(cx, cz):
+                continue
+            # Não constrói em cima do cenário antigo nem no meio da rua
+            em_ant = sum(1 for x, z in pts if 0 <= int(gx(x)) < GW and 0 <= int(gz(z)) < GH and ANT[int(gz(z)), int(gx(x))])
+            if em_ant or (0 <= int(gx(cx)) < GW and 0 <= int(gz(cz)) < GH and (ANT[int(gz(cz)), int(gx(cx))] or ASF[int(gz(cz)), int(gx(cx))])):
+                continue
+            area = area_pol(pts)
+            if area < 12:
+                continue
+            seed = int(abs(cx * 73.1 + cz * 31.7) * 10) % 65536
+            rr = random.Random(seed)
+            # Andares: do OSM quando tem; senão pela área (bairro de casas: térreas e sobrados)
+            niv = None
+            for op, on in osm_niv:
+                ox = sum(p[0] for p in op) / len(op)
+                oz = sum(p[1] for p in op) / len(op)
+                if abs(ox - cx) < 6 and abs(oz - cz) < 6:
+                    niv = on
+                    break
+            if niv is None:
+                if area < 45:
+                    niv = 1
+                elif area < 260:
+                    niv = 2 if rr.random() < 0.36 else 1
+                elif area < 700:
+                    niv = 2 if rr.random() < 0.7 else 3
+                else:
+                    niv = rr.choice([2, 2, 3, 4])
+            d_rua, q, (sa, sb, ri) = rua_perto(cx, cz)
+            r_ = ruas[ri]
+            perto_avenida = r_['tipo'] <= 3 and d_rua < r_['larg'] / 2 + r_['calc'] + 18
+            cm = caixa_minima(pts)
+            retangular = cm is not None and area / max(cm[0], 1e-6) > 0.82 and area < 650
+            if retangular and area >= 18:
+                _, c, u, Lu, Lv = cm
+                # Frente: o lado do retângulo virado pra rua mais perto
+                tx, tz = q[0] - c[0], q[1] - c[1]
+                v = (-u[1], u[0])
+                du = tx * u[0] + tz * u[1]
+                dv = tx * v[0] + tz * v[1]
+                if abs(du) > abs(dv):
+                    N = (-u[0] * math.copysign(1, du), -u[1] * math.copysign(1, du))  # aponta pra longe da rua
+                    larg, prof = Lv, Lu
+                else:
+                    N = (-v[0] * math.copysign(1, dv), -v[1] * math.copysign(1, dv))
+                    larg, prof = Lu, Lv
+                ang = math.atan2(N[0], N[1])
+                loja = perto_avenida and area < 400 and rr.random() < 0.4
+                estilo = 3 if loja else 2 if niv >= 3 else (1 if niv == 2 else 0)
+                tel = 3 if (estilo == 2 or (loja and rr.random() < 0.6)) else rr.choice([0, 0, 0, 1, 1, 2])
+                casas.append([round(c[0], 2), round(c[1], 2), round(ang, 4), round(larg, 2), round(prof, 2), int(niv), estilo, rr.randrange(12), tel, seed])
+                # Muro/grade na divisa com a calçada, na frente da casa
+                lin = r_['larg'] / 2 + max(r_['calc'], 1.0) + 0.6
+                if not loja and d_rua < lin + 16:
+                    ex, ez = sb[0] - sa[0], sb[1] - sa[1]
+                    le = math.hypot(ex, ez) or 1
+                    ex, ez = ex / le, ez / le
+                    lado_ = math.copysign(1, (c[0] - q[0]) * -ez + (c[1] - q[1]) * ex)
+                    nx_, nz_ = -ez * lado_, ex * lado_
+                    # Projeção da casa na rua (+ um pouco dos lados)
+                    sproj = [(p[0] - q[0]) * ex + (p[1] - q[1]) * ez for p in pts]
+                    s0, s1 = min(sproj) - rr.uniform(1.0, 3.0), max(sproj) + rr.uniform(1.0, 3.0)
+                    A_ = (q[0] + ex * s0 + nx_ * lin, q[1] + ez * s0 + nz_ * lin)
+                    B_ = (q[0] + ex * s1 + nx_ * lin, q[1] + ez * s1 + nz_ * lin)
+                    meio = ((A_[0] + B_[0]) / 2, (A_[1] + B_[1]) / 2)
+                    gc_, gr_ = int(gx(meio[0])), int(gz(meio[1]))
+                    if 0 <= gc_ < GW and 0 <= gr_ < GH and not ASF[gr_, gc_] and not ANT[gr_, gc_]:
+                        muros.append([round(A_[0], 2), round(A_[1], 2), round(B_[0], 2), round(B_[1], 2), rr.choice([1, 1, 1, 2, 2, 3]), seed])
+            else:
+                t = 3 if perto_avenida else (1 if niv >= 3 else 0)
+                predios.append({'p': pts, 'n': niv, 't': t if area < 1500 else 2})
+            n_ok += 1
+        print('construções de verdade:', n_ok, '(casas', len(casas), ', polígonos', len(predios), ', muros', len(muros), ')')
+
+    if copa_npy and os.path.exists(copa_npy):
+        chm = np.load(copa_npy).astype(np.float32)
+        meta = json.load(open(copa_npy + '.json'))
+        H_, W_ = chm.shape
+        # Suaviza 3x3 e acha os picos (maior valor numa janela de ~7 m) acima de 4 m
+        pad = np.pad(chm, 1, mode='edge')
+        suave = sum(pad[i:i + H_, j:j + W_] for i in range(3) for j in range(3)) / 9.0
+        janela = 3
+        pm = np.pad(suave, janela, mode='constant', constant_values=0)
+        maxr = np.max(np.lib.stride_tricks.sliding_window_view(pm, 2 * janela + 1, axis=1), axis=-1)
+        maxc = np.max(np.lib.stride_tricks.sliding_window_view(maxr, 2 * janela + 1, axis=0), axis=-1)
+        maxc = maxc[:, janela:janela + W_] if maxc.shape[1] != W_ else maxc
+        picos = np.argwhere((suave >= maxc - 1e-6) & (suave >= 2.6) & (chm >= 3.0))
+        R_ = 6378137.0
+        n_arv = 0
+        for r_i, c_i in picos:
+            X = meta['X0'] + (c_i + 0.5) * meta['sx']
+            Y = meta['Y0'] - (r_i + 0.5) * meta['sy']
+            lon = math.degrees(X / R_)
+            lat = math.degrees(2 * math.atan(math.exp(Y / R_)) - math.pi / 2)
+            x, z = para_cena(lat, lon)
+            gc_, gr_ = int(gx(x)), int(gz(z))
+            if not (0 <= gc_ < GW and 0 <= gr_ < GH) or not VIS[gr_, gc_] or ANT[gr_, gc_]:
+                continue
+            h = float(suave[r_i, c_i])
+            # Copa por cima do asfalto: o tronco fica na calçada (procura o ponto livre mais perto)
+            if ASF[gr_, gc_]:
+                achou = False
+                for raio in (2, 3, 4, 5):
+                    for ang_ in range(0, 360, 30):
+                        xx = x + raio * math.cos(math.radians(ang_))
+                        zz = z + raio * math.sin(math.radians(ang_))
+                        a2, b2 = int(gx(xx)), int(gz(zz))
+                        if 0 <= a2 < GW and 0 <= b2 < GH and not ASF[b2, a2]:
+                            x, z, achou = xx, zz, True
+                            break
+                    if achou:
+                        break
+                if not achou:
+                    continue
+            rr = random.Random(int(x * 13 + z * 7))
+            arauc = h >= 12.5 and rr.random() < 0.38
+            if arauc:
+                arvores.append([round(x, 2), round(z, 2), 1, round(max(0.6, min(1.9, h / 13.9)), 2)])
+            else:
+                arvores.append([round(x, 2), round(z, 2), 2 if rr.random() < 0.06 else 0, round(max(0.55, min(2.6, h / 6.3)), 2)])
+            n_arv += 1
+        print('árvores de verdade (picos de copa):', n_arv)
+        REAL_ARV = True
+    else:
+        REAL_ARV = False
+
+
+    # ---------------- Lotes (casas, sobrados, comércio) sorteados — só sem as construções de verdade ----------------
 
     def livre_ret(F, T, N, w, prof):
         """Quanto de fundo (m) está livre num lote de frente w a partir do ponto F (linha da calçada)."""
@@ -482,7 +705,7 @@ def main():
                 if 0 <= c < GW and 0 <= r < GH:
                     OCUP[r, c] = val
 
-    for r in sorted(ruas, key=lambda r: r['tipo']):
+    for r in ([] if REAL else sorted(ruas, key=lambda r: r['tipo'])):
         if r['hw'] not in LOTEAVEIS:
             continue
         pts = r['pts']
@@ -533,7 +756,7 @@ def main():
         pts = r['pts']
         L = comprimento(pts)
         off_arv = r['larg'] / 2 + r['calc'] * 0.32
-        for lado in (-1, 1):
+        for lado in (() if REAL_ARV else (-1, 1)):
             s = rnd.uniform(3, 12)
             while s < L - 3:
                 c, T = ponto_em(pts, s)
@@ -575,7 +798,7 @@ def main():
 
     # Árvores nos parques e matas
     ys, xs_ = np.nonzero(VERDE & VIS & ~RUA & ~ANT)
-    if len(xs_):
+    if len(xs_) and not REAL_ARV:
         n = int(len(xs_) / 140)
         escolha = np.random.default_rng(7).choice(len(xs_), size=min(n, 2600), replace=False)
         for k in escolha:
@@ -649,7 +872,7 @@ def main():
 
     dados = {
         'versao': 1,
-        'fonte': '© colaboradores do OpenStreetMap (ODbL). Lotes e casas preenchidos por sorteio.',
+        'fonte': ('Ruas: © colaboradores do OpenStreetMap (ODbL). Construções: Google Open Buildings v3 (CC BY 4.0) + Microsoft Building Footprints (ODbL), via VIDA/Source Cooperative. Árvores: Meta & WRI High Resolution Canopy Height Maps (CC BY 4.0).' if REAL else '© colaboradores do OpenStreetMap (ODbL). Lotes e casas preenchidos por sorteio.'),
         'ancora': {'lat': ANCORA_LL[0], 'lon': ANCORA_LL[1], 'rumo': RUMO, 'ajuste': [AJ_X, AJ_Z]},
         'caixa': [X0, Z0, GW, GH],
         'mascara': mascara_png,
@@ -659,6 +882,8 @@ def main():
         'rios': [[round(rr['l'], 1), plano(rr['p'])] for rr in rios],
         'predios': [[round(b['n'], 1), b['t'], plano(b['p'])] for b in predios],
         'lotes': lotes,
+        'casas': casas,
+        'muros': muros,
         'arvores': arvores,
         'postes': postes,
         'carros': carros,
@@ -670,11 +895,15 @@ def main():
     saida = os.path.join(RAIZ, 'data', 'bairro_curitiba.js')
     with open(saida, 'w', encoding='utf-8', newline='\n') as f:
         f.write('// Gerado por ferramentas/gerar_bairro.py — bairro em volta da R. Mercedes Seiler Rocha até a R. Fagundes Varela (Curitiba).\n')
-        f.write('// Ruas, rios, parques e prédios: © colaboradores do OpenStreetMap (ODbL, https://www.openstreetmap.org/copyright).\n')
+        f.write('// Ruas, rios, parques: © colaboradores do OpenStreetMap (ODbL, https://www.openstreetmap.org/copyright).\n')
+        if REAL:
+            f.write('// Construções: Google Open Buildings v3 (CC BY 4.0) e Microsoft Building Footprints (ODbL), via VIDA / Source Cooperative.\n')
+            f.write('// Árvores: Meta & World Resources Institute, High Resolution Canopy Height Maps (CC BY 4.0).\n')
         f.write('window.__LUIGGI_BAIRRO = ')
         json.dump(dados, f, ensure_ascii=False, separators=(',', ':'))
         f.write(';\n')
     print('gravado', saida, os.path.getsize(saida) // 1024, 'KB')
+    print('casas reais %d, muros %d' % (len(casas), len(muros)))
     print('ruas %d, lotes %d, árvores %d, postes %d, carros %d, placas %d, barreiras %d, prédios OSM %d, áreas %d, rios %d' % (
         len(ruas), len(lotes), len(arvores), len(postes), len(carros), len(placas), len(barreiras), len(predios), len(areas), len(rios)))
 

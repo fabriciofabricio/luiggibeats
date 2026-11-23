@@ -165,6 +165,7 @@
               ${root.LuiggiResenhaConvidados ? '<button class="mini-btn" id="rs-conv-btn" title="Colocar mais gente no banco de trás">➕ Banco de trás</button>' : ''}
               <button class="mini-btn" id="rs-classico" title="Modo clássico: só o pessoal dentro do carro, sem andar pela rua">🎴 Clássico</button>
               <button class="mini-btn rs-online-btn" id="rs-online-btn" title="Resenha Online: várias pessoas no mesmo Subaru">🌐 Online</button>
+              <button class="mini-btn" id="rs-duelos-btn" title="Duelos 1x1 / 2x2, friendly fire e placar">⚔️ Duelos</button>
               <button class="mini-btn" id="rs-sair">🏠 Menu</button>
             </div>
           </div>
@@ -451,7 +452,8 @@
           a.rotAlvo = Math.PI + carro.yaw;
           if (b.pose !== 'sit_car') b.setPose('sit_car');
         } else {
-          const pose = a.anim === 'walk' ? 'walk' : a.anim === 'run' ? 'run' : a.anim === 'dance' ? 'dance' : 'idle';
+          const morto = a.eu ? combate?.morto : a.morto;
+          const pose = morto ? 'ko' : a.anim === 'walk' ? 'walk' : a.anim === 'run' ? 'run' : a.anim === 'dance' ? 'dance' : 'idle';
           if (b.pose !== pose) b.setPose(pose, a.anim === 'run' ? 1.1 : 1);
         }
         // Dentro do carro o boneco vai colado no banco (o carro pode estar andando)
@@ -462,7 +464,14 @@
         a.primeiro = false;
         b.group.position.copy(a.pos);
         b.group.rotation.y = a.rot;
-        b.setExtras(extrasDe(a, t));
+        const ex = extrasDe(a, t);
+        if (combate) Object.entries(combate.extrasDe(a)).forEach(([k, v]) => {
+          const e = ex[k] || (ex[k] = [0, 0, 0]);
+          e[0] += v[0];
+          e[1] += v[1];
+          e[2] += v[2];
+        });
+        b.setExtras(ex);
         // Cabeça segue o olhar (dentro do carro); o resto do giro vai pro tronco
         if (a.modo === 'carro' && !a.npc) {
           const yaw = a.olhar[0] - (OLHAR_BANCO[a.banco]?.base || 0) * 0.3;
@@ -655,8 +664,25 @@
           eu.b.joints.hips.getWorldPosition(tmpV);
           orb.alvo.copy(tmpV).add(new THREE.Vector3(0, 0.22, 0));
         } else orb.alvo.set(eu.pos.x, eu.pos.y + 1.25, eu.pos.z);
+        const ajuste = modoCam === 'pe' ? combate?.ajusteCamera() : null;
+        if (ajuste?.primeiraPessoa) {
+          // Luneta da AWP: olho do boneco
+          eu.b.cabeca.getWorldPosition(c.position);
+          c.position.y += 0.06;
+          const cpp = Math.cos(orb.pitch);
+          c.lookAt(c.position.x - Math.sin(orb.yaw) * cpp, c.position.y - Math.sin(orb.pitch), c.position.z - Math.cos(orb.yaw) * cpp);
+          eu.b.cabeca.visible = false;
+          return;
+        }
+        if (modoCam === 'pe') eu.b.cabeca.visible = true;
+        if (ajuste) {
+          // Sobre o ombro direito
+          orb.alvo.x += Math.cos(orb.yaw) * ajuste.ombro;
+          orb.alvo.z -= Math.sin(orb.yaw) * ajuste.ombro;
+          orb.alvo.y += ajuste.altura;
+        }
         const cp = Math.cos(orb.pitch);
-        let dist = orb.dist;
+        let dist = ajuste ? ajuste.dist : orb.dist;
         if (modoCam === 'pe') {
           // Se o Subaru ficar entre a câmera e o boneco, a câmera chega mais perto
           raioCam.origin.copy(orb.alvo);
@@ -888,6 +914,7 @@
       }
 
       function andar(dt) {
+        if (combate) return combate.mover(dt);
         if (modoCam !== 'pe') return;
         let ix = 0;
         let iz = 0;
@@ -1310,7 +1337,7 @@
         if (!net || !net.souHost) return;
         const r = estadoRadio();
         const por = ultimoPor && ultimoPor.chave === chaveDe(r) ? ultimoPor : null;
-        net.enviarEstado({ r, c: { porta: controle.st.portaAberta, cons: controle.st.consoleAberto, conv: convidados, carro: [r2(carro.x), r2(carro.z), Math.round(carro.yaw * 1000) / 1000] }, cq: ultimoConvPor, por: por?.id || null, pc: por?.cel ? 1 : 0 }, alvo);
+        net.enviarEstado({ r, c: { porta: controle.st.portaAberta, cons: controle.st.consoleAberto, conv: convidados, carro: [r2(carro.x), r2(carro.z), Math.round(carro.yaw * 1000) / 1000] }, cq: ultimoConvPor, por: por?.id || null, pc: por?.cel ? 1 : 0, ff: combate?.ff ? 1 : 0 }, alvo);
         notarRadio(r, por?.id || null, por?.cel);
       }
 
@@ -1344,6 +1371,7 @@
           notarRadio(d.r, typeof d.por === 'string' ? d.por : null, !!d.pc);
         }
         if (d.c) controle.definir(d.c);
+        if ('ff' in d && combate) combate.definirFF(!!d.ff);
         if (d.c && d.c.conv) aplicarConvidados(d.c.conv, typeof d.cq === 'string' ? d.cq : null);
         // Onde o Subaru está (pra quem chegou agora), se ninguém estiver dirigindo
         if (d.c && Array.isArray(d.c.carro) && !euDirijo() && !motoristaRemoto()) {
@@ -1447,6 +1475,7 @@
           cs: eu.curtir ? 1 : 0,
           ol: [r2(eu.olhar[0]), r2(eu.olhar[1])],
           s: ++seqAvatar,
+          ...(combate ? combate.estadoRede() : {}),
           car: euDirijo() ? [r2(carro.x), r2(carro.z), Math.round(carro.yaw * 1000) / 1000, r2(carro.vel), r2(carro.volante)] : undefined
         };
       }
@@ -1491,6 +1520,7 @@
           if (isFinite(Number(d.r))) a.rotAlvo = Number(d.r);
         }
         a.anim = ['idle', 'walk', 'run', 'dance'].includes(d.an) ? d.an : 'idle';
+        combate?.aplicarRemoto(a, d);
         if (typeof d.aw === 'number' && d.aw !== a.aw) {
           if (a.aw) a.b.play('wave', 1.6);
           a.aw = d.aw;
@@ -1518,6 +1548,7 @@
 
       function receberEvento(d, de) {
         if (!d || !net) return;
+        if (combate?.receberEvento(d, de)) return;
         if (d.tipo === 'cutucar') {
           root.LuiggiAudio.playSFX('blip');
           falar(`👉 ${net.nomeDe(de)} te cutucou.`, null, `🌐 ${net.nomeDe(de)}`);
@@ -1534,6 +1565,7 @@
           onMembros: (lista, info) => {
             anunciarMudanca(lista, info);
             if (info?.tipo === 'saiu') {
+              combate?.pessoaSaiu(info.id);
               removerAvatar(info.id);
               atualizarNPCs();
             }
@@ -1785,6 +1817,12 @@
         if (acao === 'entrar_carro') return eu.modo === 'pe' ? entrarNoCarro() : null;
         if (acao === 'sair_entrar') return eu.modo === 'carro' ? sairDoCarro() : entrarNoCarro();
         if (acao === 'vaga') return pedirVaga();
+        if (acao === 'spawn') return combate?.voltarProSpawn();
+        if (acao === 'armas') return combate?.sacar(combate.arma ? String(R_ARMAS[combate.arma]?.slot || 1) : '1');
+        if (acao === 'pular') {
+          combate?.teclaDown({ code: 'Space', repeat: false });
+          return;
+        }
         if (acao === 'camfora') {
           if (eu.modo !== 'carro' || modoCam === 'pose') return;
           camFora = !camFora;
@@ -1899,6 +1937,7 @@
             chip('bancos', `🪑 ${ASSENTOS[eu.banco].nome}`),
             chip('camfora', '🎥 Câmera de fora <kbd>V</kbd>', camFora),
             chip('vaga', '🅿️ Voltar pra vaga', false, 'Estaciona o Subaru de novo em frente ao portão'),
+            chip('spawn', '🏁 Voltar pro spawn', false, 'Desce do carro e volta pra calçada em frente à casa'),
             chip('pose', modoCam === 'pose' ? '✓ Terminar pose <kbd>P</kbd>' : '🦾 Posar <kbd>P</kbd>', modoCam === 'pose'),
             chip('celular', '📱 Celular <kbd>C</kbd>', eu.cel),
             chip('curtir', '🎶 Curtir o som', eu.curtir),
@@ -1915,7 +1954,10 @@
             chip('dancar', '💃 Dançar', eu.anim === 'dance'),
             chip('correr', '🏃 Correr', correrToggle, 'Ou segure Shift'),
             chip('celular', '📱 Celular <kbd>C</kbd>', eu.cel),
-            chip('vaga', '🅿️ Voltar pra vaga', false, 'Estaciona o Subaru de novo em frente ao portão')
+            chip('vaga', '🅿️ Voltar pra vaga', false, 'Estaciona o Subaru de novo em frente ao portão'),
+            chip('spawn', '🏁 Voltar pro spawn', false, 'Volta pra calçada em frente à casa'),
+            chip('armas', '🔫 Armas <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd>', false, '1: AK-47 / AWP / Negev · 2: Desert Eagle / USP · 3: Karambit · Q guarda'),
+            chip('pular', '⤴ Pular <kbd>Espaço</kbd>', false, 'Pule na hora de encostar no chão e vire a câmera com A/D apertado pra ganhar velocidade (bunny hop)')
           ].join('');
         const lbl = document.getElementById('rs-pov-lbl');
         const p = PERSONAGENS[eu.pid];
@@ -1969,6 +2011,7 @@
       };
 
       function onMove(e) {
+        if (combate?.pointerMove(e)) return;
         const r = view.getBoundingClientRect();
         if (arrasto) {
           const dx = e.clientX - arrasto.x;
@@ -2011,6 +2054,7 @@
       }
       function onDown(e) {
         painelBancos.classList.add('hidden');
+        if (combate?.pointerDown(e)) return;
         if (modoCam === 'pose') {
           const hit = picker.pick(e, [eu.b.group]);
           const j = hit ? hit.object.userData.junta || eu.b.juntaDe(hit.object) : null;
@@ -2031,12 +2075,14 @@
         if (a) interagir(a);
       }
       function onUp() {
+        combate?.pointerUp();
         if (arrasto?.tipo === 'junta') aoMudarMeuEstado(true);
         if (arrasto?.acao && !arrasto.moveu) interagir(arrasto.acao);
         arrasto = null;
         if (modoCam !== 'carro') view.style.cursor = 'grab';
       }
       function onWheel(e) {
+        if (combate?.wheel(e)) return;
         if (modoCam === 'carro') return;
         e.preventDefault();
         const [mn, mx] = modoCam === 'pose' ? [0.8, 3.2] : [1.6, 8];
@@ -2083,6 +2129,7 @@
       function onKey(e) {
         if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
         if (e.key === 'Escape') {
+          if (combate && (combate.travado || combate.acabouDeSoltar())) return;
           if (!painelBancos.classList.contains('hidden')) return painelBancos.classList.add('hidden');
           if (modoCam === 'pose') return terminarPose();
           if (celular.aberto) return celular.fechar();
@@ -2092,6 +2139,12 @@
         }
         if (e.repeat) {
           if (e.code.startsWith('Key') || e.code.startsWith('Arrow') || e.code === 'Space') e.preventDefault();
+          if (e.code === 'Space') combate?.teclaDown(e);
+          return;
+        }
+        if (combate?.teclaDown(e)) {
+          e.preventDefault();
+          if (e.code === 'Space') teclas.add(e.code);
           return;
         }
         teclas.add(e.code);
@@ -2118,6 +2171,7 @@
       document.getElementById('rs-next').addEventListener('click', () => comandoRadio('next', undefined, 'barra'));
       document.getElementById('rs-play').addEventListener('click', () => comandoRadio('toggle', undefined, 'barra'));
       document.getElementById('rs-online-btn').addEventListener('click', () => abrirPainelOnline(painelOnline.classList.contains('hidden')));
+      document.getElementById('rs-duelos-btn').addEventListener('click', () => combate?.abrirPainel());
       document.getElementById('rs-on-fechar').addEventListener('click', () => abrirPainelOnline(false));
       [painelOnline, painelPose, painelBancos].forEach((p) => ['keydown', 'pointerdown', 'wheel'].forEach((t) => p.addEventListener(t, (e) => e.stopPropagation())));
       ov.querySelectorAll('[data-pers]').forEach((b) => b.addEventListener('click', () => trocarPersonagem(b.dataset.pers)));
@@ -2127,6 +2181,77 @@
       // ==================================================================
       let relogioT = 0;
       let quadro = 0;
+      // ---------------- Pulo, armas, tiro, duelos (ResenhaCombate.js) ----------------
+      const R_ARMAS = root.LuiggiResenhaCombate?.ARMAS || {};
+      const vSpawn = new THREE.Vector3();
+      const raioCarroTmp = new THREE.Ray();
+      const combate = root.LuiggiResenhaCombate
+        ? root.LuiggiResenhaCombate.criar({
+            stage,
+            view,
+            shell,
+            eu,
+            avatares,
+            teclas,
+            orb,
+            joy,
+            env,
+            net: () => net,
+            modoCam: () => modoCam,
+            colidir,
+            correrSempre: () => correrToggle,
+            mexeu: () => (ultimaInteracao = performance.now()),
+            avisar: (txt) => falar(txt, null, '⚔️ Resenha'),
+            mudouEstado: (f) => aoMudarMeuEstado(f),
+            tremer: (k) => stage.shake?.(k, 8),
+            /** Spawn: calçada em frente à casa (com um sorteio pequeno pra ninguém nascer em cima do outro). */
+            spawn() {
+              const S = root.LuiggiRuaSafepoint;
+              const x = 5 + (Math.random() - 0.5) * 6;
+              const c = S ? S.curvar(x, -2.3) : { x, z: -2.3 };
+              vSpawn.set(c.x, 0, c.z);
+              env.group.localToWorld(vSpawn);
+              return { x: vSpawn.x, z: vSpawn.z, yaw: orb.yaw };
+            },
+            /** Leva o boneco pra (x, z) a pé (desce do carro se precisar). */
+            teleportar(x, z, yaw) {
+              if (eu.modo === 'carro') {
+                if (euDirijo()) carro.vel = 0;
+                sairDoCarro();
+              }
+              eu.alvo.set(x, 0, z);
+              eu.pos.copy(eu.alvo);
+              if (Number.isFinite(yaw)) {
+                orb.yaw = yaw;
+                eu.rotAlvo = yaw + Math.PI;
+              }
+              aoMudarMeuEstado(true);
+            },
+            descer() {
+              if (eu.modo === 'carro') {
+                if (euDirijo()) carro.vel = 0;
+                sairDoCarro();
+              }
+            },
+            /** Distância do raio até a lataria do Subaru (ou null). */
+            raioNoCarro(o, d) {
+              invCarro.copy(carroGrupo.matrixWorld).invert();
+              raioCarroTmp.origin.copy(o);
+              raioCarroTmp.direction.copy(d);
+              raioCarroTmp.applyMatrix4(invCarro);
+              const hit = raioCarroTmp.intersectBox(caixaCarro, tmpV);
+              if (!hit) return null;
+              return doCarro(tmpV.clone()).distanceTo(o);
+            },
+            mudarFF(v) {
+              if (!net || !net.souHost) return;
+              combate.definirFF(v);
+              publicarEstado();
+              avisoOnline(v ? '🔥 Friendly fire LIGADO: os tiros machucam todo mundo da sala.' : '🕊️ Friendly fire desligado: fora dos duelos ninguém se machuca.');
+            }
+          })
+        : null;
+
       // ---------------- Minimapa e nome da rua ----------------
       const mapa = (() => {
         const D = root.__LUIGGI_BAIRRO;
@@ -2228,6 +2353,15 @@
             cx.beginPath();
             cx.arc(hx - px, hz - pz, 4 / escala + 2, 0, Math.PI * 2);
             cx.fill();
+            // Arena do duelo (quando tem)
+            if (combate?.arena) {
+              const ar = combate.arena;
+              vB.set(ar.cx, 0, ar.cz);
+              env.group.worldToLocal(vB);
+              const [axp, azp] = P(vB.x, vB.z);
+              cx.fillStyle = '#f97316';
+              cx.fillRect(axp - px - 8, azp - pz - 8, 16, 16);
+            }
             // O Subaru, quando a pessoa está a pé
             if (eu.modo === 'pe') {
               vB.set(carroGrupo.position.x, 0, carroGrupo.position.z);
@@ -2288,6 +2422,7 @@
         dirigir(dt);
         andar(dt);
         avatares.forEach((a) => atualizarAvatar(a, dt, t));
+        combate?.update(dt);
         atualizarCamera(dt, t);
         seguirSol();
         mapa?.atualizar(dt);
@@ -2347,6 +2482,7 @@
         window.removeEventListener('blur', limparTeclas);
         desligarVolume();
         celular.dispose();
+        combate?.dispose();
         avatares.forEach((a) => a.b.dispose());
         interior.rt.dispose();
         stage.dispose();
@@ -2386,7 +2522,7 @@
       }
 
       // Pra testes automatizados e depuração no console
-      root.__resenha3D = { stage, env, avatares, eu, interagir, carro, voltarPraVaga, dirigir, andar, get camFora() { return camFora; }, definirConvidado, get convidados() { return convidados; }, sair, trocarBanco, trocarPersonagem, comecarPose, terminarPose, selecionarJunta, girarJunta, entrarNoCarro, sairDoCarro, orb, cam, teclas, celular, get net() { return net; }, conectar, POSES_PRONTAS };
+      root.__resenha3D = { stage, env, avatares, eu, interagir, carro, voltarPraVaga, dirigir, andar, combate, get camFora() { return camFora; }, definirConvidado, get convidados() { return convidados; }, sair, trocarBanco, trocarPersonagem, comecarPose, terminarPose, selecionarJunta, girarJunta, entrarNoCarro, sairDoCarro, orb, cam, teclas, celular, get net() { return net; }, conectar, POSES_PRONTAS };
     });
   }
 

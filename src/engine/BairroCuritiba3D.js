@@ -433,6 +433,36 @@
       }
     }
   }
+  /**
+   * Muro/grade na divisa do lote com a calçada, de A até B (gerado na frente de cada casa de verdade),
+   * com portão de garagem de grade num dos lados.
+   */
+  function muroEntre(bloco, m) {
+    const [x0, z0, x1, z1, muroT, seed] = m;
+    const w = Math.hypot(x1 - x0, z1 - z0);
+    if (w < 2) return;
+    const rnd = prng(seed + 7);
+    const Tv = [(x1 - x0) / w, (z1 - z0) / w];
+    const Nv = [-Tv[1], Tv[0]];
+    const o = [(x0 + x1) / 2, (z0 + z1) / 2];
+    const P = (k, d, y) => [o[0] + Tv[0] * k + Nv[0] * d, y, o[1] + Tv[1] * k + Nv[1] * d];
+    const B = bloco.paredes;
+    const corMuro = cor3(rnd() < 0.6 ? '#f2f0ea' : PAREDES[Math.floor(rnd() * PAREDES.length)]);
+    const corGrade = cor3(GRADES[Math.floor(rnd() * GRADES.length)]);
+    const portao = Math.min(3.0, w * 0.4);
+    const kp0 = rnd() < 0.5 ? -w / 2 + 0.6 : w / 2 - 0.6 - portao;
+    const kp1 = kp0 + portao;
+    const espessura = 0.18;
+    const hMuro = muroT === 1 ? 2.0 : muroT === 3 ? 0.8 : 0.35;
+    const temGrade = muroT !== 1;
+    [[-w / 2, kp0], [kp1, w / 2]].filter(([a, b]) => b - a > 0.2).forEach(([a, b]) => {
+      caixa(B, o, Tv, Nv, a, b, 0, espessura, 0, hMuro, 6, corMuro);
+      if (temGrade) gradeEntre(bloco, P, a, b, hMuro, 1.9, corGrade);
+      for (let k = a; k <= b + 0.01; k += Math.max(2.2, (b - a) / Math.max(1, Math.round((b - a) / 3)))) caixa(B, o, Tv, Nv, k - 0.17, k + 0.17, -0.05, espessura + 0.05, 0, temGrade ? 2.0 : 2.15, 6, corMuro);
+    });
+    gradeEntre(bloco, P, kp0, kp1, 0.05, 2.0, corGrade);
+  }
+
   /** Grade vazada (textura com transparência) num trecho do lote, dos dois lados. */
   function gradeEntre(bloco, P, ka, kb, y0, y1, cor) {
     const larg = kb - ka;
@@ -710,6 +740,13 @@
       return b;
     };
     D.lotes.forEach((l) => casa(blocoDe(l[0], l[1]), l));
+    // Casas de verdade (contorno do Google Open Buildings): [cx, cz, ang, largura, profundidade, andares, estilo, cor, telhado, semente]
+    (D.casas || []).forEach(([cx, cz, ang, larg, prof, andares, estilo, cor, tel, seed]) => {
+      const Fx = cx - Math.sin(ang) * prof / 2;
+      const Fz = cz - Math.cos(ang) * prof / 2;
+      casa(blocoDe(cx, cz), [Fx, Fz, ang, larg, 0, larg, prof, andares, estilo, cor, tel, 0, 0, seed]);
+    });
+    (D.muros || []).forEach((m) => muroEntre(blocoDe((m[0] + m[2]) / 2, (m[1] + m[3]) / 2), m));
     (D.predios || []).forEach((p) => {
       const pts = p[2];
       predio(blocoDe(pts[0], pts[1]), p, rnd);
@@ -757,7 +794,15 @@
     const tmpN = new THREE.Vector3();
     const nMat = new THREE.Matrix3();
     /** Copia a geometria (sem índice) transformada pra dentro do acumulador, com uma cor. */
-    function anexar(b, geo, x, y, z, rotY, sx, sy, sz, cor) {
+    const semIndice = new Map();
+    function anexar(b, geo0, x, y, z, rotY, sx, sy, sz, cor) {
+      // A cópia é vértice a vértice: geometria com índice (cilindros) precisa virar "sem índice" antes,
+      // senão os triângulos ligam vértices errados (as barras compridas que apareciam na rua)
+      let geo = geo0;
+      if (geo0.index) {
+        geo = semIndice.get(geo0);
+        if (!geo) semIndice.set(geo0, (geo = geo0.toNonIndexed()));
+      }
       tmpP.set(x, y, z);
       tmpQ.setFromAxisAngle(eixoY, rotY);
       tmpS.set(sx, sy, sz);
@@ -1067,7 +1112,7 @@
       nomeDaRua,
       caixa: [X0, Z0, GW, GH],
       blocos: listaBlocos.length,
-      estatisticas: { lotes: D.lotes.length, arvores: (D.arvores || []).length, ruas: ruas.length, predios: (D.predios || []).length }
+      estatisticas: { casas: (D.casas || []).length, lotes: D.lotes.length, arvores: (D.arvores || []).length, ruas: ruas.length, predios: (D.predios || []).length }
     };
   }
 
