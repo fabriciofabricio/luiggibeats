@@ -604,10 +604,21 @@
       return out;
     }
     let lugares = null;
-    function montarArena(modo, idx) {
-      desmontarArena();
+    /** Escolhe onde a arena fica (só quem cria o duelo escolhe; os outros recebem as coordenadas prontas). */
+    function escolherLugarArena() {
       lugares = lugares || lugaresDeArena();
-      const p = lugares[(idx || 0) % lugares.length];
+      const p = lugares[Math.floor(Math.random() * lugares.length)];
+      return { x: Math.round(p.x * 100) / 100, z: Math.round(p.z * 100) / 100 };
+    }
+    function montarArena(modo, idx, pos) {
+      desmontarArena();
+      let p;
+      // Coordenadas vindas de quem criou o duelo: todo mundo monta a arena no MESMO lugar
+      if (pos && Number.isFinite(pos.x) && Number.isFinite(pos.z)) p = pos;
+      else {
+        lugares = lugares || lugaresDeArena();
+        p = lugares[(idx || 0) % lugares.length];
+      }
       const dim = ARENAS[modo] || ARENAS['1x1'];
       const g = new THREE.Group();
       g.position.set(p.x, 0, p.z);
@@ -1515,7 +1526,8 @@
           const c = meuConvite;
           meuConvite = null;
           // Todo mundo aceitou: começa (o dono do duelo é quem conta as rodadas)
-          const ini = { tipo: 'du-ini', id: c.id, modo: c.modo, A: c.A, B: c.B, dono: n.eu, arena: Math.floor(Math.random() * 6) };
+          const lugar = escolherLugarArena();
+          const ini = { tipo: 'du-ini', id: c.id, modo: c.modo, A: c.A, B: c.B, dono: n.eu, arena: 0, ax: lugar.x, az: lugar.z };
           n.enviarEvento(ini);
           dueloEvento(ini, n.eu);
         }
@@ -1524,7 +1536,7 @@
       if (d.tipo === 'du-ini') {
         if (duelo) desmontarArena();
         duelo = { id: d.id, modo: d.modo === '2x2' ? '2x2' : '1x1', A: d.A || [], B: d.B || [], dono: d.dono || de, ativo: true, placar: [0, 0], rodada: 1, mortos: new Set(), uids: {} };
-        montarArena(duelo.modo, d.arena || 0);
+        montarArena(duelo.modo, d.arena || 0, { x: Number(d.ax), z: Number(d.az) });
         const t = timeDe(n.eu);
         if (t) {
           // Participante: vai pra arena
