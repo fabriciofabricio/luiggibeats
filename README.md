@@ -57,9 +57,9 @@ No **Momento Resenha**, o botão **🌐 Online** deixa várias pessoas (até 8) 
 - **Criar sala** gera um código de 5 letras e um link de convite (`?resenha=CODIGO`). Quem abre o link só digita o nome e clica em Entrar.
 - Cada um escolhe o banco/POV que quiser (Luis, Fabricio ou Mateus Buse). A lista mostra quem está onde, e uma etiqueta com o nome aparece em cima do boneco.
 - Todo mundo controla o rádio (⏮ ⏯ ⏭ e o rádio do painel). A buzina, o volante, o porta-luvas e os Tic Tacs aparecem para todos.
-- A conexão é P2P (WebRTC, via `vendor/trystero-nostr.min.js`): não precisa de servidor, então funciona no GitHub Pages. Ninguém transmite áudio; cada jogo toca o próprio MP3 e só a faixa/posição é sincronizada. Um anfitrião é escolhido sozinho e, se ele sair, outro assume sem parar a música.
+- A conexão é híbrida e não precisa de servidor (funciona no GitHub Pages): direta P2P (WebRTC, via `vendor/trystero-nostr.min.js`, ⚡ na lista) quando a rede deixa, e pela rota reserva (📡) quando não deixa: mensagens criptografadas por relays Nostr públicos. Ninguém transmite áudio; cada jogo toca o próprio MP3 e só a faixa/posição é sincronizada. Um anfitrião é escolhido sozinho e, se ele sair, outro assume sem parar a música.
 - Para jogar online, todos devem abrir o jogo pelo site. Servidores locais sem suporte a *Range* (como o `python -m http.server` do `INICIAR_JOGO.bat`) não deixam pular para o meio da música.
-- Algumas redes muito restritas (4G com CGNAT, firewall corporativo) podem não conseguir conexão direta.
+- Se quiser conexão direta até em redes muito restritas, dá pra cadastrar servidores TURN em `TURN_SERVIDORES`, no topo de `src/engine/ResenhaOnline.js`.
 
 ## Como editar conteúdo, personagens, textos e charts
 

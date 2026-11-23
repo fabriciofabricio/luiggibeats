@@ -1364,7 +1364,10 @@
               onPedido: processarPedido,
               onFx: aplicarFx,
               onPrecisaEstado: (alvo) => publicarEstado(alvo),
-              onStatus: (tipo, msg) => tipo === 'erro' && avisoOnline(`Problema na conexão: ${msg}`)
+              onStatus: (tipo, msg) => {
+                if (tipo === 'reserva') avisoOnline(`${msg} Tudo continua funcionando, só com um tiquinho mais de atraso.`);
+                if (tipo === 'relays') atualizarListaOnline();
+              }
             }
           });
         } catch (e) {
@@ -1431,7 +1434,7 @@
         if (modo !== modoPainel) {
           modoPainel = modo;
           if (modo === 'indisponivel') {
-            corpo.innerHTML = '<p class="rs-on-aviso">Este navegador não suporta o modo online (WebRTC). Tente no Chrome, Edge, Firefox ou Safari atualizados.</p>';
+            corpo.innerHTML = '<p class="rs-on-aviso">Este navegador não suporta o modo online. Tente no Chrome, Edge, Firefox ou Safari atualizados.</p>';
           } else if (modo === 'entrar') {
             corpo.innerHTML = `
               <label class="rs-on-campo">Seu nome<input id="rs-on-nome" maxlength="18" autocomplete="nickname" placeholder="Como a galera te chama" value="${escHtml(lerNomeOnline())}"></label>
@@ -1504,7 +1507,14 @@
         if (cod) cod.textContent = net.sala;
         const status = document.getElementById('rs-on-status');
         if (status) {
-          status.textContent = !net.sincronizado ? 'Conectando ao carro… procurando a galera.' : net.total === 1 ? 'Só você no carro por enquanto. Mande o link pra galera.' : `${net.total} pessoas no Subaru`;
+          const semRede = net.relaysConectados === 0 && !net.pessoas.some((p) => p.via === 'p2p');
+          status.textContent = semRede
+            ? 'Procurando conexão com a internet…'
+            : !net.sincronizado
+              ? 'Conectando ao carro… procurando a galera.'
+              : net.total === 1
+                ? 'Só você no carro por enquanto. Mande o link pra galera.'
+                : `${net.total} pessoas no Subaru`;
           status.classList.toggle('pulsando', !net.sincronizado);
         }
         const lista = document.getElementById('rs-on-lista');
@@ -1517,6 +1527,7 @@
                 ${p.host ? '<span class="rs-on-host" title="Anfitrião: o rádio dele é a referência de todo mundo">👑</span>' : ''}
                 ${p.versaoDiferente ? '<span title="Essa pessoa está com outra versão do jogo">⚠️</span>' : ''}
                 <small class="rs-on-banco">${escHtml(LUGARES[p.pov]?.nome || '')}</small>
+                ${p.eu ? '' : p.via === 'p2p' ? '<span class="rs-on-via" title="Conexão direta (P2P)">⚡</span>' : '<span class="rs-on-via" title="Pela rota reserva (relay): a rede não deixou conectar direto">📡</span>'}
               </li>`
             )
             .join('');
