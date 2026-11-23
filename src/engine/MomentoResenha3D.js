@@ -136,7 +136,12 @@
   // ==================================================================
   // ABRIR O MOMENTO RESENHA
   // ==================================================================
+  /** Abre o Momento Resenha (antes carrega o bairro, que não vem mais junto com o site). */
   function abrir(opcoes = {}) {
+    const dados = root.LuiggiBairro?.carregarDados ? root.LuiggiBairro.carregarDados() : Promise.resolve(false);
+    return dados.then(() => abrirAgora(opcoes));
+  }
+  function abrirAgora(opcoes = {}) {
     return new Promise((resolve) => {
       const THREE = root.THREE;
       const U = L().U;
@@ -241,7 +246,8 @@
       const avisoOnline = (texto) => falar(texto, null, '🌐 Resenha Online');
 
       // ---------------- Palco, rua e carro ----------------
-      const stage = L().createStage(view, { radius: '0', fov: 68, near: 0.02, far: 460, fillIntensity: 0.6, fillColor: '#9fb4ff', shadowBounds: 26 });
+      const perfilGfx = L().perfilQualidade?.() || { distancia: 290, retrovisor: 2 };
+      const stage = L().createStage(view, { radius: '0', fov: 68, near: 0.02, far: perfilGfx.distancia + 170, fillIntensity: 0.6, fillColor: '#9fb4ff', shadowBounds: 26 });
       // O bairro inteiro (da casa até a R. Fagundes Varela) entra junto com a rua
       const env = root.Luiggi3DEnv.build('safepoint', { semSubaru: true, bairro: true });
       const vaga = env.vaga || [0, 0, -1];
@@ -2324,7 +2330,8 @@
         return {
           atualizar(dt) {
             if ((t -= dt) > 0) return;
-            t = 0.1;
+            // Nos níveis de gráfico leves o mapa atualiza menos (desenhar a imagem girada custa)
+            t = perfilGfx.cssLeve ? 0.3 : 0.1;
             const quem = eu.modo === 'pe' ? eu.pos : carroGrupo.position;
             vA.set(quem.x, 0, quem.z);
             env.group.worldToLocal(vA);
@@ -2426,7 +2433,9 @@
         atualizarCamera(dt, t);
         seguirSol();
         mapa?.atualizar(dt);
-        if (modoCam === 'carro' && ++quadro % 2 === 0) {
+        // Retrovisor: de quantos em quantos quadros atualiza depende do nível de gráfico (0 = parado)
+        const cadaRetro = perfilGfx.retrovisor;
+        if (modoCam === 'carro' && cadaRetro > 0 && ++quadro % cadaRetro === 0) {
           interior.retro.visible = false;
           stage.renderTo(interior.rt, stage.scene, interior.camRetro);
           interior.retro.visible = true;

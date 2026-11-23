@@ -46,7 +46,8 @@
   function init(container) {
     host = container;
     if (!L()?.hasThree()) return false;
-    stage = L().createStage(host, { radius: '0', fov: 42, near: 0.05, far: 300 });
+    // Menu e cenas de história são calmos: 30 FPS bastam (a placa de vídeo agradece)
+    stage = L().createStage(host, { radius: '0', fov: 42, near: 0.05, far: 300, fpsMax: 30 });
     if (!stage) return false;
     const THREE = root.THREE;
     camAlvo.pos = new THREE.Vector3(0, 1.8, 6);

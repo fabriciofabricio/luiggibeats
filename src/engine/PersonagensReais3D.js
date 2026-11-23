@@ -460,7 +460,10 @@
       }
     }
 
-    const nRaiz = Math.round(c.fios / 0.42);
+    // Menos mechas (e mais largas) nos níveis de gráfico baixos
+    const fracao = Math.max(0.3, Math.min(1, root.Luiggi3D?.perfilQualidade?.().cabelo || 1));
+    const nRaiz = Math.round((c.fios * fracao) / 0.42);
+    c = fracao < 1 ? { ...c, largura: c.largura * (1 + (1 - fracao) * 0.7) } : c;
     const dirs = [];
     for (let i = 0; i < nRaiz; i++) {
       const y = 1 - ((i + 0.5) / nRaiz) * 2;

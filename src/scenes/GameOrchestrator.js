@@ -545,6 +545,29 @@
         </div>
         <div class="mg-body">
           <div class="cfg-list">
+            <div class="cfg-gfx">
+              <strong>🖥️ Gráficos</strong>
+              <label>Qualidade:
+                <select id="cfg-qual">
+                  <option value="auto">Automática (recomendado)</option>
+                  <option value="muito_baixa">Muito baixa (PC bem fraco)</option>
+                  <option value="baixa">Baixa</option>
+                  <option value="media">Média</option>
+                  <option value="alta">Alta</option>
+                  <option value="ultra">Ultra (placa de vídeo forte)</option>
+                </select>
+              </label>
+              <label>Limite de FPS:
+                <select id="cfg-fps">
+                  <option value="0">Do nível de qualidade</option>
+                  <option value="30">30 (mais leve)</option>
+                  <option value="60">60</option>
+                  <option value="-1">Sem limite</option>
+                </select>
+              </label>
+              <label><input type="checkbox" id="cfg-resdin" ${cfg.resDinamica !== false ? 'checked' : ''} /> Resolução dinâmica (diminui sozinha quando o jogo fica lento)</label>
+              <small id="cfg-gfx-info"></small>
+            </div>
             <label>Volume Música: <input type="range" id="cfg-mus" min="0" max="1" step="0.05" value="${cfg.volMusica}" /></label>
             <label>Volume Efeitos: <input type="range" id="cfg-sfx" min="0" max="1" step="0.05" value="${cfg.volSfx}" /></label>
             <label>Volume Vozes: <input type="range" id="cfg-voz" min="0" max="1" step="0.05" value="${cfg.volVozes}" /></label>
@@ -559,6 +582,37 @@
       </div>`;
 
     const bind = (id, fn) => document.getElementById(id).addEventListener('input', fn);
+    // Gráficos
+    const L3 = root.Luiggi3D;
+    const selQual = document.getElementById('cfg-qual');
+    const selFps = document.getElementById('cfg-fps');
+    selQual.value = cfg.qualidade || 'auto';
+    selFps.value = String(cfg.limiteFps ?? 0);
+    const infoGfx = () => {
+      const el = document.getElementById('cfg-gfx-info');
+      if (!el || !L3?.perfilQualidade) return;
+      const p = L3.perfilQualidade();
+      const gpu = L3.lerGPU?.() || 'placa de vídeo não identificada';
+      el.textContent = `Usando: ${L3.PERFIS_QUALIDADE?.[p.nome]?.rotulo || p.nome}${p.auto ? ' (automático)' : ''} · ${p.fps ? p.fps + ' FPS' : 'FPS livre'} · ${gpu}. Sombras e efeitos mudam ao abrir a próxima cena.`;
+    };
+    const aplicarGfx = () => {
+      root.LuiggiSave.salvar();
+      L3?.aplicarQualidade?.();
+      infoGfx();
+    };
+    selQual.addEventListener('change', () => {
+      cfg.qualidade = selQual.value;
+      aplicarGfx();
+    });
+    selFps.addEventListener('change', () => {
+      cfg.limiteFps = Number(selFps.value);
+      aplicarGfx();
+    });
+    document.getElementById('cfg-resdin').addEventListener('change', (e) => {
+      cfg.resDinamica = e.target.checked;
+      aplicarGfx();
+    });
+    infoGfx();
     bind('cfg-mus', (e) => {
       cfg.volMusica = Number(e.target.value);
       root.LuiggiAudio.aplicarVolumes();

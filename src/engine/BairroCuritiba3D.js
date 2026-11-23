@@ -18,7 +18,8 @@
   const T = () => root.THREE;
   const L = () => root.Luiggi3D;
   const BLOCO = 160;
-  const LONGE = 290; // além disso o bloco nem é desenhado (a neblina já apagou)
+  // Até onde os blocos aparecem: vem do nível de gráfico (a neblina acompanha)
+  const longe = () => root.Luiggi3D?.perfilQualidade?.().distancia || 290;
 
   function prng(seed) {
     let a = seed >>> 0 || 1;
@@ -1091,10 +1092,11 @@
     // ---------------- Visibilidade por distância ----------------
     const listaBlocos = [...blocos.values()];
     function atualizar(x, z) {
+      const LONGE = longe();
       for (const b of listaBlocos) {
         const d = Math.hypot(b.cx - x, b.cz - z) - BLOCO * 0.7;
         b.grupo.visible = d < LONGE;
-        const perto = d < 150;
+        const perto = d < Math.min(150, LONGE * 0.5);
         for (const m of b.detalhes) m.visible = perto;
         // Sombra só de quem está perto (a sombra do sol cobre poucas dezenas de metros mesmo)
         const sombra = d < 40;
@@ -1234,5 +1236,23 @@
     return campo;
   }
 
-  root.LuiggiBairro = { construir, campoDistancia };
+  /** Carrega data/bairro_curitiba.js sob demanda (uma vez). */
+  let carregando = null;
+  function carregarDados() {
+    if (root.__LUIGGI_BAIRRO) return Promise.resolve(true);
+    if (carregando) return carregando;
+    carregando = new Promise((res) => {
+      const sc = document.createElement('script');
+      sc.src = 'data/bairro_curitiba.js';
+      sc.onload = () => res(!!root.__LUIGGI_BAIRRO);
+      sc.onerror = () => {
+        carregando = null;
+        res(false);
+      };
+      document.head.appendChild(sc);
+    });
+    return carregando;
+  }
+
+  root.LuiggiBairro = { construir, campoDistancia, carregarDados };
 })(window);

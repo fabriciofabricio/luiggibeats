@@ -81,6 +81,20 @@ No menu, **🎶 Momento Resenha** abre o Subaru Legacy azul parado na rua do Saf
 - Pra refazer: baixe os blocos com `https://api.openstreetmap.org/api/0.6/map?bbox=OESTE,SUL,LESTE,NORTE` (a região inteira em 4 pedaços) numa pasta e rode `python ferramentas/gerar_bairro.py <pasta> [caixas_do_cenario_antigo.json] --predios=predios.json --copa=copa.npy`. O `predios.json` é uma consulta por caixa ao arquivo GeoParquet do Brasil (célula S2 nível 5 de Curitiba) do Source Cooperative, e o `copa.npy` é o recorte do GeoTIFF `chm/210311203.tif` da Meta (lido por pedaços via HTTP).
 - Desempenho: `src/engine/BairroCuritiba3D.js` junta tudo em poucas malhas (cada bloco de 160 m vira ~6 chamadas de desenho), some com os blocos longe (a neblina esconde), só deixa os blocos perto projetarem sombra e faz a sombra do sol acompanhar quem joga. O cenário da rua e o interior do Subaru também juntam as peças paradas por material (de ~1700 pra ~1100 chamadas de desenho perto da casa, e ~400 no meio do bairro). Se o computador for fraco, o jogo ainda baixa a resolução e desliga os efeitos sozinho.
 
+## Gráficos (do PC fraco ao PC forte)
+
+Em **⚙️ Configurações → 🖥️ Gráficos**: qualidade **Automática** (o jogo olha a placa de vídeo, a memória e a tela e escolhe sozinho) ou **Muito baixa / Baixa / Média / Alta / Ultra**, limite de FPS (30, 60 ou livre) e **resolução dinâmica** (se o FPS cair, a resolução diminui sozinha e volta quando der).
+
+| Nível | Resolução | FPS | Sombras | Efeitos (bloom/cor) | Até onde o bairro aparece | Retrovisor | Interface |
+|---|---|---|---|---|---|---|---|
+| Muito baixa | 60% | 30 | não | não | 150 m | parado | sem desfoque |
+| Baixa | 75% | 30 | não | não | 210 m | lento | sem desfoque |
+| Média | 100% | 60 | sim | não | 270 m | normal | normal |
+| Alta | até 1,5× | livre | suaves | sim | 330 m | rápido | normal |
+| Ultra | até 2× | livre | suaves | sim + MSAA | 460 m | todo quadro | normal |
+
+O menu e as cenas de história ficam em no máximo 30 FPS em qualquer nível (são cenas calmas), e o mapa do bairro só é baixado quando o Momento Resenha abre.
+
 ## Momento Resenha Online (multiplayer)
 
 No **Momento Resenha**, o botão **🌐 Online** deixa várias pessoas (até 8) na mesma resenha (5 dentro do Subaru, o resto na calçada):

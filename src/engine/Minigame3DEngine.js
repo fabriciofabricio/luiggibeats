@@ -22,26 +22,86 @@
   // =====================================================================
   // QUALIDADE
   // =====================================================================
+  /**
+   * Níveis de gráfico. escala = fração da resolução (a imagem é ampliada na tela); fps = limite (0 = o da tela);
+   * distancia = até onde o bairro aparece (m); retrovisor = de quantos em quantos quadros ele atualiza (0 = parado);
+   * cabelo = fração das mechas dos modelos realistas; cssLeve = sem desfoque/sombras pesadas na interface.
+   */
   const PERFIS = {
-    alta: { pixelRatio: 2, shadows: true, shadowSize: 2048, post: true, msaa: 4, bloomScale: 0.5 },
-    media: { pixelRatio: 1.25, shadows: true, shadowSize: 1024, post: true, msaa: 0, bloomScale: 0.4 },
-    baixa: { pixelRatio: 1, shadows: false, shadowSize: 512, post: false, msaa: 0, bloomScale: 0.35 }
+    muito_baixa: { rotulo: 'Muito baixa', escala: 0.6, pixelRatio: 1, shadows: false, shadowSize: 512, sombraSuave: false, post: false, msaa: 0, bloomScale: 0.3, aa: false, fps: 30, distancia: 150, retrovisor: 0, cabelo: 0.4, cssLeve: true },
+    baixa: { rotulo: 'Baixa', escala: 0.75, pixelRatio: 1, shadows: false, shadowSize: 512, sombraSuave: false, post: false, msaa: 0, bloomScale: 0.3, aa: false, fps: 30, distancia: 210, retrovisor: 8, cabelo: 0.6, cssLeve: true },
+    media: { rotulo: 'Média', escala: 1, pixelRatio: 1, shadows: true, shadowSize: 1024, sombraSuave: false, post: false, msaa: 0, bloomScale: 0.35, aa: true, fps: 60, distancia: 270, retrovisor: 4, cabelo: 0.8, cssLeve: false },
+    alta: { rotulo: 'Alta', escala: 1, pixelRatio: 1.5, shadows: true, shadowSize: 2048, sombraSuave: true, post: true, msaa: 0, bloomScale: 0.4, aa: false, fps: 0, distancia: 330, retrovisor: 2, cabelo: 1, cssLeve: false },
+    ultra: { rotulo: 'Ultra', escala: 1, pixelRatio: 2, shadows: true, shadowSize: 2048, sombraSuave: true, post: true, msaa: 4, bloomScale: 0.5, aa: false, fps: 0, distancia: 460, retrovisor: 1, cabelo: 1, cssLeve: false }
   };
+  const ORDEM = ['muito_baixa', 'baixa', 'media', 'alta', 'ultra'];
   let autoDetectado = null;
+  let gpuNome = '';
 
+  /** Nome da placa de vídeo (quando o navegador conta). */
+  function lerGPU() {
+    if (gpuNome) return gpuNome;
+    try {
+      const c = document.createElement('canvas');
+      const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+      if (gl) {
+        const ext = gl.getExtension('WEBGL_debug_renderer_info');
+        gpuNome = String(ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER) || '');
+        gl.getExtension('WEBGL_lose_context')?.loseContext();
+      }
+    } catch (_) { }
+    return gpuNome;
+  }
+
+  /** Escolhe o nível pela placa de vídeo, memória, núcleos e tamanho da tela. */
   function detectarQualidade() {
     if (autoDetectado) return autoDetectado;
     const ua = navigator.userAgent || '';
     const mobile = /Android|iPhone|iPad|Mobile/i.test(ua);
     const cores = navigator.hardwareConcurrency || 4;
-    autoDetectado = mobile || cores <= 2 ? 'baixa' : cores <= 4 ? 'media' : 'alta';
+    const mem = navigator.deviceMemory || 8;
+    const g = lerGPU();
+    let n;
+    if (/SwiftShader|llvmpipe|Software|Basic Render|Microsoft Basic/i.test(g)) n = 'muito_baixa';
+    else if (mobile) n = /Apple GPU|Adreno \(TM\) (7[3-9]|8)\d\d|Mali-G7[1-9]|Mali-G[7-9]\d\d/i.test(g) ? 'media' : 'baixa';
+    else if (/RTX\s?(30|40|50)\d\d|RX\s?(6[7-9]|7[6-9]|9)\d\d/i.test(g)) n = 'ultra';
+    else if (/RTX|GTX\s?(9[6-9]|10[5-8]|16)|RX\s?\d{3,4}|Radeon Pro|Apple M\d/i.test(g)) n = 'alta';
+    else if (/Iris Xe|Iris\(R\) Xe|Arc|MX\s?\d{3}|GTX|Radeon\s?\(TM\)\s?Graphics|Radeon Graphics|Radeon\s?\(TM\)\s?Vega|Vega \d/i.test(g)) n = 'media';
+    else if (/Intel|HD Graphics|UHD|Iris/i.test(g)) n = 'baixa';
+    else n = cores <= 2 || mem <= 2 ? 'muito_baixa' : cores <= 4 || mem <= 4 ? 'baixa' : cores <= 8 ? 'media' : 'alta';
+    // Tela enorme (4K) com placa média: um degrau abaixo
+    const px = (screen.width || 1280) * (screen.height || 720) * (window.devicePixelRatio || 1) ** 2;
+    if (px > 6e6 && ORDEM.indexOf(n) > 0 && ORDEM.indexOf(n) < 3) n = ORDEM[ORDEM.indexOf(n) - 1];
+    if (mem <= 2 && ORDEM.indexOf(n) > 1) n = 'baixa';
+    autoDetectado = n;
     return autoDetectado;
   }
 
   function perfilQualidade() {
-    const cfg = root.LuiggiSave?.state?.config?.qualidade || 'auto';
-    const nome = cfg === 'auto' ? detectarQualidade() : cfg;
-    return { nome, auto: cfg === 'auto', ...(PERFIS[nome] || PERFIS.media) };
+    const cfg = root.LuiggiSave?.state?.config || {};
+    const escolha = cfg.qualidade || 'auto';
+    const nome = escolha === 'auto' || !PERFIS[escolha] ? detectarQualidade() : escolha;
+    const p = { nome, auto: escolha === 'auto' || !PERFIS[escolha], ...PERFIS[nome] };
+    // Limite de FPS escolhido na tela de configurações (0 = automático do nível)
+    if (Number.isFinite(cfg.limiteFps) && cfg.limiteFps > 0) p.fps = cfg.limiteFps;
+    else if (cfg.limiteFps === -1) p.fps = 0;
+    p.resDinamica = cfg.resDinamica !== false;
+    return p;
+  }
+
+  // Palcos vivos (pra aplicar mudanças de gráfico na hora)
+  const palcos = new Set();
+  /** Aplica o nível atual na interface (desfoque) e nos palcos abertos (resolução e FPS). */
+  function aplicarQualidade() {
+    const p = perfilQualidade();
+    document.body?.classList.toggle('gfx-leve', !!p.cssLeve);
+    palcos.forEach((st) => st.__aplicarPerfil?.(p));
+    return p;
+  }
+  if (typeof document !== 'undefined') {
+    const cedo = () => document.body && document.body.classList.toggle('gfx-leve', !!perfilQualidade().cssLeve);
+    if (document.body) cedo();
+    else document.addEventListener('DOMContentLoaded', cedo);
   }
 
   function canUseImageTextures() {
@@ -291,14 +351,14 @@
   function createStage(hostEl, opts = {}) {
     if (!hasThree() || !hostEl) return null;
     const THREE = T();
-    const perfil = perfilQualidade();
+    let perfil = perfilQualidade();
     let width = opts.width || hostEl.clientWidth || 740;
     let height = opts.height || hostEl.clientHeight || 420;
 
     let renderer;
     try {
       renderer = new THREE.WebGLRenderer({
-        antialias: !perfil.post || opts.post === false,
+        antialias: (!perfil.post || opts.post === false) && perfil.aa !== false,
         alpha: !!opts.alpha,
         preserveDrawingBuffer: !!opts.preserveDrawingBuffer,
         powerPreference: 'high-performance'
@@ -307,10 +367,13 @@
       return null;
     }
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, perfil.pixelRatio));
+    // Resolução: limite do nível × escala (e a resolução dinâmica mexe nessa escala quando o FPS cai)
+    const prBase = () => Math.min(window.devicePixelRatio || 1, perfil.pixelRatio) * (perfil.escala || 1);
+    let escalaDin = 1;
+    renderer.setPixelRatio(prBase());
     renderer.setSize(width, height, false);
     renderer.shadowMap.enabled = perfil.shadows && opts.shadows !== false;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = perfil.sombraSuave ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = opts.exposure || 1.0;
@@ -415,14 +478,69 @@
     let fpsFrames = 0;
     let slowStrikes = 0;
 
+    // Resolução dinâmica: média do tempo entre quadros; abaixa a resolução quando passa do alvo, sobe devagar
+    // Limite efetivo: o do nível de gráfico e, se o palco pedir, um teto próprio (ex.: o menu não precisa de 60 FPS)
+    const limiteFps = () => {
+      const a = perfil.fps > 0 ? perfil.fps : Infinity;
+      const b = opts.fpsMax > 0 ? opts.fpsMax : Infinity;
+      const m = Math.min(a, b);
+      return Number.isFinite(m) ? m : 0;
+    };
+    let mediaMs = 0;
+    let lentoT = 0;
+    let folgaT = 0;
+    let esperaSubir = 0;
+    let aquecendo = 3; // os primeiros segundos têm engasgos de carregamento (shaders, montagem): não contam
+    function ajustarResolucao(ms, dtS) {
+      if (!perfil.resDinamica) return;
+      if (aquecendo > 0) {
+        aquecendo -= dtS;
+        return;
+      }
+      // Engasgo isolado (carregando algo, aba trocada): ignora
+      if (ms > 250) return;
+      const alvo = limiteFps() > 0 ? 1000 / limiteFps() : 1000 / 60;
+      const amostra = Math.min(ms, alvo * 3);
+      mediaMs = mediaMs ? mediaMs * 0.9 + amostra * 0.1 : amostra;
+      esperaSubir = Math.max(0, esperaSubir - dtS);
+      if (mediaMs > alvo * 1.3) {
+        lentoT += dtS;
+        folgaT = 0;
+        if (lentoT > 2 && escalaDin > 0.5) {
+          escalaDin = Math.max(0.5, escalaDin * 0.85);
+          lentoT = 0;
+          esperaSubir = 8;
+          renderer.setPixelRatio(prBase() * escalaDin);
+          resize();
+        }
+      } else {
+        lentoT = 0;
+        if (mediaMs < alvo * 1.08 && escalaDin < 1) {
+          folgaT += dtS;
+          if (folgaT > 3 && esperaSubir <= 0) {
+            escalaDin = Math.min(1, escalaDin * 1.15);
+            folgaT = 0;
+            renderer.setPixelRatio(prBase() * escalaDin);
+            resize();
+          }
+        } else folgaT = 0;
+      }
+    }
+
     function frame(now) {
       rafId = requestAnimationFrame(frame);
       if (!canvas.isConnected) {
         stop();
         return;
       }
-      const dt = Math.min(0.05, last ? (now - last) / 1000 : 0.016);
+      // Limite de FPS (economiza a placa de vídeo nos níveis baixos)
+      const lim = limiteFps();
+      // (limite de 60 ou mais não precisa: a tela já entrega no máximo isso, e cortar ali só derrubaria quadros bons)
+      if (lim > 0 && lim < 58 && last && now - last < 1000 / lim - 3) return;
+      const ms = last ? now - last : 16.7;
+      const dt = Math.min(0.05, ms / 1000);
       last = now;
+      if (document.visibilityState === 'visible') ajustarResolucao(ms, dt);
       elapsed += dt;
       shakeState.amp *= Math.exp(-shakeState.decay * dt);
       for (const fn of updateFns) {
@@ -441,7 +559,7 @@
         const fps = fpsFrames / fpsAcc;
         fpsAcc = 0;
         fpsFrames = 0;
-        if (perfil.auto && fps < 28) {
+        if (perfil.auto && fps < (limiteFps() > 0 ? limiteFps() * 0.8 : 28) && escalaDin <= 0.51) {
           slowStrikes++;
           if (slowStrikes >= 2) {
             slowStrikes = 0;
@@ -452,16 +570,14 @@
     }
 
     function degradar() {
-      const prAtual = renderer.getPixelRatio();
-      if (prAtual > 1) {
-        renderer.setPixelRatio(1);
-        resize();
-      } else if (post && post.enabled) {
-        post.enabled = false;
+      // Mesmo com a resolução no mínimo continua lento: tira o pós-processamento e as sombras, e o próximo palco já abre um nível abaixo
+      if (post && post.enabled) post.enabled = false;
+      else if (renderer.shadowMap.enabled) {
         renderer.shadowMap.enabled = false;
+        scene.traverse((o) => o.material && (o.material.needsUpdate = true));
       }
-      if (autoDetectado === 'alta') autoDetectado = 'media';
-      else if (autoDetectado === 'media') autoDetectado = 'baixa';
+      const i = ORDEM.indexOf(autoDetectado);
+      if (i > 0) autoDetectado = ORDEM[i - 1];
     }
 
     function start(fn) {
@@ -515,12 +631,17 @@
     /** Renderiza direto em um render target (sem pós-processamento): retrovisores, telas... */
     function renderTo(target, s, c) {
       const prev = renderer.getRenderTarget();
+      // Retrovisores e telas reaproveitam o mapa de sombras do quadro (não refazem a sombra da cena inteira)
+      const sombraAuto = renderer.shadowMap.autoUpdate;
+      renderer.shadowMap.autoUpdate = false;
       renderer.setRenderTarget(target);
       rawRender(s, c);
       renderer.setRenderTarget(prev);
+      renderer.shadowMap.autoUpdate = sombraAuto;
     }
 
     function dispose() {
+      palcos.delete(stage);
       stop();
       updateFns = [];
       if (ro) ro.disconnect();
@@ -548,6 +669,14 @@
       domElement: canvas,
       start,
       stop,
+      /** Aplica um novo nível na hora: resolução e FPS (sombras/pós valem a partir do próximo palco). */
+      __aplicarPerfil(p) {
+        perfil = p;
+        escalaDin = 1;
+        renderer.setPixelRatio(prBase());
+        resize();
+        if (post) post.enabled = !!p.post;
+      },
       addUpdate,
       removeUpdate,
       shake,
@@ -561,6 +690,7 @@
         return { width, height };
       }
     };
+    palcos.add(stage);
     return stage;
   }
 
@@ -2199,6 +2329,11 @@
     hasThree,
     canUseImageTextures,
     perfilQualidade,
+    aplicarQualidade,
+    detectarQualidade,
+    lerGPU,
+    PERFIS_QUALIDADE: PERFIS,
+    ORDEM_QUALIDADE: ORDEM,
     U,
     M,
     textures,

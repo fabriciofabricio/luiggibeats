@@ -2153,3 +2153,13 @@ body.resenha-aberta .lc-mini { display: none; }
 .cb-cod { display: flex; gap: 6px; flex-wrap: wrap; }
 #rs-view.cb-travado { cursor: none; }
 @media (max-width: 760px) { .cb-status { bottom: 230px; left: 10px; } .cb-feed { top: 300px; right: 10px; } .cb-painel { left: 10px; right: 10px; } }
+
+/* ==================== GRÁFICOS LEVES (níveis Baixa / Muito baixa) ==================== */
+/* Desfoque de fundo e sombras grandes custam caro na placa de vídeo: some tudo nos níveis baixos */
+.gfx-leve *, .gfx-leve *::before, .gfx-leve *::after { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+.gfx-leve .mg-modal, .gfx-leve .sp3d-dialog, .gfx-leve .rs-online, .gfx-leve .main-menu, .gfx-leve .rs-cel-aparelho { box-shadow: none !important; }
+.gfx-leve .rs-mapa { filter: none; }
+/* Configurações de gráfico */
+.cfg-gfx { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 10px; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); }
+.cfg-gfx select { background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 4px 8px; }
+.cfg-gfx small { color: #94a3b8; }
