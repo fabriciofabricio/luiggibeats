@@ -2163,3 +2163,12 @@ body.resenha-aberta .lc-mini { display: none; }
 .cfg-gfx { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 10px; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); }
 .cfg-gfx select { background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 4px 8px; }
 .cfg-gfx small { color: #94a3b8; }
+
+/* Tela de carregamento do Momento Resenha */
+.rs-carregando { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 40%, #16213a, #05070d 70%); color: #f8fafc; }
+.rs-carr-caixa { display: flex; flex-direction: column; gap: 10px; align-items: center; text-align: center; padding: 24px 28px; max-width: 360px; }
+.rs-carr-caixa strong { font-size: 1.4rem; }
+.rs-carr-txt { color: #cbd5e1; }
+.rs-carr-barra { width: 260px; height: 8px; border-radius: 8px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+.rs-carr-barra i { display: block; height: 100%; width: 5%; background: linear-gradient(90deg, #f97316, #fbbf24); transition: width 0.3s; }
+.rs-carr-caixa small { color: #64748b; }

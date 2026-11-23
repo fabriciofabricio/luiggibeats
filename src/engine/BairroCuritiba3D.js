@@ -19,7 +19,7 @@
   const L = () => root.Luiggi3D;
   const BLOCO = 160;
   // Até onde os blocos aparecem: vem do nível de gráfico (a neblina acompanha)
-  const longe = () => root.Luiggi3D?.perfilQualidade?.().distancia || 290;
+  const longe = () => Number(root.Luiggi3D?.perfilQualidade?.().distancia) || 290;
 
   function prng(seed) {
     let a = seed >>> 0 || 1;
@@ -1243,7 +1243,8 @@
     if (carregando) return carregando;
     carregando = new Promise((res) => {
       const sc = document.createElement('script');
-      sc.src = 'data/bairro_curitiba.js';
+      // Mesma versão do resto do site (evita misturar arquivo novo com antigo do cache)
+      sc.src = 'data/bairro_curitiba.js' + (root.LUIGGI_VERSAO ? '?v=' + root.LUIGGI_VERSAO : '');
       sc.onload = () => res(!!root.__LUIGGI_BAIRRO);
       sc.onerror = () => {
         carregando = null;

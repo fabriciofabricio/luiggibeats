@@ -1740,7 +1740,7 @@
       slots: { L: curvo([-1.5, 0, 0.8]), R: curvo([1.5, 0, 0.8]), C: curvo([0, 0, 0.8]) },
       cam: { pos: curvo([5.5, 2.0, 5]), look: curvo([0, 0.9, -3]) },
       bg: 0xa9cdf2,
-      fog: [0xd2e3f4, bairro ? 1.55 / (L().perfilQualidade?.().distancia || 290) : 0.0075],
+      fog: [0xd2e3f4, bairro ? 1.55 / (Number(L().perfilQualidade?.().distancia) || 290) : 0.0075],
       luz: { sky: '#dcebff', ground: '#7d7566', hemi: 1.2, key: '#fff3dc', keyI: 2.6, keyPos: [10, 22, 14], fillI: 0.45, fill: '#dfe8ff' },
       grade: { tint: [1.01, 1.0, 0.99], saturation: 1.06, bloom: 0.35, threshold: 1.4, vignette: 0.45 },
       update(dt, t, camera) {

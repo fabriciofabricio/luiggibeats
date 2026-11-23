@@ -136,10 +136,55 @@
   // ==================================================================
   // ABRIR O MOMENTO RESENHA
   // ==================================================================
+  /** Tela de carregamento (fica por cima até o primeiro quadro 3D aparecer). */
+  function telaCarregando(texto, frac) {
+    const ov = document.getElementById('safepoint-overlay');
+    if (!ov) return;
+    let el = document.getElementById('rs-carregando');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'rs-carregando';
+      el.className = 'rs-carregando';
+      el.innerHTML = '<div class="rs-carr-caixa"><strong>🎶 Momento Resenha</strong><span class="rs-carr-txt"></span><div class="rs-carr-barra"><i></i></div><small>Na primeira vez o bairro inteiro é baixado (~0,7 MB) e montado.</small></div>';
+      document.body.appendChild(el);
+    }
+    el.querySelector('.rs-carr-txt').textContent = texto;
+    el.querySelector('.rs-carr-barra i').style.width = `${Math.round(Math.max(0.05, Math.min(1, frac)) * 100)}%`;
+  }
+  function fecharCarregando() {
+    document.getElementById('rs-carregando')?.remove();
+  }
+  /** Deixa a tela desenhar (a montagem da cena é pesada e bloqueia). */
+  const respirar = () => new Promise((r) => requestAnimationFrame(() => setTimeout(r, 30)));
+
   /** Abre o Momento Resenha (antes carrega o bairro, que não vem mais junto com o site). */
-  function abrir(opcoes = {}) {
-    const dados = root.LuiggiBairro?.carregarDados ? root.LuiggiBairro.carregarDados() : Promise.resolve(false);
-    return dados.then(() => abrirAgora(opcoes));
+  async function abrir(opcoes = {}) {
+    telaCarregando('Baixando o mapa do bairro…', 0.15);
+    await respirar();
+    try {
+      if (root.LuiggiBairro?.carregarDados) {
+        const ok = await root.LuiggiBairro.carregarDados();
+        if (!ok) telaCarregando('Não deu pra baixar o bairro; abrindo só a rua da casa…', 0.4);
+      }
+    } catch (_) { }
+    telaCarregando('Montando a rua, as casas e o Subaru…', 0.55);
+    await respirar();
+    let promessa;
+    try {
+      promessa = abrirAgora(opcoes);
+    } catch (e) {
+      fecharCarregando();
+      throw e;
+    }
+    // Some quando a cena já apareceu (ou depois de um tempo, por garantia)
+    telaCarregando('Quase lá…', 0.9);
+    const ate = performance.now() + 8000;
+    const vigiar = () => {
+      if (window.__resenha3D?.stage?.elapsed > 0.3 || performance.now() > ate) fecharCarregando();
+      else setTimeout(vigiar, 120);
+    };
+    vigiar();
+    return promessa.finally(fecharCarregando);
   }
   function abrirAgora(opcoes = {}) {
     return new Promise((resolve) => {
@@ -246,7 +291,14 @@
       const avisoOnline = (texto) => falar(texto, null, '🌐 Resenha Online');
 
       // ---------------- Palco, rua e carro ----------------
-      const perfilGfx = L().perfilQualidade?.() || { distancia: 290, retrovisor: 2 };
+      // Valores de segurança: se o motor vier de outra versão (cache), nada fica indefinido
+      const perfilBase = L().perfilQualidade?.() || {};
+      const perfilGfx = {
+        ...perfilBase,
+        distancia: Number(perfilBase.distancia) > 0 ? Number(perfilBase.distancia) : 290,
+        retrovisor: Number.isFinite(perfilBase.retrovisor) ? perfilBase.retrovisor : 2,
+        cssLeve: !!perfilBase.cssLeve
+      };
       const stage = L().createStage(view, { radius: '0', fov: 68, near: 0.02, far: perfilGfx.distancia + 170, fillIntensity: 0.6, fillColor: '#9fb4ff', shadowBounds: 26 });
       // O bairro inteiro (da casa até a R. Fagundes Varela) entra junto com a rua
       const env = root.Luiggi3DEnv.build('safepoint', { semSubaru: true, bairro: true });
